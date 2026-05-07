@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Altiz Solutions DZ - Elevating Brands Through Logic & Art. High-End Web Development, Cinematic Production, and Branding.">
+    <title>Altiz Solutions DZ | Professional Agency</title>
+
+    <!-- Google Fonts: Space Grotesk (Headers) and Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">ALTIZ<span>.DZ</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#solutions" data-i18n="nav_solutions">Solutions</a></li>
+                    <li><a href="portfolio.html" data-i18n="nav_portfolio">Portfolio</a></li>
+                    <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
+                    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+                    <li class="mobile-only-lang">
+                        <ul class="lang-links-mobile">
+                            <li><a href="#" data-lang="en">English</a></li>
+                            <li><a href="#" data-lang="ar">العربية</a></li>
+                            <li><a href="#" data-lang="fr">Français</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div class="lang-selector">
+                <button class="lang-btn" id="lang-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                    </svg>
+                    <span>EN</span>
+                </button>
+                <ul class="lang-dropdown" id="lang-dropdown">
+                    <li><a href="#" data-lang="en">English</a></li>
+                    <li><a href="#" data-lang="ar">العربية</a></li>
+                    <li><a href="#" data-lang="fr">Français</a></li>
+                </ul>
+            </div>
+            <div class="nav-actions">
+                <a href="#contact" class="btn btn-cta" data-i18n="btn_start_project">Start a Project</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="cyber-grid"></div>
+            <div class="container hero-content animate-on-scroll fade-up">
+                <div class="hero-brand-display">
+                    <div class="hero-icon-wrapper">
+                        <img src="altiz logo.png" alt="Altiz Logo" class="hero-icon">
+                    </div>
+                    <h1 class="hero-brand-title" data-i18n="hero_title">ALTIZ</h1>
+                    <div class="hero-brand-subtitle" data-i18n="hero_subtitle_branding">SOLUTIONS <span class="neon-divider">|</span> DZ</div>
+                </div>
+                <h2 class="hero-subtitle" data-i18n="hero_description">
+                    From High-End Web Development to Cinematic Production.<br>Based in Algeria, Serving the World.
+                </h2>
+
+                <div class="trust-signals animate-on-scroll fade-up" style="--delay: 1">
+                    <div class="tech-stack">
+                        <span class="tech-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                            <span data-i18n="badge_fast_delivery">Fast Delivery</span>
+                        </span>
+                        <span class="tech-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="22" y1="12" x2="18" y2="12"></line>
+                                <line x1="6" y1="12" x2="2" y2="12"></line>
+                                <line x1="12" y1="6" x2="12" y2="2"></line>
+                                <line x1="12" y1="22" x2="12" y2="18"></line>
+                            </svg>
+                            <span data-i18n="badge_precision">Precision & Detail</span>
+                        </span>
+                        <span class="tech-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                            <span data-i18n="badge_reliability">Professional Reliability</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="hero-cta animate-on-scroll fade-up" style="--delay: 2">
+                    <a href="#solutions" class="btn btn-primary" data-i18n="btn_explore">Explore Solutions</a>
+                    <a href="#contact" class="btn btn-outline" data-i18n="btn_contact">Initiate Contact</a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <div class="mouse"></div>
+                <p data-i18n="scroll_text">Scroll to initialize</p>
+            </div>
+        </section>
+
+        <!-- Solutions Section -->
+        <section class="solutions section-padding" id="solutions">
+            <div class="container">
+                <div class="section-header animate-on-scroll fade-up">
+                    <h2 class="section-title" data-i18n="solutions_title">Our Solutions</h2>
+                    <p class="section-desc" data-i18n="solutions_desc">Engineered for performance and designed for impact.</p>
+                </div>
+                <div class="solutions-grid">
+                    <!-- Card 1 -->
+                    <div class="solution-card glass animate-on-scroll fade-up" style="--delay: 1">
+                        <div class="card-decor-top"></div>
+                        <div class="icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="var(--primary-accent)" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="solutions_web_title">Digital Architecture <span class="highlight">(Web & Apps)</span></h3>
+                        <p data-i18n="solutions_web_desc">Building high-performance websites, custom web apps, and secure digital ecosystems. We
+                            combine modern tech stacks with impeccable logic.</p>
+                        <div class="card-decor-bottom"></div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="solution-card glass animate-on-scroll fade-up" style="--delay: 2">
+                        <div class="card-decor-top"></div>
+                        <div class="icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="var(--primary-accent)" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="solutions_video_title">Cinematic Production</h3>
+                        <p data-i18n="solutions_video_desc">Professional Reels, VFX, Motion Graphics, and Long-form video editing using Premiere Pro &
+                            After Effects. High-end visual storytelling.</p>
+                        <div class="card-decor-bottom"></div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="solution-card glass animate-on-scroll fade-up" style="--delay: 3">
+                        <div class="card-decor-top"></div>
+                        <div class="icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="var(--primary-accent)" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="solutions_marketing_title">Strategic Marketing & Analytics</h3>
+                        <p data-i18n="solutions_marketing_desc">Content strategy, profile organization, and data-driven persuasion to scale your brand
+                            efficiently in a competitive digital landscape.</p>
+                        <div class="card-decor-bottom"></div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="solution-card glass animate-on-scroll fade-up" style="--delay: 4">
+                        <div class="card-decor-top"></div>
+                        <div class="icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="var(--primary-accent)" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                <path d="M2 2l7.586 7.586"></path>
+                                <circle cx="11" cy="11" r="2"></circle>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="solutions_branding_title">Visual Identity & Branding</h3>
+                        <p data-i18n="solutions_branding_desc">Professional Logo design (PNG, PSD, AI, Vector), Banners, Catalogs, and brand guidelines to
+                            establish a robust and recognizable presence.</p>
+                        <div class="card-decor-bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section class="portfolio section-padding" id="portfolio">
+            <div class="container">
+                <div class="section-header animate-on-scroll fade-up">
+                    <h2 class="section-title" data-i18n="portfolio_title">Our Works</h2>
+                    <p class="section-desc" data-i18n="portfolio_desc">A showcase of logic-driven creativity and technical excellence.</p>
+                </div>
+
+                <div class="portfolio-grid" id="portfolio-grid">
+                    <!-- Project cards will be dynamically injected here -->
+                    <div class="portfolio-empty-state">
+                        <p>Initializing project database...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="pricing section-padding bg-alt" id="pricing">
+            <div class="container">
+                <div class="section-header animate-on-scroll fade-up">
+                    <h2 class="section-title" data-i18n="pricing_title">Investment Plans</h2>
+                    <p class="section-desc" data-i18n="pricing_desc">Transparent pricing for premium digital assets.</p>
+                </div>
+
+                <div class="pricing-tabs animate-on-scroll fade-up">
+                    <button class="tab-btn active" data-target="tab-marketing" data-i18n="tab_marketing">Marketing & Creative</button>
+                    <button class="tab-btn" data-target="tab-webdev" data-i18n="tab_webdev">Web & App Development</button>
+                </div>
+
+                <div class="pricing-tab-content active" id="tab-marketing">
+                    <div class="pricing-grid">
+                        <!-- Visual Identity Header -->
+                        <div class="grid-section-header" data-i18n="visual_identity">Visual Identity</div>
+                        <!-- Visual Identity - Basic -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 1">
+                            <div class="pricing-card glass h-100">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading" data-i18n="basic">Basic</h3>
+                                    <div class="cyber-line"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="logo_design" data-plan-id="visual_identity_basic"
+                                                data-field="s1_name">Logo Design</h4>
+                                            <p data-i18n="logo_basic_desc" data-plan-id="visual_identity_basic"
+                                                data-field="s1_desc">1 Concept, PNG/JPG format.</p>
+                                        </div>
+                                        <div class="tier-price" data-plan-id="visual_identity_basic" data-field="price">
+                                            2,000 DZD</div>
+                                    </div>
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="photos_posts">Photos & Posts</h4>
+                                            <p data-i18n="standard_visual_desc">Standard visual content.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="custom">Custom</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-outline w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- Visual Identity - Pro -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 2">
+                            <div class="pricing-card glass h-100 pro-highlight">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading">Pro <span class="badge-pro" data-i18n="most_popular">Most
+                                            Popular</span></h3>
+                                    <div class="cyber-line glow"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="logo_design" data-plan-id="visual_identity_pro"
+                                                data-field="s1_name">Logo Design</h4>
+                                            <p data-i18n="logo_pro_desc" data-plan-id="visual_identity_pro"
+                                                data-field="s1_desc">3 Concepts, Vector files (AI/PSD), Guidelines.</p>
+                                        </div>
+                                        <div class="tier-price" data-plan-id="visual_identity_pro" data-field="price">
+                                            4,000 DZD</div>
+                                    </div>
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="photos_posts">Photos & Posts</h4>
+                                            <p data-i18n="premium_art_desc">Premium art direction & styling.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="custom">Custom</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-primary w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- Video Production Header -->
+                        <div class="grid-section-header" data-i18n="video_production">Video Production</div>
+
+                        <!-- Video Production - Basic -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 3">
+                            <div class="pricing-card glass h-100">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading" data-i18n="basic">Basic</h3>
+                                    <div class="cyber-line"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="3_reels" data-plan-id="video_production_basic"
+                                                data-field="s1_name">3 Reels</h4>
+                                            <p data-i18n="standard_edit_desc" data-plan-id="video_production_basic"
+                                                data-field="s1_desc">Standard editing, basic text.</p>
+                                        </div>
+                                        <div class="tier-price" data-plan-id="video_production_basic"
+                                            data-field="price">8,000 DZD</div>
+                                    </div>
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="5_reels">5 Reels</h4>
+                                            <p data-i18n="standard_edit_desc">Standard editing, basic text.</p>
+                                        </div>
+                                        <div class="tier-price">14,000 DZD</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-outline w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- Video Production - Pro -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 4">
+                            <div class="pricing-card glass h-100 pro-highlight">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading">Pro <span class="badge-pro" data-i18n="most_popular">Most
+                                            Popular</span></h3>
+                                    <div class="cyber-line glow"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="3_reels" data-plan-id="video_production_pro"
+                                                data-field="s1_name">3 Reels</h4>
+                                            <p data-i18n="cinematic_vfx_desc" data-plan-id="video_production_pro"
+                                                data-field="s1_desc">Cinematic VFX, color grading, SFX.</p>
+                                        </div>
+                                        <div class="tier-price" data-plan-id="video_production_pro" data-field="price">
+                                            12,000 DZD</div>
+                                    </div>
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="5_reels">5 Reels</h4>
+                                            <p data-i18n="advanced_vfx_desc">Advanced VFX, graphics, animations.</p>
+                                        </div>
+                                        <div class="tier-price">20,000 DZD</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-primary w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- Digital Strategy Header -->
+                        <div class="grid-section-header" data-i18n="digital_strategy">Digital Strategy</div>
+
+                        <!-- Digital Strategy - Basic -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 5">
+                            <div class="pricing-card glass h-100">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading" data-i18n="basic">Basic</h3>
+                                    <div class="cyber-line"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="sponsored_ads">Sponsored Ads</h4>
+                                            <p data-i18n="standard_audience_desc">Standard audience targeting.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="from_10">From $10</div>
+                                    </div>
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="marketing_plans">Marketing Plans</h4>
+                                            <p data-i18n="basic_market_desc">Basic market research.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="custom">Custom</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-outline w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- Digital Strategy - Pro -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 6">
+                            <div class="pricing-card glass h-100 pro-highlight">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading">Pro <span class="badge-pro" data-i18n="most_popular">Most
+                                            Popular</span></h3>
+                                    <div class="cyber-line glow"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="sponsored_ads">Sponsored Ads</h4>
+                                            <p data-i18n="advanced_ab_desc">Advanced A/B testing & Pixel.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="from_30">From $30</div>
+                                    </div>
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="marketing_plans">Marketing Plans</h4>
+                                            <p data-i18n="comp_strategy_desc">Comprehensive strategy & analytics.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="custom">Custom</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-primary w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-tab-content" id="tab-webdev">
+                    <div class="pricing-grid">
+                        <!-- Landing Page -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 1">
+                            <div class="pricing-card glass h-100 pro-highlight">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading" data-i18n="landing_page">Landing Page</h3>
+                                    <div class="cyber-line glow"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="single_page">Single Page</h4>
+                                            <p data-i18n="landing_desc">High-conversion landing page for
+                                                products/services.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="from_15">Starting from 15,000 DZD</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-primary w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- Business Site -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 2">
+                            <div class="pricing-card glass h-100">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading" data-i18n="business_site">Business Site</h3>
+                                    <div class="cyber-line"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="multi_page">Multi-Page Site</h4>
+                                            <p data-i18n="business_desc">Complete website with 5-10 professional pages.
+                                            </p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="from_35">Starting from 35,000 DZD</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-outline w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- E-commerce -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 3">
+                            <div class="pricing-card glass h-100">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading" data-i18n="online_store">Online Store</h3>
+                                    <div class="cyber-line"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="online_store">Online Store</h4>
+                                            <p data-i18n="ecommerce_desc">Full store with inventory & payment
+                                                management.</p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="from_60">Starting from 60,000 DZD</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-outline w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+
+                        <!-- Custom App -->
+                        <div class="pricing-col animate-on-scroll fade-up" style="--delay: 4">
+                            <div class="pricing-card glass h-100">
+                                <div class="card-header">
+                                    <h3 class="cyber-heading" data-i18n="custom_app">Custom App</h3>
+                                    <div class="cyber-line"></div>
+                                </div>
+                                <div class="pricing-tiers">
+                                    <div class="tier single-tier">
+                                        <div class="tier-info">
+                                            <h4 data-i18n="bespoke_software">Bespoke Software</h4>
+                                            <p data-i18n="custom_desc">Custom logic and platform-specific applications.
+                                            </p>
+                                        </div>
+                                        <div class="tier-price" data-i18n="custom">Custom</div>
+                                    </div>
+                                </div>
+                                <a href="#contact" class="btn-outline w-100 mt-4" data-i18n="choose_plan">Choose
+                                    Plan</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact section-padding" id="contact">
+            <div class="container">
+                <div class="section-header animate-on-scroll fade-up">
+                    <h2 class="section-title" data-i18n="contact_title">Initialize System</h2>
+                    <p class="section-desc" data-i18n="contact_desc">Ready to upgrade your digital presence? Open a secure channel.</p>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-info animate-on-scroll slide-right">
+                        <div class="terminal-window">
+                            <div class="terminal-header">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                                <span class="terminal-title">altizsolutionsdz@gmail.com</span>
+                            </div>
+                            <div class="terminal-body">
+                                <p><span class="prompt">root@altiz:~#</span> <span data-i18n="terminal_email_prompt">echo "Reach out via email"</span></p>
+                                <p class="output"><a href="mailto:altizsolutionsdz@gmail.com"
+                                        class="cyber-link">altizsolutionsdz@gmail.com</a></p>
+                                <p><span class="prompt">root@altiz:~#</span> <span data-i18n="terminal_world_prompt">echo "Available for worldwide projects"</span></p>
+                                <p class="output">True</p>
+                                <p><span class="prompt">root@altiz:~#</span> <span class="cursor-blink">_</span></p>
+                            </div>
+                        </div>
+
+                        <div class="social-links mt-4">
+                            <a href="#" aria-label="LinkedIn" class="cyber-social">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                    </path>
+                                    <rect x="2" y="9" width="4" height="12"></rect>
+                                    <circle cx="4" cy="4" r="2"></circle>
+                                </svg>
+                            </a>
+                            <a href="#" aria-label="Instagram" class="cyber-social">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </a>
+                            <a href="#" aria-label="Behance" class="cyber-social">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                    </path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <form action="#" method="POST" class="contact-form glass animate-on-scroll slide-left">
+                        <div class="form-group">
+                            <label for="name" data-i18n="label_name">Identifier (Name)</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your name" data-i18n-placeholder="placeholder_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" data-i18n="label_email">Communication Node (Email)</label>
+                            <input type="email" id="email" name="email" required placeholder="name@domain.com" data-i18n-placeholder="placeholder_email">
+                        </div>
+                        <div class="form-group">
+                            <label for="message" data-i18n="label_message">Payload (Message)</label>
+                            <textarea id="message" name="message" rows="5" required
+                                placeholder="Describe your project requirements..." data-i18n-placeholder="placeholder_message"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 btn-submit" data-i18n="btn_submit">Transmit Data</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-logo">ALTIZ<span>.DZ</span></div>
+            <p data-i18n="footer_text">&copy; 2026 Altiz Solutions DZ. All logic executed securely.</p>
+            <a href="#home" class="back-to-top" aria-label="Back to Top">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Samples Modal -->
+    <div id="samples-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3 id="modal-tier-name">Tier Samples</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div id="samples-grid" class="portfolio-grid">
+                <!-- Filtered samples go here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="pricing_data.js"></script>
+
+    <!-- Interactive Logic -->
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

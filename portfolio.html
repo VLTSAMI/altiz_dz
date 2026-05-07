@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altiz Solutions | Our Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="translations.js"></script>
+    <style>
+        body { background: #050505; color: #fff; }
+        .portfolio-header {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+        }
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--primary-accent);
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        .portfolio-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 8rem;
+        }
+        .back-home {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .back-home:hover {
+            background: var(--primary-accent);
+            color: #000;
+        }
+
+        /* RTL Support */
+        .rtl-layout {
+            direction: rtl;
+            text-align: right;
+        }
+        .rtl-layout .back-home {
+            left: auto;
+            right: 2rem;
+            flex-direction: row-reverse;
+        }
+        .rtl-layout .filter-btn {
+            font-family: inherit;
+        }
+        .rtl-layout .portfolio-card {
+            text-align: right;
+        }
+        .rtl-layout .portfolio-category {
+            margin-left: auto;
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-home" data-i18n="back_home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Home
+    </a>
+
+    <header class="portfolio-header">
+        <h1 class="section-title" style="margin-bottom: 1rem;" data-i18n="our_projects">Our Projects</h1>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;" data-i18n="portfolio_desc">Explore our latest work across digital development, cinematic production, and visual branding.</p>
+    </header>
+
+    <div class="portfolio-container">
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all" data-i18n="all_projects">All Projects</button>
+            <button class="filter-btn" data-filter="Web Development" data-i18n="Web Platforms">Web Platforms</button>
+            <button class="filter-btn" data-filter="Video Production" data-i18n="Video Production">Video Production</button>
+            <button class="filter-btn" data-filter="Visual Identity" data-i18n="Visual Identity">Visual Identity</button>
+            <button class="filter-btn" data-filter="Marketing" data-i18n="Marketing">Marketing</button>
+        </div>
+
+        <div id="portfolio-grid" class="portfolio-grid">
+            <!-- Projects will load here -->
+        </div>
+
+        <div id="debug-info" style="margin-top: 2rem; padding: 1rem; background: #222; color: #0f0; font-family: monospace; font-size: 12px; display: none; white-space: pre-wrap; text-align: left; border: 1px solid #333;"></div>
+        <button onclick="toggleDebug()" style="margin: 2rem auto; display: block; background: none; border: 1px solid #333; color: #555; cursor: pointer; font-size: 10px;">Debug Sync</button>
+    </div>
+
+
+    <script>
+        const grid = document.getElementById('portfolio-grid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const DRIVE_URL = 'https://script.google.com/macros/s/AKfycbyNWWFcRwGwEB5F4E36QRwL5mVxwXMlp9IBXTzub4c9bWaPs9UUTzM6vmCVDxeQnNwv1w/exec';
+
+        function toggleDebug() {
+            const d = document.getElementById('debug-info');
+            d.style.display = d.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function fetchJSONP(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_' + Date.now();
+                window[callbackName] = (data) => {
+                    delete window[callbackName];
+                    const s = document.getElementById(callbackName);
+                    if (s) s.remove();
+                    resolve(data);
+                };
+                const script = document.createElement('script');
+                script.id = callbackName;
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                script.onerror = () => reject(new Error("Script Load Failed"));
+                document.body.appendChild(script);
+                setTimeout(() => { 
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        reject(new Error("Timeout"));
+                    }
+                }, 15000);
+            });
+        }
+
+        async function loadProjects(categoryFilter = 'all') {
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--primary-accent);">Loading Portfolio...</div>';
+            try {
+                const allProjects = await fetchJSONP(DRIVE_URL);
+                grid.innerHTML = '';
+                let count = 0;
+
+                allProjects.forEach(p => {
+                    if (categoryFilter !== 'all' && p.category.toLowerCase() !== categoryFilter.toLowerCase()) return;
+                    count++;
+                    
+                    let mediaHtml = '';
+                    if (p.type === 'video') {
+                        let src = p.path.replace('view?export=download', 'preview').replace('view?usp=sharing', 'preview');
+                        if (!src.includes('preview')) src = src.replace('uc?export=view&id=', 'file/d/').split('&')[0] + '/preview';
+                        mediaHtml = `<iframe src="${src}" style="width: 100%; height: 100%; border: none;" allow="autoplay"></iframe>`;
+                    } else {
+                        mediaHtml = `<img src="${p.path}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'portfolio-card active';
+                    card.innerHTML = `
+                        ${mediaHtml}
+                        <div class="portfolio-overlay" style="opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+                            <span class="portfolio-category">${p.category}</span>
+                            <h3 class="portfolio-title">${p.title}</h3>
+                            <a href="${p.path}" target="_blank" class="portfolio-link">View Project</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                if (count === 0) grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem;">No projects found.</div>';
+            } catch (e) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: red;">Sync Error: ${e.message}</div>`;
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        loadProjects(urlParams.get('filter') || 'all');
+
+        filterBtns.forEach(btn => {
+            btn.onclick = () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadProjects(btn.dataset.filter);
+            };
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('preferredLang') || 'en';
+            if (savedLang === 'ar') document.body.classList.add('rtl-layout');
+        });
+    </script>
+</body>
+</html>

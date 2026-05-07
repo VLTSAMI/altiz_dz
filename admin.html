@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altiz Dashboard | Secure Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #22c55e;
+            --card: #0a0a0c;
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--card);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main {
+            flex: 1;
+            padding: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--accent);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .project-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .project-card p {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-delete {
+            background: rgba(255, 50, 50, 0.1);
+            color: #ff3232;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 50, 50, 0.2);
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        input, select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem;
+            border-radius: 6px;
+            color: #fff;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        option {
+            background: var(--card);
+            color: #fff;
+            padding: 10px;
+        }
+
+        .btn-save {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .nav-item {
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .plan-editor-card {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">ALTIZ.ADMIN</div>
+        <nav>
+            <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Management</p>
+            <div class="nav-item active" onclick="switchTab('portfolio')" id="nav-portfolio">Portfolio</div>
+            <div class="nav-item" onclick="switchTab('plans')" id="nav-plans">Pricing Plans</div>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div id="portfolio-tab" class="tab-content active">
+            <div class="header">
+                <h1>Portfolio Manager</h1>
+                <button class="btn" onclick="openProjectModal()">+ Add New Project</button>
+            </div>
+            <div class="project-grid" id="admin-project-grid">
+                <!-- Projects will appear here -->
+            </div>
+        </div>
+
+        <div id="plans-tab" class="tab-content">
+            <div class="header">
+                <h1>Pricing & Plans</h1>
+                <p style="color: var(--text-dim);">Edit prices, names, and descriptions for each tier.</p>
+            </div>
+            <div id="plans-container">
+                <p style="color: var(--accent);">Fetching plan data...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-top: 0;">Add New Project</h2>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label>Project Title</label>
+                    <input type="text" id="title" required placeholder="e.g. Modern E-commerce">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category">
+                        <option value="Web Development">Web Development</option>
+                        <option value="Video Production">Video Production</option>
+                        <option value="Visual Identity">Visual Identity</option>
+                        <option value="Marketing">Marketing</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Project Media (Image/Video)</label>
+                    <input type="file" id="fileInput" accept="image/*,video/*" style="margin-bottom: 0.5rem;">
+                    <input type="url" id="image" placeholder="Or enter URL (YouTube/Direct Link)">
+                    <div id="preview-container" style="margin-top: 1rem; display: none;">
+                        <p style="font-size: 0.7rem; color: var(--accent);">Preview:</p>
+                        <img id="imagePreview" style="width: 100%; border-radius: 8px; max-height: 200px; object-fit: cover;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Linked Tier (Optional)</label>
+                    <select id="tier">
+                        <option value="">No specific tier</option>
+                        <option value="vis-basic">Visual Identity - Basic</option>
+                        <option value="vis-pro">Visual Identity - Pro</option>
+                        <option value="vid-basic">Video Production - Basic</option>
+                        <option value="vid-pro">Video Production - Pro</option>
+                        <option value="web-basic">Web Platforms - Basic</option>
+                        <option value="web-pro">Web Platforms - Pro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Project Link (Optional)</label>
+                    <input type="url" id="link" placeholder="https://vimeo.com/...">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-save">Save Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Compat SDKs -->
+    
+    <script>
+        // Simple security
+        const pass = prompt("Enter Admin Access Key:");
+        if (pass !== "admin123") {
+            alert("Unauthorized");
+            window.location.href = "index.html";
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(tab + '-tab').classList.add('active');
+            document.getElementById('nav-' + tab).classList.add('active');
+
+            if (tab === 'projects') renderProjects();
+        }
+
+        // JSONP Helper for CORS bypass
+        function fetchJSONP(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_admin_' + Math.round(100000 * Math.random());
+                window[callbackName] = (data) => {
+                    delete window[callbackName];
+                    const s = document.getElementById(callbackName);
+                    if (s) s.remove();
+                    resolve(data);
+                };
+                const script = document.createElement('script');
+                script.id = callbackName;
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                script.onerror = () => reject(new Error("JSONP Load Error"));
+                document.body.appendChild(script);
+
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        reject(new Error("Request Timeout"));
+                    }
+                }, 10000);
+            });
+        }
+
+        // --- Portfolio Logic ---
+        async function renderProjects() {
+            const grid = document.getElementById('admin-project-grid');
+            grid.innerHTML = '<p>Loading synced projects...</p>';
+            
+            const DRIVE_URL = 'https://script.google.com/macros/s/AKfycbyNWWFcRwGwEB5F4E36QRwL5mVxwXMlp9IBXTzub4c9bWaPs9UUTzM6vmCVDxeQnNwv1w/exec';
+            let driveProjects = [];
+
+            if (DRIVE_URL) {
+                try {
+                    driveProjects = await fetchJSONP(DRIVE_URL);
+                } catch(e) {
+                    console.warn("Drive sync failed in admin:", e);
+                }
+            }
+
+            grid.innerHTML = '';
+            
+            // Show Drive Projects
+            driveProjects.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <span style="font-size: 0.6rem; color: #3b82f6; background: rgba(59,130,246,0.1); padding: 2px 5px; border-radius: 4px; float: right;">Google Drive Sync</span>
+                    <h3>${p.title}</h3>
+                    <p>${p.category}</p>
+                    <div class="actions">
+                        <span style="font-size: 0.7rem; opacity: 0.5;">Auto-sync active</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Show Local Projects
+            localProjects.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <span style="font-size: 0.6rem; color: #888; background: rgba(255,255,255,0.05); padding: 2px 5px; border-radius: 4px; float: right;">Local Asset</span>
+                    <h3>${p.title}</h3>
+                    <p>${p.category}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Initial Load
+        renderProjects();
+    </script>
+</body>
+</html>

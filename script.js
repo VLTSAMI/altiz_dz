@@ -1,0 +1,393 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* ==========================================================================
+       Intersection Observer for Scroll Reveal Animations
+       ========================================================================== */
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.15 // Trigger when 15% of the element is visible
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                // Optional: Stop observing once animated
+                // observer.unobserve(entry.target); 
+            }
+        });
+    }, observerOptions);
+
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach(el => observer.observe(el));
+
+    /* ==========================================================================
+       Smooth Scrolling for Anchor Links (polyfill/enhancement)
+       ========================================================================== */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if(targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                // Adjust scroll position considering the fixed navbar
+                const headerOffset = 80; // matches var(--nav-height)
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        });
+    });
+
+    /* ==========================================================================
+       Mobile Menu Toggle
+       ========================================================================== */
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    if(mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
+    /* ==========================================================================
+       Pricing Tabs
+       ========================================================================== */
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.pricing-tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // Add active class to clicked
+            btn.classList.add('active');
+            const targetId = btn.getAttribute('data-target');
+            const targetContent = document.getElementById(targetId);
+            
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+
+    /* ==========================================================================
+       Language Selection (Native Translation System)
+       ========================================================================== */
+    const langLinks = document.querySelectorAll('.lang-dropdown a, .lang-links-mobile a');
+    const langBtnText = document.querySelector('.lang-btn span');
+    const langBtn = document.getElementById('lang-btn');
+    const langDropdown = document.getElementById('lang-dropdown');
+
+    // Toggle dropdown on click (better for mobile)
+    if (langBtn && langDropdown) {
+        langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('active-dropdown');
+        });
+
+        // Close dropdown when clicking elsewhere
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('active-dropdown');
+        });
+    }
+    
+    // Selectors for elements we want to translate
+    const translatableSelectors = [
+        '.nav-links a', '.btn-cta', '.hero-subtitle', '.tech-badge', 
+        '.hero-cta a', '.scroll-indicator p', '.section-title', '.section-desc',
+        '.solution-card h3', '.solution-card p', '.tab-btn',
+        '.cyber-heading', '.split-title', '.tier-info h4', '.tier-info p', 
+        '.tier-price', 'label', '.btn-submit', '.terminal-body p:nth-child(odd)',
+        '.terminal-body p.output', '.footer-container p'
+    ];
+
+    // Store original english text
+    const translatableElements = document.querySelectorAll(translatableSelectors.join(', '));
+    translatableElements.forEach(el => {
+        // Only target elements directly containing text or specific simple HTML
+        if (!el.hasAttribute('data-en')) {
+            el.setAttribute('data-en', el.innerHTML.trim());
+        }
+    });
+
+    // --- Dynamic Pricing System (Static) ---
+    function loadLocalPlans() {
+        Object.keys(pricingData).forEach(planId => {
+            updatePlanUI(planId, pricingData[planId]);
+        });
+    }
+
+    function updatePlanUI(planId, data) {
+        const lang = (localStorage.getItem('selectedLanguage') || 'en').toLowerCase();
+        
+        // Select the plan card based on child element with data-i18n
+        // This requires a stable way to identify each card.
+        // Let's add IDs to the cards or use specific logic.
+        // For now, we will update the translations object keys dynamically!
+        const suffix = lang === 'ar' ? 'ar' : (lang === 'fr' ? 'fr' : 'en');
+        
+        if (data[`price_${suffix}`]) {
+            // We need to know which translation key to override
+            // This part needs a map of doc IDs to translation keys
+        }
+    }
+
+    // Optimized Language Switcher
+    function setLanguage(lang) {
+        localStorage.setItem('preferredLang', lang);
+        document.documentElement.lang = lang;
+        
+        // Toggle RTL
+        if (lang === 'ar') {
+            document.body.classList.add('rtl-layout');
+        } else {
+            document.body.classList.remove('rtl-layout');
+        }
+
+        // 1. Apply translations via data-i18n (Primary)
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                el.innerHTML = translations[lang][key];
+            }
+        });
+
+        // 2. Fallback: Apply translations via text matching (Secondary)
+        translatableElements.forEach(el => {
+            if (el.hasAttribute('data-i18n')) return; 
+            
+            const enText = el.getAttribute('data-en');
+            if (lang === 'en') {
+                el.innerHTML = enText;
+            } else if (translations[lang] && translations[lang][enText]) {
+                el.innerHTML = translations[lang][enText];
+            }
+        });
+
+        // Handle placeholders
+        const inputs = document.querySelectorAll('[data-i18n-placeholder]');
+        inputs.forEach(input => {
+            const key = input.getAttribute('data-i18n-placeholder');
+            if (translations[lang] && translations[lang][key]) {
+                input.placeholder = translations[lang][key];
+            }
+        });
+
+        // Load local overrides after setting base language
+        applyLocalOverrides(lang);
+    }
+
+    function applyLocalOverrides(lang) {
+        Object.keys(pricingData).forEach(planId => {
+            const data = pricingData[planId];
+            const fields = ['price', 's1_name', 's1_desc'];
+            
+            fields.forEach(field => {
+                const value = data[`${field}_${lang}`] || data[`${field}_en`];
+                if (value) {
+                    const el = document.querySelector(`[data-plan-id="${planId}"][data-field="${field}"]`);
+                    if (el) el.innerHTML = value;
+                }
+            });
+        });
+    }
+    
+    function updateLangUI(langCode) {
+        setLanguage(langCode);
+    }
+
+    langLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const langCode = link.getAttribute('data-lang');
+            updateLangUI(langCode);
+            
+            // Close mobile menu if open
+            if(navLinks) navLinks.classList.remove('active');
+        });
+    });
+
+    // Initialize from storage
+    const savedLang = localStorage.getItem('preferredLang') || 'en';
+    setLanguage(savedLang);
+    loadLocalPlans();
+
+    /* ==========================================================================
+       Portfolio Rendering
+       ========================================================================== */
+    async function renderPortfolio() {
+        const grid = document.getElementById('portfolio-grid');
+        if (!grid) return;
+
+        const DRIVE_URL = 'https://script.google.com/macros/s/AKfycbyNWWFcRwGwEB5F4E36QRwL5mVxwXMlp9IBXTzub4c9bWaPs9UUTzM6vmCVDxeQnNwv1w/exec';
+
+        // JSONP Helper for CORS bypass
+        function fetchJSONP(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_home_' + Math.round(100000 * Math.random());
+                window[callbackName] = (data) => {
+                    delete window[callbackName];
+                    const s = document.getElementById(callbackName);
+                    if (s) s.remove();
+                    resolve(data);
+                };
+                const script = document.createElement('script');
+                script.id = callbackName;
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                script.onerror = () => reject(new Error("JSONP Load Error"));
+                document.body.appendChild(script);
+
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        reject(new Error("Request Timeout"));
+                    }
+                }, 10000);
+            });
+        }
+
+        try {
+            let allProjects = [];
+
+            if (DRIVE_URL) {
+                console.log("Fetching Home Portfolio via JSONP...");
+                try {
+                    allProjects = await fetchJSONP(DRIVE_URL);
+                    console.log("Home Projects loaded:", allProjects.length);
+                } catch(e) {
+                    console.error("Home Drive Sync Error:", e);
+                }
+            }
+
+            if (allProjects.length === 0) {
+                grid.innerHTML = `<div class="portfolio-empty-state">
+                    <p data-i18n="portfolio_empty">Check back soon for new projects!</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = '';
+            // Limit to first 8 projects on home page
+            allProjects.slice(0, 8).forEach((p) => {
+                let mediaHtml = '';
+                if (p.type === 'video' || p.path.endsWith('.mp4')) {
+                    if (p.path.includes('drive.google.com')) {
+                        let src = p.path;
+                        if (src.includes('view?usp=sharing')) src = src.replace('view?usp=sharing', 'preview');
+                        mediaHtml = `<iframe src="${src}" style="width: 100%; height: 100%; border: none; pointer-events: none;" allow="autoplay"></iframe>`;
+                    } else {
+                        mediaHtml = `<video src="${p.path}" muted loop onmouseover="this.play()" onmouseout="this.pause()" style="width: 100%; height: 100%; object-fit: cover;"></video>`;
+                    }
+                } else {
+                    mediaHtml = `<img src="${p.path}" alt="${p.title}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80'">`;
+                }
+
+                const projectLink = (p.link && p.link !== '#') ? p.link : p.path;
+
+                const card = document.createElement('div');
+                card.className = 'portfolio-card animate-on-scroll fade-up';
+                card.innerHTML = `
+                    ${mediaHtml}
+                    <div class="portfolio-overlay">
+                        <span class="portfolio-category">${p.category}</span>
+                        <h3 class="portfolio-title">${p.title}</h3>
+                        <a href="${projectLink}" target="_blank" class="portfolio-link">
+                            View Project
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+                if(observer) observer.observe(card);
+            });
+        } catch (e) {
+            console.error("Error rendering portfolio: ", e);
+        }
+    }
+
+    renderPortfolio();
+
+    /* ==========================================================================
+       Tier Filtering & Modal
+       ========================================================================== */
+    const modal = document.getElementById('samples-modal');
+    const samplesGrid = document.getElementById('samples-grid');
+    const modalTitle = document.getElementById('modal-tier-name');
+    const closeBtn = document.querySelector('.modal-close');
+
+    // Links to portfolio.html will now work directly without intercepting.
+
+    async function showTierSamples(tierKey, name) {
+        modalTitle.textContent = name + " - Examples";
+        samplesGrid.innerHTML = '<p style="color: var(--accent); padding: 2rem;">Loading cloud samples...</p>';
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        try {
+            const querySnapshot = await db.collection("projects")
+                .where("tier", "==", tierKey)
+                .orderBy("createdAt", "desc")
+                .get();
+            
+            samplesGrid.innerHTML = '';
+
+            if (querySnapshot.empty) {
+                samplesGrid.innerHTML = `<div class="portfolio-empty-state"><p>No samples added yet for this tier.</p></div>`;
+            } else {
+                querySnapshot.forEach((docSnap) => {
+                    const p = docSnap.data();
+                    const isVideo = p.image.includes('data:video/') || p.image.endsWith('.mp4') || p.image.includes('vimeo.com') || p.image.includes('youtube.com');
+                    const mediaHtml = isVideo 
+                        ? `<video src="${p.image}" muted loop onmouseover="this.play()" onmouseout="this.pause()" style="width: 100%; height: 100%; object-fit: cover;"></video>`
+                        : `<img src="${p.image}" alt="${p.title}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80'">`;
+
+                    const card = document.createElement('div');
+                    card.className = 'portfolio-card active';
+                    card.innerHTML = `
+                        ${mediaHtml}
+                        <div class="portfolio-overlay" style="opacity: 1">
+                            <span class="portfolio-category">${p.category}</span>
+                            <h3 class="portfolio-title">${p.title}</h3>
+                        </div>
+                    `;
+                    samplesGrid.appendChild(card);
+                });
+            }
+        } catch (e) {
+            console.error("Error fetching samples: ", e);
+            samplesGrid.innerHTML = '<p style="color: #ff3232; padding: 2rem;">Error connecting to cloud.</p>';
+        }
+    }
+
+    if(closeBtn) {
+        closeBtn.onclick = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+    }
+
+    modal.onclick = (e) => {
+        if (e.target === modal) closeBtn.onclick();
+    };
+
+});
