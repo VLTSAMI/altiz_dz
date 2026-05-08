@@ -585,10 +585,11 @@ body {
 .hero-subtitle {
     font-family: var(--font-body);
     font-size: clamp(1.1rem, 2vw, 1.4rem);
-    color: #e2e8f0; /* Brighter for better contrast */
+    color: #e2e8f0;
     font-weight: 400;
     margin-bottom: 2.5rem;
     line-height: 1.6;
+    text-align: center;
 }
 
 .trust-signals {
@@ -1628,12 +1629,16 @@ footer p {
 }
 
 /* Other alignments */
-.rtl-layout .hero-content,
 .rtl-layout .section-header,
 .rtl-layout .footer-container,
 .rtl-layout .contact-info,
 .rtl-layout .solution-card {
     text-align: right;
+}
+/* Hero always stays centered regardless of language */
+.hero-content,
+.rtl-layout .hero-content {
+    text-align: center;
 }
 
 @media (max-width: 768px) {
