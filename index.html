@@ -223,7 +223,6 @@
                     <h2 class="section-title" data-i18n="portfolio_title">Our Works</h2>
                     <p class="section-desc" data-i18n="portfolio_desc">A showcase of logic-driven creativity and technical excellence.</p>
                 </div>
-            
             <div class="category-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 4rem;">
                 <!-- Web Dev Card -->
                 <a href="projects.html?filter=Web Development" class="category-card" style="text-decoration: none; position: relative; height: 380px; border-radius: 28px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.08); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
@@ -236,7 +235,7 @@
                         <div style="width: 40px; height: 3px; background: var(--primary-accent); margin: 1rem 0; border-radius: 2px;"></div>
                         <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.5;">Modern & Scalable Solutions</p>
                     </div>
-                </a>
+                 </a>
 
                 <!-- Video Card -->
                 <a href="projects.html?filter=Video Production" class="category-card" style="text-decoration: none; position: relative; height: 380px; border-radius: 28px; overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.08); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
@@ -655,19 +654,29 @@
                         </div>
                     </div>
 
-                    <form action="#" method="POST" class="contact-form glass animate-on-scroll slide-left">
+                    <form id="contactForm" class="contact-form glass animate-on-scroll slide-left">
                         <div class="form-group">
                             <label for="name" data-i18n="label_name">Identifier (Name)</label>
-                            <input type="text" id="name" name="name" required placeholder="Enter your name" data-i18n-placeholder="placeholder_name">
+                            <input type="text" id="contactName" required placeholder="Enter your name" data-i18n-placeholder="placeholder_name">
                         </div>
                         <div class="form-group">
                             <label for="email" data-i18n="label_email">Communication Node (Email)</label>
-                            <input type="email" id="email" name="email" required placeholder="name@domain.com" data-i18n-placeholder="placeholder_email">
+                            <input type="email" id="contactEmail" required placeholder="name@domain.com" data-i18n-placeholder="placeholder_email">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="contact_method">Preferred Contact Method</label>
+                            <div style="display: flex; gap: 1.5rem; margin-top: 0.5rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #fff; font-size: 0.9rem;">
+                                    <input type="radio" name="method" value="whatsapp" checked style="accent-color: var(--primary-accent);"> WhatsApp
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #fff; font-size: 0.9rem;">
+                                    <input type="radio" name="method" value="email" style="accent-color: var(--primary-accent);"> Email
+                                </label>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="message" data-i18n="label_message">Payload (Message)</label>
-                            <textarea id="message" name="message" rows="5" required
-                                placeholder="Describe your project requirements..." data-i18n-placeholder="placeholder_message"></textarea>
+                            <textarea id="contactMessage" rows="5" required placeholder="Describe your project requirements..." data-i18n-placeholder="placeholder_message"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 btn-submit" data-i18n="btn_submit">Transmit Data</button>
                     </form>

@@ -354,6 +354,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Contact Form Logic
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            const method = document.querySelector('input[name="method"]:checked').value;
+            
+            const myEmail = "altizsolutionsdz@gmail.com";
+            const myWhatsApp = "213550000000"; // Replace with your actual number
+            
+            const fullMessage = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
+
+            if (method === 'whatsapp') {
+                const encodedMsg = encodeURIComponent(fullMessage);
+                window.open(`https://wa.me/${myWhatsApp}?text=${encodedMsg}`, '_blank');
+            } else {
+                const subject = encodeURIComponent(`New Project Inquiry from ${name}`);
+                const body = encodeURIComponent(fullMessage);
+                window.location.href = `mailto:${myEmail}?subject=${subject}&body=${body}`;
+            }
+        });
+    }
+
     // Call it
     renderPortfolio();
     }
