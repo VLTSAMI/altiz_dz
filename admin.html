@@ -3,78 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altiz Admin | Full Cloud Control</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <title>Altiz Premium Admin | Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505;
+            --bg: #030303;
             --accent: #22c55e;
+            --accent-glow: rgba(34, 197, 94, 0.2);
             --card: #0a0a0c;
+            --card-hover: #121215;
             --text: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.6);
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --border: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.03);
         }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; min-height: 100vh; }
-        .sidebar { width: 260px; background: var(--card); border-right: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; display: flex; flex-direction: column; position: fixed; height: 100vh; }
-        .main { flex: 1; padding: 3rem; margin-left: 260px; max-width: 1200px; width: calc(100% - 260px); }
-        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; color: var(--accent); }
-        .nav-link { color: var(--text-dim); text-decoration: none; padding: 10px; display: block; border-radius: 6px; margin-bottom: 5px; cursor: pointer; }
-        .nav-link.active { background: rgba(34, 197, 94, 0.1); color: var(--accent); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
-        .btn { background: var(--accent); color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .project-card { background: var(--card); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem; }
-        .project-card img, .project-card video { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); z-index: 100; align-items: center; justify-content: center; overflow-y: auto; }
-        .modal.active { display: flex; }
-        .modal-content { background: var(--card); width: 100%; max-width: 650px; padding: 2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); margin: 2rem; }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.3rem; font-size: 0.8rem; color: var(--text-dim); }
-        input, select, textarea { width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.7rem; border-radius: 6px; color: #fff; box-sizing: border-box; }
-        .tabs-content { display: none; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 3px;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .nav-link {
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-link.active {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .status-pill {
+            margin-top: auto;
+            padding: 12px;
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            padding: 4rem;
+            margin-left: 280px;
+            max-width: 1200px;
+            width: calc(100% - 280px);
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4rem;
+        }
+
+        h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin: 0; letter-spacing: -1px; }
+
+        .btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-secondary { background: #222; color: #fff; }
+
+        /* Grid Styling */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            background: var(--card-hover);
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .media-preview {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
+            background: #111;
+        }
+
+        /* Modal & Form Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content {
+            background: var(--card);
+            width: 100%;
+            max-width: 700px;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+
+        label { display: block; margin-bottom: 0.6rem; font-size: 0.85rem; font-weight: 500; color: var(--text-dim); }
+
+        input, select, textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 0.9rem;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus { border-color: var(--accent); }
+
+        /* FIX: Dropdown styling for readability */
+        select option {
+            background: #111;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .tabs-content { display: none; animation: slideUp 0.4s ease; }
         .tabs-content.active { display: block; }
-        .plan-card { background: var(--card); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .plan-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">ALTIZ.ADMIN</div>
+        <div class="logo">ALTIZ.STUDIO</div>
         <nav>
-            <div class="nav-link active" onclick="showTab('projects')">Portfolio Projects</div>
-            <div class="nav-link" onclick="showTab('plans')">Service Plans</div>
-            <div style="margin-top: 2rem; padding: 10px; background: rgba(34, 197, 94, 0.1); color: var(--accent); border-radius: 6px; font-size: 0.8rem;">
-                ● Cloud Connected
+            <div class="nav-link active" id="nav-projects" onclick="showTab('projects')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Portfolio Projects
+            </div>
+            <div class="nav-link" id="nav-plans" onclick="showTab('plans')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                Service Plans
+            </div>
+            
+            <div class="status-pill">
+                <span style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent);"></span>
+                Cloud Engine Online
             </div>
         </nav>
     </div>
 
     <div class="main">
-        <!-- Projects Tab -->
+        <!-- Projects View -->
         <div id="projects-tab" class="tabs-content active">
             <div class="header">
-                <h1>Portfolio Management</h1>
-                <button class="btn" onclick="openProjectModal()">+ New Project</button>
+                <div>
+                    <p style="color: var(--accent); font-weight: 600; margin: 0;">Showcase Management</p>
+                    <h1>Your Work</h1>
+                </div>
+                <button class="btn" onclick="openProjectModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    New Project
+                </button>
             </div>
-            <div class="project-grid" id="project-grid">Loading...</div>
+            <div class="project-grid" id="project-grid">Loading cloud data...</div>
         </div>
 
-        <!-- Plans Tab -->
+        <!-- Plans View -->
         <div id="plans-tab" class="tabs-content">
             <div class="header">
-                <h1>Service Plans</h1>
-                <p style="color: var(--text-dim);">Edit prices and features for your clients.</p>
+                <div>
+                    <p style="color: var(--accent); font-weight: 600; margin: 0;">Pricing Engine</p>
+                    <h1>Service Plans</h1>
+                </div>
             </div>
-            <div id="plans-list">Loading...</div>
+            <div id="plans-list">Loading pricing data...</div>
         </div>
     </div>
 
     <!-- Project Modal -->
     <div id="projectModal" class="modal">
         <div class="modal-content">
-            <h2 id="modalTitle">Project Details</h2>
+            <h2 id="modalTitle" style="margin-top: 0; font-family: 'Space Grotesk'; font-size: 1.8rem;">Project Details</h2>
             <form id="projectForm" onsubmit="handleProjectSave(event)">
                 <input type="hidden" id="projectId">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group"><label>Title</label><input type="text" id="title" required></div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Project Title</label><input type="text" id="title" placeholder="e.g. Modern Brand Identity" required></div>
                     <div class="form-group">
                         <label>Category</label>
                         <select id="category">
@@ -85,54 +308,61 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Media Type</label>
-                    <select id="type"><option value="image">Image</option><option value="video">Video</option></select>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Media Content Type</label>
+                        <select id="type"><option value="image">Still Image</option><option value="video">Motion Video</option></select>
+                    </div>
+                    <div class="form-group"><label>Direct URL / Drive Link</label><input type="text" id="path" placeholder="https://..." required></div>
                 </div>
                 <div class="form-group">
-                    <label>File URL (Drive link supported)</label>
-                    <input type="text" id="path" required>
+                    <label>Thumbnail / Poster URL (Highly recommended for videos)</label>
+                    <input type="text" id="thumbnail" placeholder="https://...">
                 </div>
-                <div class="form-group">
-                    <label>Thumbnail URL (for Video Poster)</label>
-                    <input type="text" id="thumbnail">
-                </div>
-                <div class="form-group"><label>Project Link</label><input type="url" id="link"></div>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <button type="button" class="btn" style="background: #333; color: #fff;" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn" id="projectSaveBtn">Save Project</button>
+                <div class="form-group"><label>External Link (Optional)</label><input type="url" id="link" placeholder="https://behance.net/..."></div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Dismiss</button>
+                    <button type="submit" class="btn" id="projectSaveBtn">Deploy Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Plan Modal -->
+    <!-- Plan Modal (Multi-Language Support) -->
     <div id="planModal" class="modal">
         <div class="modal-content">
-            <h2>Edit Plan Details</h2>
+            <h2 style="margin-top: 0; font-family: 'Space Grotesk'; font-size: 1.8rem;">Edit Plan</h2>
             <form id="planForm" onsubmit="handlePlanSave(event)">
                 <input type="hidden" id="planId">
-                <div class="form-group">
-                    <label>Price (EN)</label>
-                    <input type="text" id="price_en" required>
+                
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                    <label style="color: var(--accent); font-weight: bold;">PRICE</label>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Price (English)</label><input type="text" id="price_en" placeholder="8,000 DZD"></div>
+                        <div class="form-group"><label>Price (العربية)</label><input type="text" id="price_ar" placeholder="8,000 دج" dir="rtl"></div>
+                    </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group"><label>Feature 1 Name (EN)</label><input type="text" id="s1_name_en"></div>
-                    <div class="form-group"><label>Feature 1 Desc (EN)</label><input type="text" id="s1_desc_en"></div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="color: var(--accent); font-weight: bold;">FEATURES (English)</label>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Feature 1</label><input type="text" id="s1_name_en"></div>
+                        <div class="form-group"><label>Feature 2</label><input type="text" id="s2_name_en"></div>
+                    </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group"><label>Feature 2 Name (EN)</label><input type="text" id="s2_name_en"></div>
-                    <div class="form-group"><label>Feature 2 Desc (EN)</label><input type="text" id="s2_desc_en"></div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="color: var(--accent); font-weight: bold;">المميزات (العربية)</label>
+                    <div class="form-grid" dir="rtl">
+                        <div class="form-group"><label>الميزة 1</label><input type="text" id="s1_name_ar"></div>
+                        <div class="form-group"><label>الميزة 2</label><input type="text" id="s2_name_ar"></div>
+                    </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group"><label>Feature 3 Name (EN)</label><input type="text" id="s3_name_en"></div>
-                    <div class="form-group"><label>Feature 3 Desc (EN)</label><input type="text" id="s3_desc_en"></div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn" id="planSaveBtn">Sync Cloud</button>
                 </div>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <button type="button" class="btn" style="background: #333; color: #fff;" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn" id="planSaveBtn">Save Changes</button>
-                </div>
-                <p style="font-size: 0.7rem; color: var(--text-dim); margin-top: 1rem;">Note: Update other languages (AR/FR) in Firestore directly or ask to add them here.</p>
             </form>
         </div>
     </div>
@@ -152,7 +382,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Helper to convert Drive Link
         function fixDriveUrl(url) {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
@@ -166,10 +395,10 @@
             document.querySelectorAll('.tabs-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tab + '-tab').classList.add('active');
-            event.target.classList.add('active');
+            document.getElementById('nav-' + tab).classList.add('active');
         }
 
-        // --- PROJECTS LOGIC ---
+        // Projects logic
         db.collection("projects").orderBy("createdAt", "desc").onSnapshot(snap => {
             const grid = document.getElementById('project-grid');
             grid.innerHTML = '';
@@ -177,33 +406,19 @@
                 const p = doc.data();
                 const id = doc.id;
                 const path = fixDriveUrl(p.path);
-                const thumb = fixDriveUrl(p.thumbnail);
                 const card = document.createElement('div');
                 card.className = 'project-card';
                 card.innerHTML = `
-                    ${p.type === 'video' ? `<video src="${path}" muted poster="${thumb}"></video>` : `<img src="${path}">`}
-                    <h3>${p.title}</h3>
+                    ${p.type === 'video' ? `<video class="media-preview" src="${path}" muted poster="${fixDriveUrl(p.thumbnail)}"></video>` : `<img class="media-preview" src="${path}">`}
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.1rem;">${p.title}</h3>
+                    <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1.2rem;">${p.category}</p>
                     <div style="display:flex; gap:10px;">
-                        <button onclick="editProject('${id}')" style="flex:1; cursor:pointer;">Edit</button>
-                        <button onclick="deleteProject('${id}')" style="flex:1; color:red; cursor:pointer;">Delete</button>
+                        <button class="btn btn-secondary" onclick="editProject('${id}')" style="flex:1; padding: 0.5rem;">Edit</button>
+                        <button class="btn btn-secondary" onclick="deleteProject('${id}')" style="flex:0.5; padding: 0.5rem; color: #ff4444;">×</button>
                     </div>`;
                 grid.appendChild(card);
             });
         });
-
-        function openProjectModal(data = null) {
-            document.getElementById('projectForm').reset();
-            document.getElementById('projectId').value = data ? data.id : '';
-            if (data) {
-                document.getElementById('title').value = data.title;
-                document.getElementById('category').value = data.category;
-                document.getElementById('type').value = data.type;
-                document.getElementById('path').value = data.path;
-                document.getElementById('thumbnail').value = data.thumbnail || '';
-                document.getElementById('link').value = data.link || '';
-            }
-            document.getElementById('projectModal').classList.add('active');
-        }
 
         async function handleProjectSave(e) {
             e.preventDefault();
@@ -227,27 +442,43 @@
 
         async function editProject(id) {
             const doc = await db.collection("projects").doc(id).get();
-            openProjectModal({ id, ...doc.data() });
+            const p = doc.data();
+            document.getElementById('projectId').value = id;
+            document.getElementById('title').value = p.title;
+            document.getElementById('category').value = p.category;
+            document.getElementById('type').value = p.type;
+            document.getElementById('path').value = p.path;
+            document.getElementById('thumbnail').value = p.thumbnail || '';
+            document.getElementById('link').value = p.link || '';
+            document.getElementById('modalTitle').textContent = 'Update Project';
+            document.getElementById('projectModal').classList.add('active');
+        }
+
+        function openProjectModal() {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.getElementById('modalTitle').textContent = 'New Project';
+            document.getElementById('projectModal').classList.add('active');
         }
 
         async function deleteProject(id) {
-            if (confirm("Delete project?")) await db.collection("projects").doc(id).delete();
+            if (confirm("Permanently delete this project from cloud?")) await db.collection("projects").doc(id).delete();
         }
 
-        // --- PLANS LOGIC ---
+        // Plans logic
         db.collection("plans").onSnapshot(snap => {
             const list = document.getElementById('plans-list');
             list.innerHTML = '';
             snap.forEach(doc => {
                 const p = doc.data();
                 const card = document.createElement('div');
-                card.className = 'plan-card';
+                card.className = 'plan-item';
                 card.innerHTML = `
                     <div>
-                        <h3 style="margin:0">${doc.id.replace(/_/g, ' ').toUpperCase()}</h3>
-                        <p style="color:var(--accent); margin:5px 0">${p.price_en || 'No price set'}</p>
+                        <h3 style="margin:0; font-family: 'Space Grotesk';">${doc.id.replace(/_/g, ' ').toUpperCase()}</h3>
+                        <p style="color:var(--accent); margin:8px 0; font-weight: 600;">${p.price_en || 'Free'}</p>
                     </div>
-                    <button class="btn" style="background:#222; color:#fff" onclick="editPlan('${doc.id}')">Edit Plan</button>
+                    <button class="btn" style="background:#222; color:#fff" onclick="editPlan('${doc.id}')">Configure Plan</button>
                 `;
                 list.appendChild(card);
             });
@@ -255,15 +486,14 @@
 
         async function editPlan(id) {
             const doc = await db.collection("plans").doc(id).get();
-            const data = doc.data();
+            const p = doc.data();
             document.getElementById('planId').value = id;
-            document.getElementById('price_en').value = data.price_en || '';
-            document.getElementById('s1_name_en').value = data.s1_name_en || '';
-            document.getElementById('s1_desc_en').value = data.s1_desc_en || '';
-            document.getElementById('s2_name_en').value = data.s2_name_en || '';
-            document.getElementById('s2_desc_en').value = data.s2_desc_en || '';
-            document.getElementById('s3_name_en').value = data.s3_name_en || '';
-            document.getElementById('s3_desc_en').value = data.s3_desc_en || '';
+            document.getElementById('price_en').value = p.price_en || '';
+            document.getElementById('price_ar').value = p.price_ar || '';
+            document.getElementById('s1_name_en').value = p.s1_name_en || '';
+            document.getElementById('s2_name_en').value = p.s2_name_en || '';
+            document.getElementById('s1_name_ar').value = p.s1_name_ar || '';
+            document.getElementById('s2_name_ar').value = p.s2_name_ar || '';
             document.getElementById('planModal').classList.add('active');
         }
 
@@ -272,12 +502,11 @@
             const id = document.getElementById('planId').value;
             const data = {
                 price_en: document.getElementById('price_en').value,
+                price_ar: document.getElementById('price_ar').value,
                 s1_name_en: document.getElementById('s1_name_en').value,
-                s1_desc_en: document.getElementById('s1_desc_en').value,
                 s2_name_en: document.getElementById('s2_name_en').value,
-                s2_desc_en: document.getElementById('s2_desc_en').value,
-                s3_name_en: document.getElementById('s3_name_en').value,
-                s3_desc_en: document.getElementById('s3_desc_en').value,
+                s1_name_ar: document.getElementById('s1_name_ar').value,
+                s2_name_ar: document.getElementById('s2_name_ar').value,
             };
             await db.collection("plans").doc(id).update(data);
             closeModal();
