@@ -353,57 +353,58 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+} // <--- Added this to properly close renderPortfolio
 
-    // Initialize
-    renderPortfolio();
+// Initialize
+renderPortfolio();
 
-    // Contact Form Logic
-    const submitBtn = document.getElementById('realSubmitBtn');
-    if (submitBtn) {
-        submitBtn.addEventListener('click', function() {
-            const nameInput = document.getElementById('contactName');
-            const emailInput = document.getElementById('contactEmail');
-            const messageInput = document.getElementById('contactMessage');
-            const methodInput = document.querySelector('input[name="method"]:checked');
-            
-            if (!nameInput.value || !emailInput.value || !messageInput.value) {
-                alert("Please fill in all details.");
-                return;
-            }
+// Contact Form Logic
+const submitBtn = document.getElementById('realSubmitBtn');
+if (submitBtn) {
+    submitBtn.addEventListener('click', function() {
+        const nameInput = document.getElementById('contactName');
+        const emailInput = document.getElementById('contactEmail');
+        const messageInput = document.getElementById('contactMessage');
+        const methodInput = document.querySelector('input[name="method"]:checked');
+        
+        if (!nameInput.value || !emailInput.value || !messageInput.value) {
+            alert("Please fill in all details.");
+            return;
+        }
 
-            const name = nameInput.value;
-            const email = emailInput.value;
-            const message = messageInput.value;
-            const method = methodInput ? methodInput.value : 'whatsapp';
-            
-            const myEmail = "altizsolutionsdz@gmail.com";
-            const myWhatsApp = "213676184805"; 
-            
-            const msg = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
+        const name = nameInput.value;
+        const email = emailInput.value;
+        const message = messageInput.value;
+        const method = methodInput ? methodInput.value : 'whatsapp';
+        
+        const myEmail = "altizsolutionsdz@gmail.com";
+        const myWhatsApp = "213676184805"; 
+        
+        const msg = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
 
-            if (method === 'whatsapp') {
-                window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
-            } else {
-                window.location.href = `mailto:${myEmail}?subject=Project Inquiry&body=${encodeURIComponent(msg)}`;
-            }
+        if (method === 'whatsapp') {
+            window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
+        } else {
+            window.location.href = `mailto:${myEmail}?subject=Project Inquiry&body=${encodeURIComponent(msg)}`;
+        }
 
-            nameInput.value = '';
-            emailInput.value = '';
-            messageInput.value = '';
-        });
-    }
+        nameInput.value = '';
+        emailInput.value = '';
+        messageInput.value = '';
+    });
+}
 
-    // Modal Logic
-    const modal = document.getElementById('samples-modal');
-    const closeBtn = document.querySelector('.modal-close');
+// Modal Logic
+const modal = document.getElementById('samples-modal');
+const closeBtn = document.querySelector('.modal-close');
 
-    if(closeBtn && modal) {
-        closeBtn.onclick = () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        };
-        modal.onclick = (e) => {
-            if (e.target === modal) closeBtn.onclick();
-        };
-    }
+if(closeBtn && modal) {
+    closeBtn.onclick = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+    modal.onclick = (e) => {
+        if (e.target === modal) closeBtn.onclick();
+    };
+}
 });
