@@ -354,43 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Contact Form Logic (Manual Trigger to prevent refresh)
-    const submitBtn = document.getElementById('realSubmitBtn');
-    if (submitBtn) {
-        submitBtn.addEventListener('click', function() {
-            const nameInput = document.getElementById('contactName');
-            const emailInput = document.getElementById('contactEmail');
-            const messageInput = document.getElementById('contactMessage');
-            const methodInput = document.querySelector('input[name="method"]:checked');
-            
-            if (!nameInput.value || !emailInput.value || !messageInput.value) {
-                alert("Please fill in all details.");
-                return;
-            }
-
-            const name = nameInput.value;
-            const email = emailInput.value;
-            const message = messageInput.value;
-            const method = methodInput ? methodInput.value : 'whatsapp';
-            
-            const myEmail = "altizsolutionsdz@gmail.com";
-            const myWhatsApp = "213676184805"; 
-            
-            const msg = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
-
-            if (method === 'whatsapp') {
-                window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
-            } else {
-                window.location.href = `mailto:${myEmail}?subject=Project Inquiry&body=${encodeURIComponent(msg)}`;
-            }
-
-            // Clear inputs manually
-            nameInput.value = '';
-            emailInput.value = '';
-            messageInput.value = '';
-        });
-    }
-
     // Initialize display if data already loaded
     if (typeof renderFilteredProjects === "function") {
         renderFilteredProjects();
