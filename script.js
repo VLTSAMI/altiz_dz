@@ -252,13 +252,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const db = firebase.firestore();
 
         // Improved Helper to convert Drive Link
-        function fixDriveUrl(url) {
+        function fixDriveUrl(url, type = 'image') {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
                 let id = "";
                 if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
                 else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
-                return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+                if (!id) return url;
+                
+                if (type === 'video') {
+                    return `https://docs.google.com/uc?export=download&id=${id}`;
+                }
+                return `https://lh3.googleusercontent.com/d/${id}`;
             }
             return url;
         }
@@ -275,8 +280,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             snapshot.forEach((doc) => {
                 const p = doc.data();
-                const path = fixDriveUrl(p.path);
-                const thumb = fixDriveUrl(p.thumbnail);
+                const path = fixDriveUrl(p.path, p.type);
+                const thumb = fixDriveUrl(p.thumbnail, 'image');
 
                 let mediaHtml = '';
                 if (p.type === 'video') {

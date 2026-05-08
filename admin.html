@@ -382,11 +382,18 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        function fixDriveUrl(url) {
+        function fixDriveUrl(url, type = 'image') {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
                 const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
-                return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+                if (!id) return url;
+                
+                // If it's a video, use the direct stream link
+                if (type === 'video') {
+                    return `https://docs.google.com/uc?export=download&id=${id}`;
+                }
+                // If it's an image, use the fast thumbnail preview
+                return `https://lh3.googleusercontent.com/d/${id}`;
             }
             return url;
         }
@@ -405,11 +412,12 @@
             snap.forEach(doc => {
                 const p = doc.data();
                 const id = doc.id;
-                const path = fixDriveUrl(p.path);
+                const path = fixDriveUrl(p.path, p.type);
+                const thumb = fixDriveUrl(p.thumbnail, 'image');
                 const card = document.createElement('div');
                 card.className = 'project-card';
                 card.innerHTML = `
-                    ${p.type === 'video' ? `<video class="media-preview" src="${path}" muted poster="${fixDriveUrl(p.thumbnail)}"></video>` : `<img class="media-preview" src="${path}">`}
+                    ${p.type === 'video' ? `<video class="media-preview" src="${path}" muted poster="${thumb}"></video>` : `<img class="media-preview" src="${path}">`}
                     <h3 style="margin: 0 0 5px 0; font-size: 1.1rem;">${p.title}</h3>
                     <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1.2rem;">${p.category}</p>
                     <div style="display:flex; gap:10px;">
