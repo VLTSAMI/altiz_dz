@@ -750,7 +750,9 @@ body {
 }
 
 .solution-card:hover .card-decor-top,
-.solution-card:hover .card-decor-bottom {
+.solution-card:hover .card-decor-bottom,
+.category-card:hover .card-decor-top,
+.category-card:hover .card-decor-bottom {
     opacity: 0.5;
 }
 
