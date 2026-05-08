@@ -254,6 +254,10 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
                 Service Plans
             </div>
+            <div class="nav-link" id="nav-sequence" onclick="showTab('sequence')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path></svg>
+                Project Sequence
+            </div>
             
             <div class="status-pill">
                 <span style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent);"></span>
@@ -287,6 +291,19 @@
                 </div>
             </div>
             <div id="plans-list">Loading pricing data...</div>
+        </div>
+
+        <!-- Sequence View -->
+        <div id="sequence-tab" class="tabs-content">
+            <div class="header">
+                <div>
+                    <p style="color: var(--accent); font-weight: 600; margin: 0;">Sorting Center</p>
+                    <h1>Project Sequence</h1>
+                </div>
+            </div>
+            <div id="sequence-list" style="background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 1rem;">
+                <!-- Sequence list will be loaded here -->
+            </div>
         </div>
     </div>
 
@@ -433,7 +450,35 @@
                     </div>`;
                 grid.appendChild(card);
             });
+
+            // Update Sequence List
+            const seqList = document.getElementById('sequence-list');
+            seqList.innerHTML = '';
+            projects.forEach(p => {
+                const item = document.createElement('div');
+                item.style = "display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border);";
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="color: var(--accent); font-weight: bold; width: 30px;">#${p.order || 0}</span>
+                        <img src="${fixDriveUrl(p.thumbnail || p.path, 'image')}" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;">
+                        <span>${p.title}</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="number" value="${p.order || 0}" 
+                            onchange="updateProjectOrder('${p.id}', this.value)"
+                            style="width: 60px; padding: 5px; background: #111; border: 1px solid var(--border); color: #fff; border-radius: 5px; text-align: center;">
+                    </div>
+                `;
+                seqList.appendChild(item);
+            });
         });
+
+        async function updateProjectOrder(id, newOrder) {
+            await db.collection("projects").doc(id).update({
+                order: parseInt(newOrder) || 0,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
 
         async function handleProjectSave(e) {
             e.preventDefault();
