@@ -752,10 +752,9 @@ body {
 
 .solution-card:hover .card-decor-top,
 .solution-card:hover .card-decor-bottom,
-.category-card:hover .card-decor-top,
-.category-card:hover .card-decor-bottom {
+.category-card-wrapper:hover .card-decor-top,
+.category-card-wrapper:hover .card-decor-bottom {
     opacity: 1;
-    transform: translate(0, 0);
 }
 
 .icon-wrapper {
