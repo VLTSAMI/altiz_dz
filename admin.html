@@ -16,6 +16,7 @@
             --text-dim: rgba(255, 255, 255, 0.5);
             --border: rgba(255, 255, 255, 0.08);
             --input-bg: rgba(255, 255, 255, 0.03);
+            --danger: #ef4444;
         }
 
         body {
@@ -139,26 +140,31 @@
         }
 
         .btn-secondary { background: #222; color: #fff; }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
 
         /* Grid Styling */
         .project-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2rem;
         }
 
         .project-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.2rem;
+            border-radius: 20px;
+            padding: 1.5rem;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .project-card:hover {
             background: var(--card-hover);
             border-color: var(--accent);
             transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
         .media-preview {
@@ -168,6 +174,7 @@
             border-radius: 12px;
             margin-bottom: 1.2rem;
             background: #111;
+            border: 1px solid var(--border);
         }
 
         /* Modal & Form Styling */
@@ -175,8 +182,8 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
             z-index: 100;
             align-items: center;
             justify-content: center;
@@ -190,59 +197,123 @@
         .modal-content {
             background: var(--card);
             width: 100%;
-            max-width: 700px;
-            padding: 2.5rem;
-            border-radius: 20px;
+            max-width: 800px;
+            padding: 3rem;
+            border-radius: 24px;
             border: 1px solid var(--border);
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 
         .form-group { margin-bottom: 1.5rem; }
 
-        label { display: block; margin-bottom: 0.6rem; font-size: 0.85rem; font-weight: 500; color: var(--text-dim); }
+        label { display: block; margin-bottom: 0.6rem; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 
         input, select, textarea {
             width: 100%;
             background: var(--input-bg);
             border: 1px solid var(--border);
-            padding: 0.9rem;
-            border-radius: 10px;
+            padding: 1rem;
+            border-radius: 12px;
             color: #fff;
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
-        input:focus, select:focus { border-color: var(--accent); }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); background: rgba(34, 197, 94, 0.03); }
 
-        /* FIX: Dropdown styling for readability */
-        select option {
-            background: #111;
-            color: #fff;
-            padding: 10px;
+        /* Tabs for Multi-Language */
+        .modal-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
         }
 
-        .tabs-content { display: none; animation: slideUp 0.4s ease; }
-        .tabs-content.active { display: block; }
+        .tab-trigger {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-dim);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-trigger.active {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; animation: slideUp 0.3s ease; }
+
         @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .plan-item {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 2rem;
             margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .plan-item:hover {
+            border-color: var(--accent);
+            background: var(--card-hover);
+        }
+
+        .search-bar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            color: #fff;
+            width: 300px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .search-bar input:focus { border: none; background: transparent; }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
 <body>
+    <div id="loading" class="loading-overlay">
+        <div style="color: var(--accent); font-family: 'Space Grotesk'; font-size: 1.5rem; margin-bottom: 2rem;">INITIALIZING CLOUD ENGINE...</div>
+        <button class="btn btn-secondary" onclick="hideLoading()" style="opacity: 0.5; font-size: 0.7rem;">Bypass Loading (If Stuck)</button>
+    </div>
+
     <div class="sidebar">
         <div class="logo">ALTIZ.STUDIO</div>
         <nav>
@@ -279,28 +350,36 @@
                     New Project
                 </button>
             </div>
-            <div class="project-grid" id="project-grid">Loading cloud data...</div>
+
+            <div class="search-bar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.5;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="projectSearch" placeholder="Search projects by title..." oninput="filterProjects()">
+            </div>
+
+            <div class="project-grid" id="project-grid">Waiting for Cloud Sync...</div>
         </div>
 
         <!-- Plans View -->
-        <div id="plans-tab" class="tabs-content">
+        <div id="plans-tab" class="tabs-content" style="display: none;">
             <div class="header">
                 <div>
                     <p style="color: var(--accent); font-weight: 600; margin: 0;">Pricing Engine</p>
                     <h1>Service Plans</h1>
                 </div>
             </div>
-            <div id="plans-list">Loading pricing data...</div>
+            <p style="color: var(--text-dim); margin-bottom: 2rem;">Manage all pricing tiers across the website. Changes are reflected instantly.</p>
+            <div id="plans-list">Waiting for Pricing Engine...</div>
         </div>
 
         <!-- Sequence View -->
-        <div id="sequence-tab" class="tabs-content">
+        <div id="sequence-tab" class="tabs-content" style="display: none;">
             <div class="header">
                 <div>
                     <p style="color: var(--accent); font-weight: 600; margin: 0;">Sorting Center</p>
                     <h1>Project Sequence</h1>
                 </div>
             </div>
+            <p style="color: var(--text-dim); margin-bottom: 2rem;">Drag items to reorder how they appear in your portfolio gallery.</p>
             <div id="sequence-list" style="background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 1rem;">
                 <!-- Sequence list will be loaded here -->
             </div>
@@ -344,40 +423,36 @@
         </div>
     </div>
 
-    <!-- Plan Modal (Multi-Language Support) -->
+    <!-- Plan Modal -->
     <div id="planModal" class="modal">
         <div class="modal-content">
-            <h2 style="margin-top: 0; font-family: 'Space Grotesk'; font-size: 1.8rem;">Edit Plan</h2>
+            <h2 id="planModalTitle" style="margin-top: 0; font-family: 'Space Grotesk'; font-size: 1.8rem;">Configure Plan</h2>
+            <div class="modal-tabs">
+                <div class="tab-trigger active" onclick="switchPlanTab('en')">English</div>
+                <div class="tab-trigger" onclick="switchPlanTab('ar')">العربية</div>
+                <div class="tab-trigger" onclick="switchPlanTab('fr')">Français</div>
+            </div>
+
             <form id="planForm" onsubmit="handlePlanSave(event)">
                 <input type="hidden" id="planId">
-                
-                <div style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
-                    <label style="color: var(--accent); font-weight: bold;">PRICE</label>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Price (English)</label><input type="text" id="price_en" placeholder="8,000 DZD"></div>
-                        <div class="form-group"><label>Price (العربية)</label><input type="text" id="price_ar" placeholder="8,000 دج" dir="rtl"></div>
-                    </div>
+                <div id="tab-en" class="tab-pane active">
+                    <div class="form-group"><label>Price (EN)</label><input type="text" id="price_en"></div>
+                    <div class="form-group"><label>Feature Name (EN)</label><input type="text" id="s1_name_en"></div>
+                    <div class="form-group"><label>Description (EN)</label><textarea id="s1_desc_en" rows="2"></textarea></div>
                 </div>
-
-                <div style="margin-bottom: 1rem;">
-                    <label style="color: var(--accent); font-weight: bold;">FEATURES (English)</label>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Feature 1</label><input type="text" id="s1_name_en"></div>
-                        <div class="form-group"><label>Feature 2</label><input type="text" id="s2_name_en"></div>
-                    </div>
+                <div id="tab-ar" class="tab-pane">
+                    <div class="form-group" dir="rtl"><label>السعر (AR)</label><input type="text" id="price_ar"></div>
+                    <div class="form-group" dir="rtl"><label>اسم الميزة (AR)</label><input type="text" id="s1_name_ar"></div>
+                    <div class="form-group" dir="rtl"><label>الوصف (AR)</label><textarea id="s1_desc_ar" rows="2"></textarea></div>
                 </div>
-
-                <div style="margin-bottom: 1rem;">
-                    <label style="color: var(--accent); font-weight: bold;">المميزات (العربية)</label>
-                    <div class="form-grid" dir="rtl">
-                        <div class="form-group"><label>الميزة 1</label><input type="text" id="s1_name_ar"></div>
-                        <div class="form-group"><label>الميزة 2</label><input type="text" id="s2_name_ar"></div>
-                    </div>
+                <div id="tab-fr" class="tab-pane">
+                    <div class="form-group"><label>Prix (FR)</label><input type="text" id="price_fr"></div>
+                    <div class="form-group"><label>Nom (FR)</label><input type="text" id="s1_name_fr"></div>
+                    <div class="form-group"><label>Description (FR)</label><textarea id="s1_desc_fr" rows="2"></textarea></div>
                 </div>
-
-                <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: flex-end;">
+                <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn" id="planSaveBtn">Sync Cloud</button>
+                    <button type="submit" class="btn">Update Cloud</button>
                 </div>
             </form>
         </div>
@@ -385,8 +460,23 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="pricing_data.js"></script>
 
     <script>
+        // Global variables and safety checks
+        let pricingData = window.pricingData || {};
+        let allProjectsData = [];
+        let cloudPlansData = {};
+
+        function hideLoading() {
+            const loader = document.getElementById('loading');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }
+        }
+
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
             authDomain: "altiz1dz.firebaseapp.com",
@@ -395,247 +485,133 @@
             messagingSenderId: "716320058728",
             appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            // Projects logic
+            db.collection("projects").onSnapshot(snap => {
+                allProjectsData = [];
+                snap.forEach(doc => allProjectsData.push({ id: doc.id, ...doc.data() }));
+                allProjectsData.sort((a, b) => (a.order || 0) - (b.order || 0));
+                renderProjectsList(allProjectsData);
+                renderSequenceList(allProjectsData);
+                hideLoading();
+            }, err => { console.error(err); hideLoading(); });
+
+            // Plans logic
+            db.collection("plans").onSnapshot(snap => {
+                cloudPlansData = {};
+                snap.forEach(doc => cloudPlansData[doc.id] = doc.data());
+                renderPlansList();
+                hideLoading();
+            }, err => { console.error(err); hideLoading(); });
+
+        } catch (e) {
+            console.error("Firebase Init Failed:", e);
+            hideLoading();
+        }
+
+        // --- Core Functions ---
+        function showTab(tab) {
+            document.querySelectorAll('.tabs-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(tab + '-tab').style.display = 'block';
+            document.getElementById('nav-' + tab).classList.add('active');
+        }
+
+        function switchPlanTab(lang) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + lang).classList.add('active');
+            const triggers = document.querySelectorAll('.tab-trigger');
+            if (lang === 'en') triggers[0].classList.add('active');
+            if (lang === 'ar') triggers[1].classList.add('active');
+            if (lang === 'fr') triggers[2].classList.add('active');
+        }
 
         function fixDriveUrl(url, type = 'image') {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
                 const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
                 if (!id) return url;
-                
                 if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
-                if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
-                
-                // Use official Google Drive thumbnail endpoint for images and posters
                 return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
             }
             return url;
         }
 
-        function showTab(tab) {
-            document.querySelectorAll('.tabs-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById(tab + '-tab').classList.add('active');
-            document.getElementById('nav-' + tab).classList.add('active');
-        }
-
-        // Projects logic
-        db.collection("projects").onSnapshot(snap => {
+        function renderProjectsList(projects) {
             const grid = document.getElementById('project-grid');
+            if(!grid) return;
             grid.innerHTML = '';
-            
-            // Convert to array and sort manually in JS to avoid disappearing projects without 'order' field
-            const projects = [];
-            snap.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
-            
-            projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-
             projects.forEach(p => {
-                const id = p.id;
-                const path = fixDriveUrl(p.path, p.type);
-                const thumb = fixDriveUrl(p.thumbnail, 'image');
                 const card = document.createElement('div');
                 card.className = 'project-card';
                 card.innerHTML = `
-                    ${p.type === 'video' ? `<video class="media-preview" src="${path}" muted poster="${thumb}"></video>` : `<img class="media-preview" src="${path}">`}
-                    <h3 style="margin: 0 0 5px 0; font-size: 1.1rem;">${p.title}</h3>
-                    <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem;">${p.category}</p>
-                    <p style="font-size: 0.7rem; opacity: 0.5; margin-bottom: 1.2rem;">Priority Order: ${p.order || 0}</p>
+                    <div style="height: 180px; background: #111; border-radius: 12px; margin-bottom: 1rem; overflow: hidden;">
+                        ${p.type === 'video' ? `<video src="${fixDriveUrl(p.path, 'video')}" muted style="width:100%; height:100%; object-fit:cover;"></video>` : `<img src="${fixDriveUrl(p.path, 'image')}" style="width:100%; height:100%; object-fit:cover;">`}
+                    </div>
+                    <h3 style="margin:0;">${p.title}</h3>
+                    <p style="color:var(--accent); font-size:0.8rem; margin: 5px 0 15px 0;">${p.category}</p>
                     <div style="display:flex; gap:10px;">
-                        <button class="btn btn-secondary" onclick="editProject('${id}')" style="flex:1; padding: 0.5rem;">Edit</button>
-                        <button class="btn btn-secondary" onclick="deleteProject('${id}')" style="flex:0.5; padding: 0.5rem; color: #ff4444;">×</button>
+                        <button class="btn btn-secondary" onclick="editProject('${p.id}')" style="flex:1;">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteProject('${p.id}')">×</button>
                     </div>`;
                 grid.appendChild(card);
             });
-
-            // Update Sequence List
-            const seqList = document.getElementById('sequence-list');
-            seqList.innerHTML = '';
-            projects.forEach((p, index) => {
-                const item = document.createElement('div');
-                item.className = 'sequence-item';
-                item.draggable = true;
-                item.dataset.id = p.id;
-                item.style = "display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border); cursor: grab; background: var(--card); transition: background 0.2s;";
-                item.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 1rem; pointer-events: none;">
-                        <span style="color: var(--accent); font-weight: bold; width: 30px;">#${index + 1}</span>
-                        <img src="${fixDriveUrl(p.thumbnail || p.path, 'image')}" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;">
-                        <span>${p.title}</span>
-                    </div>
-                    <div style="color: var(--text-dim); pointer-events: none;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16M4 16h16"></path></svg>
-                    </div>
-                `;
-                
-                // Drag and Drop Events
-                item.addEventListener('dragstart', (e) => {
-                    e.target.classList.add('dragging');
-                    e.dataTransfer.setData('text/plain', p.id);
-                });
-                item.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
-                
-                seqList.appendChild(item);
-            });
-
-            seqList.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                const draggingItem = document.querySelector('.dragging');
-                const afterElement = getDragAfterElement(seqList, e.clientY);
-                if (afterElement == null) {
-                    seqList.appendChild(draggingItem);
-                } else {
-                    seqList.insertBefore(draggingItem, afterElement);
-                }
-            });
-
-            seqList.addEventListener('drop', async (e) => {
-                e.preventDefault();
-                const items = [...seqList.querySelectorAll('.sequence-item')];
-                const batch = db.batch();
-                items.forEach((item, index) => {
-                    const ref = db.collection("projects").doc(item.dataset.id);
-                    batch.update(ref, { order: index + 1 });
-                });
-                await batch.commit();
-            });
-        });
-
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.sequence-item:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        async function updateProjectOrder(id, newOrder) {
-            await db.collection("projects").doc(id).update({
-                order: parseInt(newOrder) || 1,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        }
-
-        async function handleProjectSave(e) {
-            e.preventDefault();
-            const id = document.getElementById('projectId').value;
-            const data = {
-                title: document.getElementById('title').value,
-                category: document.getElementById('category').value,
-                type: document.getElementById('type').value,
-                path: document.getElementById('path').value,
-                thumbnail: document.getElementById('thumbnail').value,
-                link: document.getElementById('link').value,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            if (id) await db.collection("projects").doc(id).update(data);
-            else {
-                // Auto-increment order
-                const snap = await db.collection("projects").get();
-                let maxOrder = 0;
-                snap.forEach(doc => {
-                    const p = doc.data();
-                    if (p.order > maxOrder) maxOrder = p.order;
-                });
-                data.order = maxOrder + 1;
-                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                await db.collection("projects").add(data);
-            }
-            closeModal();
-        }
-
-        async function editProject(id) {
-            const doc = await db.collection("projects").doc(id).get();
-            const p = doc.data();
-            document.getElementById('projectId').value = id;
-            document.getElementById('title').value = p.title;
-            document.getElementById('category').value = p.category;
-            document.getElementById('type').value = p.type;
-            document.getElementById('path').value = p.path;
-            document.getElementById('thumbnail').value = p.thumbnail || '';
-            document.getElementById('link').value = p.link || '';
-            document.getElementById('modalTitle').textContent = 'Update Project';
-            document.getElementById('projectModal').classList.add('active');
-        }
-
-        function openProjectModal() {
-            document.getElementById('projectForm').reset();
-            document.getElementById('projectId').value = '';
-            document.getElementById('modalTitle').textContent = 'New Project';
-            document.getElementById('projectModal').classList.add('active');
-        }
-
-        async function deleteProject(id) {
-            if (confirm("Permanently delete this project from cloud?")) {
-                await db.collection("projects").doc(id).delete();
-                
-                // Re-index remaining projects to ensure no gaps or duplicates
-                const snap = await db.collection("projects").orderBy("order", "asc").get();
-                const batch = db.batch();
-                let i = 1;
-                snap.forEach(doc => {
-                    batch.update(doc.ref, { order: i++ });
-                });
-                await batch.commit();
-            }
-        }
-
-        // Plans logic
-        db.collection("plans").onSnapshot(snap => {
+        function renderPlansList() {
             const list = document.getElementById('plans-list');
+            if(!list) return;
             list.innerHTML = '';
-            snap.forEach(doc => {
-                const p = doc.data();
-                const card = document.createElement('div');
-                card.className = 'plan-item';
-                card.innerHTML = `
+            Object.keys(pricingData).forEach(id => {
+                const p = { ...pricingData[id], ...cloudPlansData[id] };
+                const item = document.createElement('div');
+                item.className = 'plan-item';
+                item.innerHTML = `
                     <div>
-                        <h3 style="margin:0; font-family: 'Space Grotesk';">${doc.id.replace(/_/g, ' ').toUpperCase()}</h3>
-                        <p style="color:var(--accent); margin:8px 0; font-weight: 600;">${p.price_en || 'Free'}</p>
+                        <h3 style="margin:0;">${id.replace(/_/g, ' ').toUpperCase()}</h3>
+                        <p style="color:var(--accent); margin:5px 0;">${p.price_en || '---'}</p>
                     </div>
-                    <button class="btn" style="background:#222; color:#fff" onclick="editPlan('${doc.id}')">Configure Plan</button>
-                `;
-                list.appendChild(card);
+                    <button class="btn" onclick="editPlan('${id}')">Configure</button>`;
+                list.appendChild(item);
             });
-        });
+        }
 
         async function editPlan(id) {
-            const doc = await db.collection("plans").doc(id).get();
-            const p = doc.data();
+            const p = { ...pricingData[id], ...cloudPlansData[id] };
             document.getElementById('planId').value = id;
-            document.getElementById('price_en').value = p.price_en || '';
-            document.getElementById('price_ar').value = p.price_ar || '';
-            document.getElementById('s1_name_en').value = p.s1_name_en || '';
-            document.getElementById('s2_name_en').value = p.s2_name_en || '';
-            document.getElementById('s1_name_ar').value = p.s1_name_ar || '';
-            document.getElementById('s2_name_ar').value = p.s2_name_ar || '';
+            ['en', 'ar', 'fr'].forEach(lang => {
+                document.getElementById(`price_${lang}`).value = p[`price_${lang}`] || '';
+                document.getElementById(`s1_name_${lang}`).value = p[`s1_name_${lang}`] || '';
+                document.getElementById(`s1_desc_${lang}`).value = p[`s1_desc_${lang}`] || '';
+            });
+            switchPlanTab('en');
             document.getElementById('planModal').classList.add('active');
         }
 
         async function handlePlanSave(e) {
             e.preventDefault();
             const id = document.getElementById('planId').value;
-            const data = {
-                price_en: document.getElementById('price_en').value,
-                price_ar: document.getElementById('price_ar').value,
-                s1_name_en: document.getElementById('s1_name_en').value,
-                s2_name_en: document.getElementById('s2_name_en').value,
-                s1_name_ar: document.getElementById('s1_name_ar').value,
-                s2_name_ar: document.getElementById('s2_name_ar').value,
-            };
-            await db.collection("plans").doc(id).update(data);
+            const data = {};
+            ['en', 'ar', 'fr'].forEach(lang => {
+                data[`price_${lang}`] = document.getElementById(`price_${lang}`).value;
+                data[`s1_name_${lang}`] = document.getElementById(`s1_name_${lang}`).value;
+                data[`s1_desc_${lang}`] = document.getElementById(`s1_desc_${lang}`).value;
+            });
+            await firebase.firestore().collection("plans").doc(id).set(data, { merge: true });
             closeModal();
         }
 
         function closeModal() {
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
         }
+
+        // Final safety: hide loader after 3 seconds no matter what
+        setTimeout(hideLoading, 3000);
     </script>
 </body>
 </html>

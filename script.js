@@ -129,26 +129,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Dynamic Pricing System (Static) ---
-    function loadLocalPlans() {
-        Object.keys(pricingData).forEach(planId => {
-            updatePlanUI(planId, pricingData[planId]);
+    // --- Dynamic Pricing System (Live Firebase) ---
+    async function initPricingSystem() {
+        if (typeof firebase === 'undefined') return;
+        const db = firebase.firestore();
+        
+        // Initial load from local data
+        applyLocalOverrides(savedLang);
+
+        // Listen for live updates
+        db.collection("plans").onSnapshot(snap => {
+            const cloudPlans = {};
+            snap.forEach(doc => {
+                cloudPlans[doc.id] = doc.data();
+            });
+            
+            // Merge cloud data with local fallback
+            window.activePricingData = { ...pricingData, ...cloudPlans };
+            
+            // Re-apply translations with new data
+            const currentLang = localStorage.getItem('preferredLang') || 'en';
+            applyLocalOverrides(currentLang);
         });
     }
 
-    function updatePlanUI(planId, data) {
-        const lang = (localStorage.getItem('selectedLanguage') || 'en').toLowerCase();
+    function applyLocalOverrides(lang) {
+        const dataToUse = window.activePricingData || pricingData;
         
-        // Select the plan card based on child element with data-i18n
-        // This requires a stable way to identify each card.
-        // Let's add IDs to the cards or use specific logic.
-        // For now, we will update the translations object keys dynamically!
-        const suffix = lang === 'ar' ? 'ar' : (lang === 'fr' ? 'fr' : 'en');
-        
-        if (data[`price_${suffix}`]) {
-            // We need to know which translation key to override
-            // This part needs a map of doc IDs to translation keys
-        }
+        Object.keys(dataToUse).forEach(planId => {
+            const data = dataToUse[planId];
+            const fields = ['price', 's1_name', 's1_desc'];
+            
+            fields.forEach(field => {
+                const value = data[`${field}_${lang}`] || data[`${field}_en`];
+                if (value) {
+                    const el = document.querySelector(`[data-plan-id="${planId}"][data-field="${field}"]`);
+                    if (el) el.innerHTML = value;
+                }
+            });
+        });
     }
 
     // Optimized Language Switcher
@@ -201,21 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Load local overrides after setting base language
         applyLocalOverrides(lang);
     }
-
-    function applyLocalOverrides(lang) {
-        Object.keys(pricingData).forEach(planId => {
-            const data = pricingData[planId];
-            const fields = ['price', 's1_name', 's1_desc'];
-            
-            fields.forEach(field => {
-                const value = data[`${field}_${lang}`] || data[`${field}_en`];
-                if (value) {
-                    const el = document.querySelector(`[data-plan-id="${planId}"][data-field="${field}"]`);
-                    if (el) el.innerHTML = value;
-                }
-            });
-        });
-    }
     
     function updateLangUI(langCode) {
         setLanguage(langCode);
@@ -235,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize from storage
     const savedLang = localStorage.getItem('preferredLang') || 'en';
     setLanguage(savedLang);
-    loadLocalPlans();
+    initPricingSystem();
 
     /* ==========================================================================
        Portfolio Rendering (Live Firebase)
