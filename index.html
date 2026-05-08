@@ -302,25 +302,31 @@
                 </div>
 
                 <style>
-                    .category-card {
-                        transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                        z-index: 1;
+                    /* Wrapper handles ALL movement so card + corners move together */
+                    .category-card-wrapper {
+                        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                                    box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
                     }
-                    .category-card:hover {
+                    .category-card-wrapper:hover {
                         transform: translateY(-10px);
                         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
                     }
-                    .category-card:active {
+                    .category-card-wrapper:active {
                         transform: translateY(-5px);
                     }
-                    /* Removed text movement to ensure stability */
+                    .category-card {
+                        transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                        z-index: 1;
+                        display: block;
+                    }
+                    /* Text stays fixed - no movement */
                     .category-card h3, 
                     .category-card p,
                     .category-card div[style*="height: 3px"] {
                         transition: none;
                         transform: none !important;
                     }
-                    .category-card:hover .icon-box {
+                    .category-card-wrapper:hover .icon-box {
                         opacity: 1 !important;
                     }
                     .category-card svg {
@@ -329,19 +335,17 @@
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
-                    .category-card:hover svg {
+                    .category-card-wrapper:hover svg {
                         opacity: 1 !important;
                         color: var(--primary-accent) !important;
                         stroke-width: 1.5;
                         transform: scale(1.1);
                         filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.5));
                     }
-                    /* Removed neon-pulse for a cleaner tech look */
-                    .category-card:active svg {
+                    .category-card-wrapper:active svg {
                         transform: scale(0.98);
                         filter: drop-shadow(0 0 5px var(--primary-accent));
                     }
-                     /* Unification complete - Removed conflicting corner logic */
                 </style>
             </div>
         </section>
