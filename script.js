@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let mediaHtml = '';
                 if (p.type === 'video') {
-                    mediaHtml = `<video src="${path}" muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease;" poster="${thumb}" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>`;
+                    mediaHtml = `<video src="${path}" muted loop playsinline preload="auto" style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; background: #000;" poster="${thumb}" onmouseover="this.play()" onmouseout="this.pause(); this.currentTime=0;"></video>`;
                 } else {
                     mediaHtml = `<img src="${path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Preview'">`;
                 }
