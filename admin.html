@@ -320,6 +320,7 @@
                     <input type="text" id="thumbnail" placeholder="https://...">
                 </div>
                 <div class="form-group"><label>External Link (Optional)</label><input type="url" id="link" placeholder="https://behance.net/..."></div>
+                <div class="form-group"><label>Display Order (Priority - e.g. 1 shows first)</label><input type="number" id="order" placeholder="0" value="0"></div>
                 <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: flex-end;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Dismiss</button>
                     <button type="submit" class="btn" id="projectSaveBtn">Deploy Changes</button>
@@ -405,7 +406,7 @@
         }
 
         // Projects logic
-        db.collection("projects").orderBy("createdAt", "desc").onSnapshot(snap => {
+        db.collection("projects").orderBy("order", "asc").onSnapshot(snap => {
             const grid = document.getElementById('project-grid');
             grid.innerHTML = '';
             snap.forEach(doc => {
@@ -418,7 +419,8 @@
                 card.innerHTML = `
                     ${p.type === 'video' ? `<video class="media-preview" src="${path}" muted poster="${thumb}"></video>` : `<img class="media-preview" src="${path}">`}
                     <h3 style="margin: 0 0 5px 0; font-size: 1.1rem;">${p.title}</h3>
-                    <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 1.2rem;">${p.category}</p>
+                    <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.5rem;">${p.category}</p>
+                    <p style="font-size: 0.7rem; opacity: 0.5; margin-bottom: 1.2rem;">Priority Order: ${p.order || 0}</p>
                     <div style="display:flex; gap:10px;">
                         <button class="btn btn-secondary" onclick="editProject('${id}')" style="flex:1; padding: 0.5rem;">Edit</button>
                         <button class="btn btn-secondary" onclick="deleteProject('${id}')" style="flex:0.5; padding: 0.5rem; color: #ff4444;">×</button>
@@ -437,6 +439,7 @@
                 path: document.getElementById('path').value,
                 thumbnail: document.getElementById('thumbnail').value,
                 link: document.getElementById('link').value,
+                order: parseInt(document.getElementById('order').value) || 0,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             if (id) await db.collection("projects").doc(id).update(data);
@@ -457,6 +460,7 @@
             document.getElementById('path').value = p.path;
             document.getElementById('thumbnail').value = p.thumbnail || '';
             document.getElementById('link').value = p.link || '';
+            document.getElementById('order').value = p.order || 0;
             document.getElementById('modalTitle').textContent = 'Update Project';
             document.getElementById('projectModal').classList.add('active');
         }

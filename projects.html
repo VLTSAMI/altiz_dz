@@ -253,7 +253,7 @@
             }
 
             // Fetch Data
-            db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+            db.collection("projects").orderBy("order", "asc").onSnapshot((snapshot) => {
                 spinner.style.display = 'none';
                 allProjects = [];
                 snapshot.forEach(doc => allProjects.push(doc.data()));

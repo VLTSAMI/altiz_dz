@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return url;
         }
 
-        db.collection("projects").orderBy("createdAt", "desc").limit(6).onSnapshot((snapshot) => {
+        db.collection("projects").orderBy("order", "asc").limit(6).onSnapshot((snapshot) => {
             grid.innerHTML = '';
             
             if (snapshot.empty) {
