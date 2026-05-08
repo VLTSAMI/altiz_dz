@@ -284,12 +284,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const path = fixDriveUrl(p.path, p.type);
                 const thumb = fixDriveUrl(p.thumbnail, 'image');
                 const preview = fixDriveUrl(p.path, 'preview');
+                const displayImage = thumb || path;
 
                 let mediaHtml = '';
                 if (p.type === 'video') {
                     mediaHtml = `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: contain; background: #000;" poster="${thumb}"></video>`;
                 } else {
-                    mediaHtml = `<img src="${path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: contain; background: #000;" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Preview'">`;
+                    mediaHtml = `<img src="${displayImage}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: contain; background: #000;" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Preview'">`;
                 }
 
                 const projectLink = (p.link && p.link !== '#') ? p.link : preview;
