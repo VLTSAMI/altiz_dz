@@ -324,6 +324,15 @@
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
+            // Setup a timeout to catch silent rule blocks
+            const timeout = setTimeout(() => {
+                if (btn.disabled) {
+                    alert("⚠️ الحفظ يستغرق وقتاً طويلاً! \nغالباً المشكلة هي 'Firestore Rules' في حسابك على Firebase. تأكد من ضبط القواعد (Rules) للسماح بالكتابة (allow write: if true).");
+                    btn.disabled = false;
+                    btn.textContent = 'Retry Save';
+                }
+            }, 5000);
+
             try {
                 if (id) {
                     await db.collection("projects").doc(id).update(data);
@@ -331,8 +340,10 @@
                     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection("projects").add(data);
                 }
+                clearTimeout(timeout);
                 closeModal();
             } catch (error) {
+                clearTimeout(timeout);
                 alert("Error saving: " + error.message);
             } finally {
                 btn.disabled = false;
