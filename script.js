@@ -358,9 +358,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize
 renderPortfolio();
 
-// Contact Form Logic
+// Contact Form Logic (Enhanced for Mobile)
 const submitBtn = document.getElementById('realSubmitBtn');
 if (submitBtn) {
+    // UI Logic for Tabs (Fallback for older browsers)
+    const methodLabels = document.querySelectorAll('.method-selector label');
+    methodLabels.forEach(label => {
+        label.addEventListener('click', () => {
+            methodLabels.forEach(l => l.style.color = 'rgba(255,255,255,0.5)');
+            label.style.color = '#000';
+        });
+    });
+
     submitBtn.addEventListener('click', function() {
         const nameInput = document.getElementById('contactName');
         const emailInput = document.getElementById('contactEmail');
@@ -368,7 +377,7 @@ if (submitBtn) {
         const methodInput = document.querySelector('input[name="method"]:checked');
         
         if (!nameInput.value || !emailInput.value || !messageInput.value) {
-            alert("Please fill in all details.");
+            alert("Please complete the transmission parameters (Fill all fields).");
             return;
         }
 
@@ -380,17 +389,32 @@ if (submitBtn) {
         const myEmail = "altizsolutionsdz@gmail.com";
         const myWhatsApp = "213676184805"; 
         
-        const msg = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
+        const msg = `System Inquiry from ${name}\nNode: ${email}\n\nPayload:\n${message}`;
 
         if (method === 'whatsapp') {
-            window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
+            const waUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
         } else {
-            window.location.href = `mailto:${myEmail}?subject=Project Inquiry&body=${encodeURIComponent(msg)}`;
+            // More reliable mailto for mobile
+            const mailtoUrl = `mailto:${myEmail}?subject=Inquiry from ${name}&body=${encodeURIComponent(msg)}`;
+            const tempLink = document.createElement('a');
+            tempLink.href = mailtoUrl;
+            tempLink.click();
         }
 
-        nameInput.value = '';
-        emailInput.value = '';
-        messageInput.value = '';
+        // Success feedback
+        submitBtn.innerText = "DATA TRANSMITTED";
+        submitBtn.style.background = "#fff";
+        submitBtn.style.color = "#000";
+
+        setTimeout(() => {
+            nameInput.value = '';
+            emailInput.value = '';
+            messageInput.value = '';
+            submitBtn.innerText = "TRANSMIT DATA";
+            submitBtn.style.background = "";
+            submitBtn.style.color = "";
+        }, 3000);
     });
 }
 
