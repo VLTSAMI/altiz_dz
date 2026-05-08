@@ -260,9 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
                 if (!id) return url;
                 
-                if (type === 'video') {
-                    return `https://docs.google.com/uc?export=download&id=${id}`;
-                }
+                if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
+                if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
                 return `https://lh3.googleusercontent.com/d/${id}`;
             }
             return url;
@@ -282,6 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const p = doc.data();
                 const path = fixDriveUrl(p.path, p.type);
                 const thumb = fixDriveUrl(p.thumbnail, 'image');
+                const preview = fixDriveUrl(p.path, 'preview');
 
                 let mediaHtml = '';
                 if (p.type === 'video') {
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     mediaHtml = `<img src="${path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Preview'">`;
                 }
 
-                const projectLink = (p.link && p.link !== '#') ? p.link : path;
+                const projectLink = (p.link && p.link !== '#') ? p.link : preview;
 
                 const card = document.createElement('div');
                 card.className = 'portfolio-card animate-on-scroll fade-up is-visible';

@@ -388,11 +388,12 @@
                 const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
                 if (!id) return url;
                 
-                // If it's a video, use the direct stream link
                 if (type === 'video') {
                     return `https://docs.google.com/uc?export=download&id=${id}`;
                 }
-                // If it's an image, use the fast thumbnail preview
+                if (type === 'preview') {
+                    return `https://drive.google.com/file/d/${id}/view`;
+                }
                 return `https://lh3.googleusercontent.com/d/${id}`;
             }
             return url;

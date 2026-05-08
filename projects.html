@@ -184,9 +184,8 @@
                 else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
                 if (!id) return url;
 
-                if (type === 'video') {
-                    return `https://docs.google.com/uc?export=download&id=${id}`;
-                }
+                if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
+                if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
                 return `https://lh3.googleusercontent.com/d/${id}`;
             }
             return url;
@@ -221,6 +220,7 @@
                     card.className = 'project-card';
                     const path = fixDriveUrl(p.path, p.type);
                     const thumb = fixDriveUrl(p.thumbnail, 'image');
+                    const preview = fixDriveUrl(p.path, 'preview');
                     
                     let mediaHtml = '';
                     if (p.type === 'video') {
@@ -229,7 +229,7 @@
                         mediaHtml = `<img src="${path}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Image+Not+Found'">`;
                     }
                     
-                    const projectLink = (p.link && p.link !== '#') ? p.link : path;
+                    const projectLink = (p.link && p.link !== '#') ? p.link : preview;
                     card.innerHTML = `
                         <div class="project-media">${mediaHtml}</div>
                         <div class="project-info">
