@@ -316,24 +316,19 @@
                         z-index: 1;
                     }
                     .category-card:hover {
-                        transform: translateY(-15px) scale(1.02);
+                        transform: translateY(-10px);
                         box-shadow: inset 0 0 0 2px var(--primary-accent), 
-                                    0 30px 60px rgba(0, 0, 0, 0.6),
-                                    0 10px 40px -10px rgba(34, 197, 94, 0.4);
+                                    0 20px 40px rgba(0, 0, 0, 0.4);
                     }
                     .category-card:active {
-                        transform: translateY(-10px) scale(0.98);
-                        filter: brightness(1.2);
+                        transform: translateY(-5px);
                     }
-                    .category-card:hover h3, 
-                    .category-card:hover p,
-                    .category-card:hover div[style*="height: 3px"] {
-                        transform: translateY(-8px);
-                    }
+                    /* Removed text movement to ensure stability */
                     .category-card h3, 
                     .category-card p,
                     .category-card div[style*="height: 3px"] {
-                        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                        transition: none;
+                        transform: none !important;
                     }
                     .category-card:hover .icon-box {
                         opacity: 1 !important;
