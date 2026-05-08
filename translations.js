@@ -37,6 +37,13 @@ const translations = {
         "portfolio_empty": "يتم تحديث قاعدة بيانات المشاريع حالياً. عد قريباً!",
         "view_project": "مشاهدة المشروع",
         "btn_view_projects": "شاهد المشاريع",
+        // Category Cards
+        "filter_web": "تصميم المواقع",
+        "filter_video": "مونتاج الفيديو",
+        "filter_branding": "الهوية الإبداعية",
+        "cat_web_desc": "حلول حديثة وقابلة للتوسع",
+        "cat_video_desc": "رواية بصرية سينمائية",
+        "cat_branding_desc": "استراتيجية بصرية وهوية رقمية",
 
         // Pricing
         "pricing_title": "خطط الاستثمار",
@@ -139,6 +146,13 @@ const translations = {
         "portfolio_empty": "Initializing project database...",
         "view_project": "View Project",
         "btn_view_projects": "View Projects",
+        // Category Cards
+        "filter_web": "Web Design",
+        "filter_video": "Video Editing",
+        "filter_branding": "Creative Branding",
+        "cat_web_desc": "Modern & Scalable Solutions",
+        "cat_video_desc": "Cinematic Storytelling",
+        "cat_branding_desc": "Visual Strategy & Digital Identity",
 
         // Pricing
         "pricing_title": "Investment Plans",
@@ -241,6 +255,13 @@ const translations = {
         "portfolio_empty": "Initialisation...",
         "view_project": "Voir Projet",
         "btn_view_projects": "Voir Projets",
+        // Category Cards
+        "filter_web": "Web Design",
+        "filter_video": "Montage Vidéo",
+        "filter_branding": "Branding Créatif",
+        "cat_web_desc": "Solutions Modernes & Scalables",
+        "cat_video_desc": "Narration Cinématographique",
+        "cat_branding_desc": "Stratégie Visuelle & Identité Digitale",
 
         // Pricing
         "pricing_title": "Plans d'Investissement",
