@@ -159,6 +159,16 @@
                 if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
             });
 
+            // Helper to convert Drive Link
+            function fixDriveUrl(url) {
+                if (!url) return "";
+                if (url.includes("drive.google.com")) {
+                    const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+                    return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+                }
+                return url;
+            }
+
             // Fetch
             db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 spinner.style.display = 'none';
@@ -171,11 +181,15 @@
                     const p = docSnap.data();
                     const card = document.createElement('div');
                     card.className = 'project-card';
-                    let mediaHtml = p.type === 'video' 
-                        ? `<video src="${p.path}" autoplay muted loop playsinline poster="${p.thumbnail || ''}"></video>`
-                        : `<img src="${p.path}" alt="${p.title}" loading="lazy">`;
                     
-                    const projectLink = (p.link && p.link !== '#') ? p.link : p.path;
+                    const path = fixDriveUrl(p.path);
+                    const thumb = fixDriveUrl(p.thumbnail);
+
+                    let mediaHtml = p.type === 'video' 
+                        ? `<video src="${path}" autoplay muted loop playsinline poster="${thumb}"></video>`
+                        : `<img src="${path}" alt="${p.title}" loading="lazy">`;
+                    
+                    const projectLink = (p.link && p.link !== '#') ? p.link : path;
                     card.innerHTML = `
                         <div class="project-media">${mediaHtml}</div>
                         <div class="project-info">

@@ -251,6 +251,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const db = firebase.firestore();
 
+        // Helper to convert Drive Link
+        function fixDriveUrl(url) {
+            if (!url) return "";
+            if (url.includes("drive.google.com")) {
+                const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+                return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+            }
+            return url;
+        }
+
         db.collection("projects").orderBy("createdAt", "desc").limit(6).onSnapshot((snapshot) => {
             grid.innerHTML = '';
             
@@ -263,15 +273,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             snapshot.forEach((doc) => {
                 const p = doc.data();
+                const path = fixDriveUrl(p.path);
+                const thumb = fixDriveUrl(p.thumbnail);
+
                 let mediaHtml = '';
                 if (p.type === 'video') {
-                    let posterAttr = p.thumbnail ? `poster="${p.thumbnail}"` : '';
-                    mediaHtml = `<video src="${p.path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;" ${posterAttr}></video>`;
+                    mediaHtml = `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;" poster="${thumb}"></video>`;
                 } else {
-                    mediaHtml = `<img src="${p.path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">`;
+                    mediaHtml = `<img src="${path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">`;
                 }
 
-                const projectLink = (p.link && p.link !== '#') ? p.link : p.path;
+                const projectLink = (p.link && p.link !== '#') ? p.link : path;
 
                 const card = document.createElement('div');
                 card.className = 'portfolio-card animate-on-scroll fade-up is-visible';

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altiz Admin | Live Firebase Dashboard</title>
+    <title>Altiz Admin | Full Cloud Control</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,206 +13,134 @@
             --text: #ffffff;
             --text-dim: rgba(255, 255, 255, 0.6);
         }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 260px;
-            background: var(--card);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-        }
-        .main {
-            flex: 1;
-            padding: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-            color: var(--accent);
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-        }
-        h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2rem;
-            margin: 0;
-        }
-        .btn {
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .project-card {
-            background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 1.5rem;
-            position: relative;
-        }
-        .project-card img, .project-card video {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal.active {
-            display: flex;
-        }
-        .modal-content {
-            background: var(--card);
-            width: 100%;
-            max-width: 600px;
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-dim);
-        }
-        input, select {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.75rem;
-            border-radius: 6px;
-            color: #fff;
-            box-sizing: border-box;
-            outline: none;
-        }
-        #status-indicator {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-top: 10px;
-        }
-        .status-loading { background: rgba(255, 165, 0, 0.1); color: orange; }
-        .status-error { background: rgba(255, 0, 0, 0.1); color: #ff4444; }
-        .status-ok { background: rgba(34, 197, 94, 0.1); color: var(--accent); }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--card); border-right: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+        .main { flex: 1; padding: 3rem; margin-left: 260px; max-width: 1200px; width: calc(100% - 260px); }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 3rem; color: var(--accent); }
+        .nav-link { color: var(--text-dim); text-decoration: none; padding: 10px; display: block; border-radius: 6px; margin-bottom: 5px; cursor: pointer; }
+        .nav-link.active { background: rgba(34, 197, 94, 0.1); color: var(--accent); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+        .btn { background: var(--accent); color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .project-card { background: var(--card); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem; }
+        .project-card img, .project-card video { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); z-index: 100; align-items: center; justify-content: center; overflow-y: auto; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--card); width: 100%; max-width: 650px; padding: 2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); margin: 2rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.3rem; font-size: 0.8rem; color: var(--text-dim); }
+        input, select, textarea { width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.7rem; border-radius: 6px; color: #fff; box-sizing: border-box; }
+        .tabs-content { display: none; }
+        .tabs-content.active { display: block; }
+        .plan-card { background: var(--card); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">ALTIZ.LIVE</div>
+        <div class="logo">ALTIZ.ADMIN</div>
         <nav>
-            <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase;">Database Status</p>
-            <div id="status-indicator" class="status-loading">Checking connection...</div>
+            <div class="nav-link active" onclick="showTab('projects')">Portfolio Projects</div>
+            <div class="nav-link" onclick="showTab('plans')">Service Plans</div>
+            <div style="margin-top: 2rem; padding: 10px; background: rgba(34, 197, 94, 0.1); color: var(--accent); border-radius: 6px; font-size: 0.8rem;">
+                ● Cloud Connected
+            </div>
         </nav>
     </div>
 
     <div class="main">
-        <div class="header">
-            <div>
-                <h1>Cloud Portfolio Manager</h1>
-                <p style="color: var(--text-dim);">Changes here update the live website instantly via Firebase.</p>
+        <!-- Projects Tab -->
+        <div id="projects-tab" class="tabs-content active">
+            <div class="header">
+                <h1>Portfolio Management</h1>
+                <button class="btn" onclick="openProjectModal()">+ New Project</button>
             </div>
-            <button class="btn" onclick="openModal()">+ Add Live Project</button>
+            <div class="project-grid" id="project-grid">Loading...</div>
         </div>
 
-        <div class="project-grid" id="project-grid">
-            <p id="loading-text">Connecting to Firebase Cloud...</p>
+        <!-- Plans Tab -->
+        <div id="plans-tab" class="tabs-content">
+            <div class="header">
+                <h1>Service Plans</h1>
+                <p style="color: var(--text-dim);">Edit prices and features for your clients.</p>
+            </div>
+            <div id="plans-list">Loading...</div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Project Modal -->
     <div id="projectModal" class="modal">
         <div class="modal-content">
-            <h2 id="modalTitle" style="margin-top: 0;">Add Live Project</h2>
-            <form id="projectForm" onsubmit="handleSave(event)">
+            <h2 id="modalTitle">Project Details</h2>
+            <form id="projectForm" onsubmit="handleProjectSave(event)">
                 <input type="hidden" id="projectId">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" id="title" required>
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="category">
-                        <option value="Web Development">Web Development</option>
-                        <option value="Video Production">Video Production</option>
-                        <option value="Visual Identity">Visual Identity</option>
-                        <option value="Marketing">Marketing</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group"><label>Title</label><input type="text" id="title" required></div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="category">
+                            <option value="Web Development">Web Development</option>
+                            <option value="Video Production">Video Production</option>
+                            <option value="Visual Identity">Visual Identity</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Media Type</label>
-                    <select id="type">
-                        <option value="image">Image</option>
-                        <option value="video">Video</option>
-                    </select>
+                    <select id="type"><option value="image">Image</option><option value="video">Video</option></select>
                 </div>
                 <div class="form-group">
-                    <label>File Path / URL</label>
-                    <input type="text" id="path" required placeholder="portfolio_assets/...">
+                    <label>File URL (Drive link supported)</label>
+                    <input type="text" id="path" required>
                 </div>
                 <div class="form-group">
-                    <label>Thumbnail / Poster (Optional)</label>
-                    <input type="text" id="thumbnail" placeholder="portfolio_assets/...">
+                    <label>Thumbnail URL (for Video Poster)</label>
+                    <input type="text" id="thumbnail">
                 </div>
-                <div class="form-group">
-                    <label>Link (Optional)</label>
-                    <input type="url" id="link">
-                </div>
-                <div style="display: flex; gap: 1rem;">
+                <div class="form-group"><label>Project Link</label><input type="url" id="link"></div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                     <button type="button" class="btn" style="background: #333; color: #fff;" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn" id="saveBtn">Save to Cloud</button>
+                    <button type="submit" class="btn" id="projectSaveBtn">Save Project</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Firebase SDKs (v8 compat for easier integration) -->
+    <!-- Plan Modal -->
+    <div id="planModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Plan Details</h2>
+            <form id="planForm" onsubmit="handlePlanSave(event)">
+                <input type="hidden" id="planId">
+                <div class="form-group">
+                    <label>Price (EN)</label>
+                    <input type="text" id="price_en" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group"><label>Feature 1 Name (EN)</label><input type="text" id="s1_name_en"></div>
+                    <div class="form-group"><label>Feature 1 Desc (EN)</label><input type="text" id="s1_desc_en"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group"><label>Feature 2 Name (EN)</label><input type="text" id="s2_name_en"></div>
+                    <div class="form-group"><label>Feature 2 Desc (EN)</label><input type="text" id="s2_desc_en"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group"><label>Feature 3 Name (EN)</label><input type="text" id="s3_name_en"></div>
+                    <div class="form-group"><label>Feature 3 Desc (EN)</label><input type="text" id="s3_desc_en"></div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button type="button" class="btn" style="background: #333; color: #fff;" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn" id="planSaveBtn">Save Changes</button>
+                </div>
+                <p style="font-size: 0.7rem; color: var(--text-dim); margin-top: 1rem;">Note: Update other languages (AR/FR) in Firestore directly or ask to add them here.</p>
+            </form>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // CONFIG DIRECTLY IN FILE TO PREVENT LOADING ERRORS
         const firebaseConfig = {
             apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
             authDomain: "altiz1dz.firebaseapp.com",
@@ -221,98 +149,64 @@
             messagingSenderId: "716320058728",
             appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
         };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        const statusIndicator = document.getElementById('status-indicator');
-        const grid = document.getElementById('project-grid');
-        const modal = document.getElementById('projectModal');
-        const form = document.getElementById('projectForm');
-
-        try {
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-            console.log("Firebase Initialized");
-
-            // Real-time listener for projects
-            db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-                statusIndicator.className = 'status-ok';
-                statusIndicator.textContent = '● Online (Connected)';
-                grid.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; border: 2px dashed rgba(255,255,255,0.05); border-radius: 12px;"><p style="color: var(--text-dim);">Database is empty. Click "+ Add Live Project" to start.</p></div>';
-                    return;
-                }
-
-                snapshot.forEach((doc) => {
-                    const p = doc.data();
-                    const id = doc.id;
-                    const card = document.createElement('div');
-                    card.className = 'project-card';
-                    
-                    let mediaHtml = '';
-                    if (p.type === 'video') {
-                        mediaHtml = `<video src="${p.path}" muted poster="${p.thumbnail || ''}"></video>`;
-                    } else {
-                        mediaHtml = `<img src="${p.path}" onerror="this.src='https://via.placeholder.com/300x150/111/444?text=Preview'">`;
-                    }
-
-                    card.innerHTML = `
-                        ${mediaHtml}
-                        <h3 style="margin: 0;">${p.title || 'Untitled'}</h3>
-                        <p style="color: var(--accent); margin: 5px 0 15px 0;">${p.category || 'No Category'}</p>
-                        <div style="display: flex; gap: 10px;">
-                            <button onclick="editProject('${id}')" style="flex:1; background:#222; color:#fff; border:none; padding:8px; border-radius:4px; cursor:pointer;">Edit</button>
-                            <button onclick="deleteProject('${id}')" style="flex:1; background:rgba(255,0,0,0.1); color:#ff4444; border:none; padding:8px; border-radius:4px; cursor:pointer;">Delete</button>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }, (error) => {
-                console.error("Firestore Error:", error);
-                statusIndicator.className = 'status-error';
-                statusIndicator.textContent = '● Error: Check Rules';
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #ff4444; padding: 2rem; border: 1px solid rgba(255,0,0,0.2); border-radius: 10px;">
-                    <h3>Connection Error</h3>
-                    <p>${error.message}</p>
-                    <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">Make sure your Firestore Security Rules are set to public for testing.</p>
-                </div>`;
-            });
-
-            window.db = db; // Global access
-        } catch (err) {
-            statusIndicator.className = 'status-error';
-            statusIndicator.textContent = '● Init Error';
-            grid.innerHTML = `<p style="color:red">Init Error: ${err.message}</p>`;
-        }
-
-        function openModal(editData = null) {
-            form.reset();
-            if (editData) {
-                document.getElementById('modalTitle').textContent = 'Edit Project';
-                document.getElementById('projectId').value = editData.id;
-                document.getElementById('title').value = editData.title;
-                document.getElementById('category').value = editData.category;
-                document.getElementById('type').value = editData.type;
-                document.getElementById('path').value = editData.path;
-                document.getElementById('thumbnail').value = editData.thumbnail || '';
-                document.getElementById('link').value = editData.link || '';
-            } else {
-                document.getElementById('modalTitle').textContent = 'Add Live Project';
-                document.getElementById('projectId').value = '';
+        // Helper to convert Drive Link
+        function fixDriveUrl(url) {
+            if (!url) return "";
+            if (url.includes("drive.google.com")) {
+                const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+                return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
             }
-            modal.classList.add('active');
+            return url;
         }
 
-        function closeModal() {
-            modal.classList.remove('active');
+        function showTab(tab) {
+            document.querySelectorAll('.tabs-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+            event.target.classList.add('active');
         }
 
-        async function handleSave(e) {
+        // --- PROJECTS LOGIC ---
+        db.collection("projects").orderBy("createdAt", "desc").onSnapshot(snap => {
+            const grid = document.getElementById('project-grid');
+            grid.innerHTML = '';
+            snap.forEach(doc => {
+                const p = doc.data();
+                const id = doc.id;
+                const path = fixDriveUrl(p.path);
+                const thumb = fixDriveUrl(p.thumbnail);
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    ${p.type === 'video' ? `<video src="${path}" muted poster="${thumb}"></video>` : `<img src="${path}">`}
+                    <h3>${p.title}</h3>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="editProject('${id}')" style="flex:1; cursor:pointer;">Edit</button>
+                        <button onclick="deleteProject('${id}')" style="flex:1; color:red; cursor:pointer;">Delete</button>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        });
+
+        function openProjectModal(data = null) {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = data ? data.id : '';
+            if (data) {
+                document.getElementById('title').value = data.title;
+                document.getElementById('category').value = data.category;
+                document.getElementById('type').value = data.type;
+                document.getElementById('path').value = data.path;
+                document.getElementById('thumbnail').value = data.thumbnail || '';
+                document.getElementById('link').value = data.link || '';
+            }
+            document.getElementById('projectModal').classList.add('active');
+        }
+
+        async function handleProjectSave(e) {
             e.preventDefault();
-            const btn = document.getElementById('saveBtn');
-            btn.disabled = true;
-            btn.textContent = 'Saving...';
-
             const id = document.getElementById('projectId').value;
             const data = {
                 title: document.getElementById('title').value,
@@ -323,43 +217,74 @@
                 link: document.getElementById('link').value,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-
-            // Setup a timeout to catch silent rule blocks
-            const timeout = setTimeout(() => {
-                if (btn.disabled) {
-                    alert("⚠️ الحفظ يستغرق وقتاً طويلاً! \nغالباً المشكلة هي 'Firestore Rules' في حسابك على Firebase. تأكد من ضبط القواعد (Rules) للسماح بالكتابة (allow write: if true).");
-                    btn.disabled = false;
-                    btn.textContent = 'Retry Save';
-                }
-            }, 5000);
-
-            try {
-                if (id) {
-                    await db.collection("projects").doc(id).update(data);
-                } else {
-                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection("projects").add(data);
-                }
-                clearTimeout(timeout);
-                closeModal();
-            } catch (error) {
-                clearTimeout(timeout);
-                alert("Error saving: " + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Save to Cloud';
+            if (id) await db.collection("projects").doc(id).update(data);
+            else {
+                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                await db.collection("projects").add(data);
             }
+            closeModal();
         }
 
         async function editProject(id) {
             const doc = await db.collection("projects").doc(id).get();
-            openModal({ id: doc.id, ...doc.data() });
+            openProjectModal({ id, ...doc.data() });
         }
 
         async function deleteProject(id) {
-            if (confirm("Delete this project from live database?")) {
-                await db.collection("projects").doc(id).delete();
-            }
+            if (confirm("Delete project?")) await db.collection("projects").doc(id).delete();
+        }
+
+        // --- PLANS LOGIC ---
+        db.collection("plans").onSnapshot(snap => {
+            const list = document.getElementById('plans-list');
+            list.innerHTML = '';
+            snap.forEach(doc => {
+                const p = doc.data();
+                const card = document.createElement('div');
+                card.className = 'plan-card';
+                card.innerHTML = `
+                    <div>
+                        <h3 style="margin:0">${doc.id.replace(/_/g, ' ').toUpperCase()}</h3>
+                        <p style="color:var(--accent); margin:5px 0">${p.price_en || 'No price set'}</p>
+                    </div>
+                    <button class="btn" style="background:#222; color:#fff" onclick="editPlan('${doc.id}')">Edit Plan</button>
+                `;
+                list.appendChild(card);
+            });
+        });
+
+        async function editPlan(id) {
+            const doc = await db.collection("plans").doc(id).get();
+            const data = doc.data();
+            document.getElementById('planId').value = id;
+            document.getElementById('price_en').value = data.price_en || '';
+            document.getElementById('s1_name_en').value = data.s1_name_en || '';
+            document.getElementById('s1_desc_en').value = data.s1_desc_en || '';
+            document.getElementById('s2_name_en').value = data.s2_name_en || '';
+            document.getElementById('s2_desc_en').value = data.s2_desc_en || '';
+            document.getElementById('s3_name_en').value = data.s3_name_en || '';
+            document.getElementById('s3_desc_en').value = data.s3_desc_en || '';
+            document.getElementById('planModal').classList.add('active');
+        }
+
+        async function handlePlanSave(e) {
+            e.preventDefault();
+            const id = document.getElementById('planId').value;
+            const data = {
+                price_en: document.getElementById('price_en').value,
+                s1_name_en: document.getElementById('s1_name_en').value,
+                s1_desc_en: document.getElementById('s1_desc_en').value,
+                s2_name_en: document.getElementById('s2_name_en').value,
+                s2_desc_en: document.getElementById('s2_desc_en').value,
+                s3_name_en: document.getElementById('s3_name_en').value,
+                s3_desc_en: document.getElementById('s3_desc_en').value,
+            };
+            await db.collection("plans").doc(id).update(data);
+            closeModal();
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
         }
     </script>
 </body>
