@@ -37,6 +37,8 @@ const translations = {
         "portfolio_empty": "يتم تحديث قاعدة بيانات المشاريع حالياً. عد قريباً!",
         "view_project": "مشاهدة المشروع",
         "btn_view_projects": "شاهد المشاريع",
+        "back_home": "العودة للرئيسية",
+        "filter_all": "الكل",
         // Category Cards
         "filter_web": "تصميم المواقع",
         "filter_video": "مونتاج الفيديو",
@@ -146,6 +148,8 @@ const translations = {
         "portfolio_empty": "Initializing project database...",
         "view_project": "View Project",
         "btn_view_projects": "View Projects",
+        "back_home": "Back to Home",
+        "filter_all": "All",
         // Category Cards
         "filter_web": "Web Design",
         "filter_video": "Video Editing",
@@ -255,6 +259,8 @@ const translations = {
         "portfolio_empty": "Initialisation...",
         "view_project": "Voir Projet",
         "btn_view_projects": "Voir Projets",
+        "back_home": "Retour à l'Accueil",
+        "filter_all": "Tout",
         // Category Cards
         "filter_web": "Web Design",
         "filter_video": "Montage Vidéo",
