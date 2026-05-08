@@ -6,15 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const observerOptions = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.15 // Trigger when 15% of the element is visible
+        threshold: 0.15 
     };
 
-    const observer = new IntersectionObserver((entries, observer) => {
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
-                // Optional: Stop observing once animated
-                // observer.unobserve(entry.target); 
             }
         });
     }, observerOptions);
@@ -23,46 +21,32 @@ document.addEventListener('DOMContentLoaded', () => {
     animatedElements.forEach(el => observer.observe(el));
 
     /* ==========================================================================
-       Smooth Scrolling for Anchor Links (polyfill/enhancement)
+       Smooth Scrolling
        ========================================================================== */
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            
             const targetId = this.getAttribute('href');
             if(targetId === '#') return;
-            
             const targetElement = document.querySelector(targetId);
-            
             if (targetElement) {
-                // Adjust scroll position considering the fixed navbar
-                const headerOffset = 80; // matches var(--nav-height)
+                const headerOffset = 80;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-  
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
+                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
             }
         });
     });
 
     /* ==========================================================================
-       Mobile Menu Toggle
+       Mobile Menu
        ========================================================================== */
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
     if(mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-        
-        // Close menu when clicking a link
+        mobileMenuBtn.addEventListener('click', () => navLinks.classList.toggle('active'));
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
+            link.addEventListener('click', () => navLinks.classList.remove('active'));
         });
     }
 
@@ -74,43 +58,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active class from all
             tabBtns.forEach(b => b.classList.remove('active'));
             tabContents.forEach(c => c.classList.remove('active'));
-
-            // Add active class to clicked
             btn.classList.add('active');
             const targetId = btn.getAttribute('data-target');
             const targetContent = document.getElementById(targetId);
-            
-            if (targetContent) {
-                targetContent.classList.add('active');
-            }
+            if (targetContent) targetContent.classList.add('active');
         });
     });
 
     /* ==========================================================================
-       Language Selection (Native Translation System)
+       Language Selection & Translation System
        ========================================================================== */
     const langLinks = document.querySelectorAll('.lang-dropdown a, .lang-links-mobile a');
     const langBtnText = document.querySelector('.lang-btn span');
     const langBtn = document.getElementById('lang-btn');
     const langDropdown = document.getElementById('lang-dropdown');
 
-    // Toggle dropdown on click (better for mobile)
     if (langBtn && langDropdown) {
         langBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             langDropdown.classList.toggle('active-dropdown');
         });
-
-        // Close dropdown when clicking elsewhere
-        document.addEventListener('click', () => {
-            langDropdown.classList.remove('active-dropdown');
-        });
+        document.addEventListener('click', () => langDropdown.classList.remove('active-dropdown'));
     }
     
-    // Selectors for elements we want to translate
     const translatableSelectors = [
         '.nav-links a', '.btn-cta', '.hero-subtitle', '.tech-badge', 
         '.hero-cta a', '.scroll-indicator p', '.section-title', '.section-desc',
@@ -120,132 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
         '.terminal-body p.output', '.footer-container p'
     ];
 
-    // Store original english text
     const translatableElements = document.querySelectorAll(translatableSelectors.join(', '));
     translatableElements.forEach(el => {
-        // Only target elements directly containing text or specific simple HTML
         if (!el.hasAttribute('data-en')) {
             el.setAttribute('data-en', el.innerHTML.trim());
         }
     });
 
-    // --- Dynamic Pricing System (Live Firebase) ---
-    async function initPricingSystem() {
-        if (typeof firebase === 'undefined') return;
-        const db = firebase.firestore();
-        
-        // Initial load from local data
-        applyLocalOverrides(savedLang);
-
-        // Listen for live updates
-        db.collection("plans").onSnapshot(snap => {
-            const cloudPlans = {};
-            snap.forEach(doc => {
-                cloudPlans[doc.id] = doc.data();
-            });
-            
-            // Merge cloud data with local fallback
-            window.activePricingData = { ...pricingData, ...cloudPlans };
-            
-            // Re-apply translations with new data
-            const currentLang = localStorage.getItem('preferredLang') || 'en';
-            applyLocalOverrides(currentLang);
-        });
-    }
-
-    function applyLocalOverrides(lang) {
-        const dataToUse = window.activePricingData || pricingData;
-        
-        Object.keys(dataToUse).forEach(planId => {
-            const data = dataToUse[planId];
-            const fields = ['price', 's1_name', 's1_desc'];
-            
-            fields.forEach(field => {
-                const value = data[`${field}_${lang}`] || data[`${field}_en`];
-                if (value) {
-                    const el = document.querySelector(`[data-plan-id="${planId}"][data-field="${field}"]`);
-                    if (el) el.innerHTML = value;
-                }
-            });
-        });
-    }
-
-    // Optimized Language Switcher
-    function setLanguage(lang) {
-        localStorage.setItem('preferredLang', lang);
-        document.documentElement.lang = lang;
-        
-        // Toggle RTL and update button text
-        if (lang === 'ar') {
-            document.body.classList.add('rtl-layout');
-            if (langBtnText) langBtnText.textContent = 'AR';
-        } else if (lang === 'fr') {
-            document.body.classList.remove('rtl-layout');
-            if (langBtnText) langBtnText.textContent = 'FR';
-        } else {
-            document.body.classList.remove('rtl-layout');
-            if (langBtnText) langBtnText.textContent = 'EN';
-        }
-
-        // 1. Apply translations via data-i18n (Primary)
-        const elements = document.querySelectorAll('[data-i18n]');
-        elements.forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[lang] && translations[lang][key]) {
-                el.innerHTML = translations[lang][key];
-            }
-        });
-
-        // 2. Fallback: Apply translations via text matching (Secondary)
-        translatableElements.forEach(el => {
-            if (el.hasAttribute('data-i18n')) return; 
-            
-            const enText = el.getAttribute('data-en');
-            if (lang === 'en') {
-                el.innerHTML = enText;
-            } else if (translations[lang] && translations[lang][enText]) {
-                el.innerHTML = translations[lang][enText];
-            }
-        });
-
-        // Handle placeholders
-        const inputs = document.querySelectorAll('[data-i18n-placeholder]');
-        inputs.forEach(input => {
-            const key = input.getAttribute('data-i18n-placeholder');
-            if (translations[lang] && translations[lang][key]) {
-                input.placeholder = translations[lang][key];
-            }
-        });
-
-        // Load local overrides after setting base language
-        applyLocalOverrides(lang);
-    }
-    
-    function updateLangUI(langCode) {
-        setLanguage(langCode);
-    }
-
-    langLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const langCode = link.getAttribute('data-lang');
-            updateLangUI(langCode);
-            
-            // Close mobile menu if open
-            if(navLinks) navLinks.classList.remove('active');
-        });
-    });
-
-    // Initialize from storage
-    const savedLang = localStorage.getItem('preferredLang') || 'en';
-    setLanguage(savedLang);
-    initPricingSystem();
-
-    /* ==========================================================================
-       Portfolio Rendering (Live Firebase)
-       ========================================================================== */
-    function renderPortfolio() {
-        // Firebase Config & Init
+    // --- Dynamic Sync Engine (Firestore) ---
     const firebaseConfig = {
         apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
         authDomain: "altiz1dz.firebaseapp.com",
@@ -257,182 +111,184 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
-        // Enable Offline Persistence for faster loading
-        firebase.firestore().enablePersistence().catch(err => console.error("Persistence failed", err));
     }
     const db = firebase.firestore();
 
-    function fixDriveUrl(url, type = 'image') {
-        if (!url) return "";
-        if (url.includes("drive.google.com")) {
-            let id = "";
-            if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
-            else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
-            if (!id) return url;
-            if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
-            if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
-            return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-        }
-        return url;
-    }
-
-    const grid = document.getElementById('portfolio-grid');
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    let allProjects = [];
-    let currentFilter = 'all';
-
-    function renderFilteredProjects() {
-        if (!grid) return;
-        grid.innerHTML = '';
+    async function initPricingSystem() {
+        const savedLang = localStorage.getItem('preferredLang') || 'en';
         
-        let filtered = currentFilter === 'all' 
-            ? allProjects 
-            : allProjects.filter(p => p.category === currentFilter);
-
-        if (filtered.length === 0) {
-            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; opacity: 0.5;">No projects found in this category.</div>`;
-            return;
-        }
-
-        filtered.slice(0, 6).forEach((p) => {
-            const path = fixDriveUrl(p.path, p.type);
-            const thumb = fixDriveUrl(p.thumbnail, 'image');
-            const preview = fixDriveUrl(p.path, 'preview');
-            const displayImage = thumb || path;
-            const projectLink = (p.link && p.link !== '#') ? p.link : preview;
-
-            const card = document.createElement('div');
-            card.className = 'portfolio-card animate-on-scroll fade-up is-visible';
-            card.style = "position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 16/9; background: #0a0a0a;";
+        // Listen for live updates
+        db.collection("plans").onSnapshot(snap => {
+            const cloudPlans = {};
+            snap.forEach(doc => { cloudPlans[doc.id] = doc.data(); });
             
-            let mediaHtml = p.type === 'video' 
-                ? `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: contain;" poster="${thumb}"></video>`
-                : `<img src="${displayImage}" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy">`;
-
-            card.innerHTML = `
-                ${mediaHtml}
-                <div class="portfolio-overlay" style="position: absolute; inset: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease;">
-                    <span style="color: var(--primary-accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">${p.category}</span>
-                    <h3 style="margin: 5px 0 15px; font-size: 1.1rem;">${p.title}</h3>
-                    <a href="${projectLink}" target="_blank" style="color: #fff; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
-                        View Project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                    </a>
-                </div>
-            `;
+            // Access pricingData globally
+            const localData = window.pricingData || {};
+            window.activePricingData = { ...localData, ...cloudPlans };
             
-            card.addEventListener('mouseenter', () => card.querySelector('.portfolio-overlay').style.opacity = '1');
-            card.addEventListener('mouseleave', () => card.querySelector('.portfolio-overlay').style.opacity = '0');
-            
-            grid.appendChild(card);
+            const currentLang = localStorage.getItem('preferredLang') || 'en';
+            applyLocalOverrides(currentLang);
         });
     }
 
-    if (grid) {
-        db.collection("projects").onSnapshot((snapshot) => {
-            if (snapshot.metadata.fromCache && snapshot.empty) return;
+    function applyLocalOverrides(lang) {
+        const dataToUse = window.activePricingData || window.pricingData || {};
+        
+        Object.keys(dataToUse).forEach(planId => {
+            const data = dataToUse[planId];
+            const fields = ['price', 's1_name', 's1_desc'];
             
-            allProjects = [];
-            snapshot.forEach(doc => allProjects.push({ id: doc.id, ...doc.data() }));
-            allProjects.sort((a, b) => (a.order || 0) - (b.order || 0));
-            
-            renderFilteredProjects();
-        }, (error) => {
-            console.error("Firebase Error:", error);
-            grid.innerHTML = '<p style="text-align:center; color:red;">Connection Error. Please refresh.</p>';
-        });
-
-        // Filter Button Logic
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => {
-                    b.classList.remove('active');
-                    b.style.background = 'rgba(255,255,255,0.05)';
-                    b.style.color = '#fff';
-                });
-                btn.classList.add('active');
-                btn.style.background = 'var(--primary-accent)';
-                btn.style.color = '#000';
-                currentFilter = btn.dataset.filter;
-                renderFilteredProjects();
+            fields.forEach(field => {
+                const value = data[`${field}_${lang}`] || data[`${field}_en`];
+                if (value) {
+                    const elements = document.querySelectorAll(`[data-plan-id="${planId}"][data-field="${field}"]`);
+                    elements.forEach(el => {
+                        el.innerHTML = value;
+                        // Important: Prevent static translation from overwriting this again
+                        el.setAttribute('data-sync-active', 'true');
+                    });
+                }
             });
         });
     }
-} // <--- Added this to properly close renderPortfolio
 
-// Initialize
-renderPortfolio();
+    function setLanguage(lang) {
+        localStorage.setItem('preferredLang', lang);
+        document.documentElement.lang = lang;
+        
+        if (lang === 'ar') {
+            document.body.classList.add('rtl-layout');
+            if (langBtnText) langBtnText.textContent = 'AR';
+        } else if (lang === 'fr') {
+            document.body.classList.remove('rtl-layout');
+            if (langBtnText) langBtnText.textContent = 'FR';
+        } else {
+            document.body.classList.remove('rtl-layout');
+            if (langBtnText) langBtnText.textContent = 'EN';
+        }
 
-// Contact Form Logic (Enhanced for Mobile)
-const submitBtn = document.getElementById('realSubmitBtn');
-if (submitBtn) {
-    // UI Logic for Tabs (Fallback for older browsers)
-    const methodLabels = document.querySelectorAll('.method-selector label');
-    methodLabels.forEach(label => {
-        label.addEventListener('click', () => {
-            methodLabels.forEach(l => l.style.color = 'rgba(255,255,255,0.5)');
-            label.style.color = '#000';
+        // Apply translations
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(el => {
+            // Skip if this field is currently being managed by the Dynamic Sync Engine
+            if (el.hasAttribute('data-sync-active')) return;
+
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                el.innerHTML = translations[lang][key];
+            }
+        });
+
+        // Fallback translation
+        translatableElements.forEach(el => {
+            if (el.hasAttribute('data-i18n') || el.hasAttribute('data-sync-active')) return; 
+            const enText = el.getAttribute('data-en');
+            if (lang === 'en') el.innerHTML = enText;
+            else if (translations[lang] && translations[lang][enText]) el.innerHTML = translations[lang][enText];
+        });
+
+        const inputs = document.querySelectorAll('[data-i18n-placeholder]');
+        inputs.forEach(input => {
+            const key = input.getAttribute('data-i18n-placeholder');
+            if (translations[lang] && translations[lang][key]) input.placeholder = translations[lang][key];
+        });
+
+        applyLocalOverrides(lang);
+    }
+    
+    langLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const langCode = link.getAttribute('data-lang');
+            setLanguage(langCode);
+            if(navLinks) navLinks.classList.remove('active');
         });
     });
 
-    submitBtn.addEventListener('click', function() {
-        const nameInput = document.getElementById('contactName');
-        const emailInput = document.getElementById('contactEmail');
-        const messageInput = document.getElementById('contactMessage');
-        const methodInput = document.querySelector('input[name="method"]:checked');
-        
-        if (!nameInput.value || !emailInput.value || !messageInput.value) {
-            alert("Please complete the transmission parameters (Fill all fields).");
-            return;
+    // Initialize Language & Pricing
+    const initialLang = localStorage.getItem('preferredLang') || 'en';
+    setLanguage(initialLang);
+    initPricingSystem();
+
+    /* ==========================================================================
+       Portfolio Rendering
+       ========================================================================== */
+    function renderPortfolio() {
+        function fixDriveUrl(url, type = 'image') {
+            if (!url) return "";
+            if (url.includes("drive.google.com")) {
+                let id = "";
+                if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
+                else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
+                if (!id) return url;
+                if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
+                return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+            }
+            return url;
         }
 
-        const name = nameInput.value;
-        const email = emailInput.value;
-        const message = messageInput.value;
-        const method = methodInput ? methodInput.value : 'whatsapp';
-        
-        const myEmail = "altizsolutionsdz@gmail.com";
-        const myWhatsApp = "213676184805"; 
-        
-        const msg = `System Inquiry from ${name}\nNode: ${email}\n\nPayload:\n${message}`;
+        const grid = document.getElementById('portfolio-grid');
+        if (!grid) return;
 
-        if (method === 'whatsapp') {
-            const waUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`;
-            window.open(waUrl, '_blank');
-        } else {
-            // More reliable mailto for mobile
-            const mailtoUrl = `mailto:${myEmail}?subject=Inquiry from ${name}&body=${encodeURIComponent(msg)}`;
-            const tempLink = document.createElement('a');
-            tempLink.href = mailtoUrl;
-            tempLink.click();
-        }
+        db.collection("projects").onSnapshot(snapshot => {
+            grid.innerHTML = '';
+            const projects = [];
+            snapshot.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
+            projects.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-        // Success feedback
-        submitBtn.innerText = "DATA TRANSMITTED";
-        submitBtn.style.background = "#fff";
-        submitBtn.style.color = "#000";
+            projects.slice(0, 6).forEach(p => {
+                const path = fixDriveUrl(p.path, p.type);
+                const thumb = fixDriveUrl(p.thumbnail || p.path, 'image');
+                
+                const card = document.createElement('div');
+                card.className = 'portfolio-card animate-on-scroll fade-up is-visible';
+                card.style = "position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 16/9; background: #0a0a0a;";
+                
+                let mediaHtml = p.type === 'video' 
+                    ? `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;" poster="${thumb}"></video>`
+                    : `<img src="${thumb}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">`;
 
-        setTimeout(() => {
-            nameInput.value = '';
-            emailInput.value = '';
-            messageInput.value = '';
-            submitBtn.innerText = "TRANSMIT DATA";
-            submitBtn.style.background = "";
-            submitBtn.style.color = "";
-        }, 3000);
-    });
-}
+                card.innerHTML = `
+                    ${mediaHtml}
+                    <div class="portfolio-overlay" style="position: absolute; inset: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease;">
+                        <span style="color: var(--primary-accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">${p.category}</span>
+                        <h3 style="margin: 5px 0 15px; font-size: 1.1rem;">${p.title}</h3>
+                        <a href="${p.link || '#'}" target="_blank" style="color: #fff; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
+                            View Project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                        </a>
+                    </div>`;
+                
+                card.addEventListener('mouseenter', () => card.querySelector('.portfolio-overlay').style.opacity = '1');
+                card.addEventListener('mouseleave', () => card.querySelector('.portfolio-overlay').style.opacity = '0');
+                grid.appendChild(card);
+            });
+        });
+    }
 
-// Modal Logic
-const modal = document.getElementById('samples-modal');
-const closeBtn = document.querySelector('.modal-close');
+    renderPortfolio();
 
-if(closeBtn && modal) {
-    closeBtn.onclick = () => {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    };
-    modal.onclick = (e) => {
-        if (e.target === modal) closeBtn.onclick();
-    };
-}
+    /* ==========================================================================
+       Contact Form Logic
+       ========================================================================== */
+    const submitBtn = document.getElementById('realSubmitBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            const method = document.querySelector('input[name="method"]:checked')?.value || 'whatsapp';
+            
+            if (!name || !email || !message) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            const msg = `System Inquiry from ${name}\nNode: ${email}\n\nPayload:\n${message}`;
+            if (method === 'whatsapp') {
+                window.open(`https://wa.me/213676184805?text=${encodeURIComponent(msg)}`, '_blank');
+            } else {
+                window.location.href = `mailto:altizsolutionsdz@gmail.com?subject=Inquiry from ${name}&body=${encodeURIComponent(msg)}`;
+            }
+        });
+    }
 });
