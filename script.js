@@ -357,15 +357,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Contact Form Logic
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.onsubmit = (e) => { 
             e.preventDefault();
+        };
+        
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
             const nameInput = document.getElementById('contactName');
             const emailInput = document.getElementById('contactEmail');
             const messageInput = document.getElementById('contactMessage');
             const methodInput = document.querySelector('input[name="method"]:checked');
             
             if (!nameInput || !emailInput || !messageInput || !methodInput) {
-                console.error("Form fields not found");
                 return;
             }
 
@@ -377,29 +382,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const myEmail = "altizsolutionsdz@gmail.com";
             const myWhatsApp = "213676184805"; 
             
-            const fullMessage = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
+            const msg = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
 
             if (method === 'whatsapp') {
-                const encodedMsg = encodeURIComponent(fullMessage);
-                window.open(`https://wa.me/${myWhatsApp}?text=${encodedMsg}`, '_blank');
+                window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
             } else {
-                const subject = encodeURIComponent(`New Project Inquiry from ${name}`);
-                const body = encodeURIComponent(fullMessage);
-                window.location.href = `mailto:${myEmail}?subject=${subject}&body=${body}`;
+                window.location.href = `mailto:${myEmail}?subject=Inquiry&body=${encodeURIComponent(msg)}`;
             }
 
-            // Reset form after a short delay
-            setTimeout(() => contactForm.reset(), 1000);
+            setTimeout(() => contactForm.reset(), 500);
+            return false;
         });
     }
 
-    // Call it
-    renderPortfolio();
+    // Initialize display if data already loaded
+    if (typeof renderFilteredProjects === "function") {
+        renderFilteredProjects();
     }
 
-    /* ==========================================================================
-       Modal (Removed Cloud Logic)
-       ========================================================================== */
+    // Modal Logic
     const modal = document.getElementById('samples-modal');
     const closeBtn = document.querySelector('.modal-close');
 
