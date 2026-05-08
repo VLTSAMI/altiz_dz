@@ -3,17 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ==========================================================================
        Intersection Observer for Scroll Reveal Animations
        ========================================================================== */
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.15 
-    };
-
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-            }
+            if (entry.isIntersecting) entry.target.classList.add('is-visible');
         });
     }, observerOptions);
 
@@ -94,48 +87,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const translatableElements = document.querySelectorAll(translatableSelectors.join(', '));
     translatableElements.forEach(el => {
-        if (!el.hasAttribute('data-en')) {
-            el.setAttribute('data-en', el.innerHTML.trim());
-        }
+        if (!el.hasAttribute('data-en')) el.setAttribute('data-en', el.innerHTML.trim());
     });
 
     // --- Dynamic Sync Engine (Firestore) ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
-        authDomain: "altiz1dz.firebaseapp.com",
-        projectId: "altiz1dz",
-        storageBucket: "altiz1dz.firebasestorage.app",
-        messagingSenderId: "716320058728",
-        appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
-    };
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
-
-    async function initPricingSystem() {
-        const savedLang = localStorage.getItem('preferredLang') || 'en';
-        
-        // Listen for live updates
-        db.collection("plans").onSnapshot(snap => {
-            const cloudPlans = {};
-            snap.forEach(doc => { cloudPlans[doc.id] = doc.data(); });
-            
-            // Access pricingData globally
-            const localData = window.pricingData || {};
-            window.activePricingData = { ...localData, ...cloudPlans };
-            
-            const currentLang = localStorage.getItem('preferredLang') || 'en';
-            applyLocalOverrides(currentLang);
-        });
-    }
-
     function applyLocalOverrides(lang) {
-        const dataToUse = window.activePricingData || window.pricingData || {};
+        // Use window.pricingData from pricing_data.js and window.activePricingData from Firestore
+        const baseData = window.pricingData || {};
+        const cloudData = window.activePricingData || {};
+        const combined = { ...baseData, ...cloudData };
         
-        Object.keys(dataToUse).forEach(planId => {
-            const data = dataToUse[planId];
+        Object.keys(combined).forEach(planId => {
+            const data = combined[planId];
             const fields = ['price', 's1_name', 's1_desc'];
             
             fields.forEach(field => {
@@ -144,11 +107,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const elements = document.querySelectorAll(`[data-plan-id="${planId}"][data-field="${field}"]`);
                     elements.forEach(el => {
                         el.innerHTML = value;
-                        // Important: Prevent static translation from overwriting this again
                         el.setAttribute('data-sync-active', 'true');
                     });
                 }
             });
+        });
+    }
+
+    function initPricingSystem() {
+        if (typeof firebase === 'undefined') return;
+        // Use global db if available, else get from firebase
+        const firestore = (typeof db !== 'undefined') ? db : firebase.firestore();
+
+        firestore.collection("plans").onSnapshot(snap => {
+            const cloudPlans = {};
+            snap.forEach(doc => { cloudPlans[doc.id] = doc.data(); });
+            window.activePricingData = cloudPlans;
+            
+            const currentLang = localStorage.getItem('preferredLang') || 'en';
+            applyLocalOverrides(currentLang);
         });
     }
 
@@ -170,9 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Apply translations
         const elements = document.querySelectorAll('[data-i18n]');
         elements.forEach(el => {
-            // Skip if this field is currently being managed by the Dynamic Sync Engine
-            if (el.hasAttribute('data-sync-active')) return;
-
             const key = el.getAttribute('data-i18n');
             if (translations[lang] && translations[lang][key]) {
                 el.innerHTML = translations[lang][key];
@@ -181,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fallback translation
         translatableElements.forEach(el => {
-            if (el.hasAttribute('data-i18n') || el.hasAttribute('data-sync-active')) return; 
+            if (el.hasAttribute('data-i18n')) return; 
             const enText = el.getAttribute('data-en');
             if (lang === 'en') el.innerHTML = enText;
             else if (translations[lang] && translations[lang][enText]) el.innerHTML = translations[lang][enText];
@@ -193,19 +167,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (translations[lang] && translations[lang][key]) input.placeholder = translations[lang][key];
         });
 
+        // Override with dynamic cloud data
         applyLocalOverrides(lang);
     }
     
     langLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const langCode = link.getAttribute('data-lang');
-            setLanguage(langCode);
+            setLanguage(link.getAttribute('data-lang'));
             if(navLinks) navLinks.classList.remove('active');
         });
     });
 
-    // Initialize Language & Pricing
+    // Initialize
     const initialLang = localStorage.getItem('preferredLang') || 'en';
     setLanguage(initialLang);
     initPricingSystem();
@@ -214,32 +188,25 @@ document.addEventListener('DOMContentLoaded', () => {
        Portfolio Rendering
        ========================================================================== */
     function renderPortfolio() {
-        function fixDriveUrl(url, type = 'image') {
-            if (!url) return "";
-            if (url.includes("drive.google.com")) {
-                let id = "";
-                if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
-                else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
-                if (!id) return url;
-                if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
-                return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-            }
-            return url;
-        }
-
+        if (typeof firebase === 'undefined') return;
+        const firestore = (typeof db !== 'undefined') ? db : firebase.firestore();
         const grid = document.getElementById('portfolio-grid');
         if (!grid) return;
 
-        db.collection("projects").onSnapshot(snapshot => {
+        firestore.collection("projects").onSnapshot(snapshot => {
             grid.innerHTML = '';
             const projects = [];
             snapshot.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
             projects.sort((a, b) => (a.order || 0) - (b.order || 0));
 
             projects.slice(0, 6).forEach(p => {
-                const path = fixDriveUrl(p.path, p.type);
-                const thumb = fixDriveUrl(p.thumbnail || p.path, 'image');
-                
+                const path = p.path && p.path.includes("drive.google.com") 
+                    ? `https://docs.google.com/uc?export=download&id=${p.path.split("/d/")[1]?.split("/")[0] || p.path.split("id=")[1]?.split("&")[0]}`
+                    : p.path;
+                const thumb = p.thumbnail && p.thumbnail.includes("drive.google.com")
+                    ? `https://drive.google.com/thumbnail?id=${p.thumbnail.split("/d/")[1]?.split("/")[0] || p.thumbnail.split("id=")[1]?.split("&")[0]}&sz=w1000`
+                    : (p.thumbnail || path);
+
                 const card = document.createElement('div');
                 card.className = 'portfolio-card animate-on-scroll fade-up is-visible';
                 card.style = "position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 16/9; background: #0a0a0a;";
@@ -264,11 +231,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
     renderPortfolio();
 
     /* ==========================================================================
-       Contact Form Logic
+       Contact Form
        ========================================================================== */
     const submitBtn = document.getElementById('realSubmitBtn');
     if (submitBtn) {
@@ -277,18 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('contactEmail').value;
             const message = document.getElementById('contactMessage').value;
             const method = document.querySelector('input[name="method"]:checked')?.value || 'whatsapp';
-            
-            if (!name || !email || !message) {
-                alert("Please fill all fields.");
-                return;
-            }
-
-            const msg = `System Inquiry from ${name}\nNode: ${email}\n\nPayload:\n${message}`;
-            if (method === 'whatsapp') {
-                window.open(`https://wa.me/213676184805?text=${encodeURIComponent(msg)}`, '_blank');
-            } else {
-                window.location.href = `mailto:altizsolutionsdz@gmail.com?subject=Inquiry from ${name}&body=${encodeURIComponent(msg)}`;
-            }
+            if (!name || !email || !message) return alert("Please fill all fields.");
+            const msg = `Inquiry from ${name}\nNode: ${email}\n\nPayload:\n${message}`;
+            if (method === 'whatsapp') window.open(`https://wa.me/213676184805?text=${encodeURIComponent(msg)}`, '_blank');
+            else window.location.href = `mailto:altizsolutionsdz@gmail.com?subject=Inquiry from ${name}&body=${encodeURIComponent(msg)}`;
         });
     }
 });
