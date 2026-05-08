@@ -388,13 +388,11 @@
                 const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
                 if (!id) return url;
                 
-                if (type === 'video') {
-                    return `https://docs.google.com/uc?export=download&id=${id}`;
-                }
-                if (type === 'preview') {
-                    return `https://drive.google.com/file/d/${id}/view`;
-                }
-                return `https://lh3.googleusercontent.com/d/${id}`;
+                if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
+                if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
+                
+                // Use official Google Drive thumbnail endpoint for images and posters
+                return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
             }
             return url;
         }

@@ -262,7 +262,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
                 if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
-                return `https://lh3.googleusercontent.com/d/${id}`;
+                
+                // Use official Google Drive thumbnail endpoint
+                return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
             }
             return url;
         }
