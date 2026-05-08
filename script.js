@@ -251,11 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const db = firebase.firestore();
 
-        // Helper to convert Drive Link
+        // Improved Helper to convert Drive Link
         function fixDriveUrl(url) {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
-                const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+                let id = "";
+                if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
+                else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
                 return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
             }
             return url;
@@ -278,9 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let mediaHtml = '';
                 if (p.type === 'video') {
-                    mediaHtml = `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;" poster="${thumb}"></video>`;
+                    mediaHtml = `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;" poster="${thumb}" onerror="this.style.display='none'"></video>`;
                 } else {
-                    mediaHtml = `<img src="${path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">`;
+                    mediaHtml = `<img src="${path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Preview'">`;
                 }
 
                 const projectLink = (p.link && p.link !== '#') ? p.link : path;

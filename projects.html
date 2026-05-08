@@ -175,11 +175,14 @@
             appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
         };
 
-        // Helper to convert Drive Link
+        // Improved Helper to convert Drive Link
         function fixDriveUrl(url) {
             if (!url) return "";
             if (url.includes("drive.google.com")) {
-                const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+                let id = "";
+                if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
+                else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
+                
                 return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
             }
             return url;
@@ -198,11 +201,10 @@
             // Set Language logic
             const lang = localStorage.getItem('preferredLang') || 'en';
             document.documentElement.lang = lang;
-            if(lang === 'ar') document.body.classList.add('rtl-layout');
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
-            });
+            if(lang === 'ar') {
+                document.body.classList.add('rtl-layout');
+                document.body.style.direction = 'rtl';
+            }
 
             function renderProjects(projects) {
                 grid.innerHTML = '';
@@ -215,9 +217,13 @@
                     card.className = 'project-card';
                     const path = fixDriveUrl(p.path);
                     const thumb = fixDriveUrl(p.thumbnail);
-                    let mediaHtml = p.type === 'video' 
-                        ? `<video src="${path}" autoplay muted loop playsinline poster="${thumb}"></video>`
-                        : `<img src="${path}" alt="${p.title}" loading="lazy">`;
+                    
+                    let mediaHtml = '';
+                    if (p.type === 'video') {
+                        mediaHtml = `<video src="${path}" autoplay muted loop playsinline poster="${thumb}" onerror="this.style.display='none'"></video>`;
+                    } else {
+                        mediaHtml = `<img src="${path}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Image+Not+Found'">`;
+                    }
                     
                     const projectLink = (p.link && p.link !== '#') ? p.link : path;
                     card.innerHTML = `
