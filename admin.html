@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altiz Dashboard | Code Generator</title>
+    <title>Altiz Dashboard | Fast Editor</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -158,7 +158,7 @@
         <div class="logo">ALTIZ.ADMIN</div>
         <nav>
             <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Management</p>
-            <div class="nav-item active">Portfolio Generator</div>
+            <div class="nav-item active">Portfolio Editor</div>
         </nav>
     </div>
 
@@ -166,10 +166,9 @@
         <div class="header">
             <div>
                 <h1>Portfolio Data Manager</h1>
-                <p style="color: var(--text-dim); margin-top: 5px;">This tool generates the secure code for your portfolio_data.js file.</p>
+                <p style="color: var(--text-dim); margin-top: 5px;">Any Add/Edit/Delete action will automatically download the updated data file.</p>
             </div>
             <div>
-                <button class="btn-outline" onclick="openCodeModal()" style="margin-right: 10px;">Export Final Code</button>
                 <button class="btn" onclick="openProjectModal()">+ Add New Project</button>
             </div>
         </div>
@@ -179,10 +178,10 @@
         </div>
     </div>
 
-    <!-- Add Project Modal -->
+    <!-- Add/Edit Project Modal -->
     <div id="projectModal" class="modal">
         <div class="modal-content">
-            <h2 style="margin-top: 0;">Add New Project</h2>
+            <h2 id="modal-title" style="margin-top: 0;">Add New Project</h2>
             <form id="projectForm" onsubmit="saveProject(event)">
                 <div class="form-group">
                     <label>Project Title</label>
@@ -220,29 +219,9 @@
                 </div>
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button type="button" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="closeModal('projectModal')">Cancel</button>
-                    <button type="submit" class="btn" style="flex: 1;">Add to List</button>
+                    <button type="submit" class="btn" style="flex: 1;">Save Project</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- Export Code Modal -->
-    <div id="codeModal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
-            <h2 style="margin-top: 0; color: var(--accent);">Export Generated Code</h2>
-            <p style="color: var(--text-dim); margin-bottom: 1rem;">
-                1. Click "Copy Code" below.<br>
-                2. Open the file <strong>portfolio_data.js</strong> in your code editor.<br>
-                3. Paste and replace everything inside it.<br>
-                4. Commit and push to GitHub.
-            </p>
-            <div class="form-group">
-                <textarea id="generatedCode" rows="15" readonly></textarea>
-            </div>
-            <div style="display: flex; gap: 1rem;">
-                <button type="button" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="closeModal('codeModal')">Close</button>
-                <button type="button" class="btn" style="flex: 1;" onclick="copyCode()">Copy Code</button>
-            </div>
         </div>
     </div>
 
@@ -252,13 +231,15 @@
     <script>
         // Use the loaded 'projects' array from portfolio_data.js
         let currentProjects = typeof projects !== 'undefined' ? [...projects] : [];
+        let editingIndex = -1; // -1 means adding new, otherwise it's the index being edited
 
         function renderProjects() {
             const grid = document.getElementById('admin-project-grid');
             grid.innerHTML = '';
             
             // Show newest first visually
-            [...currentProjects].reverse().forEach((p, index) => {
+            [...currentProjects].reverse().forEach((p, revIndex) => {
+                const actualIndex = currentProjects.length - 1 - revIndex;
                 const card = document.createElement('div');
                 card.className = 'project-card';
                 
@@ -276,30 +257,43 @@
                     <h3 style="margin-top: 0;">${p.title}</h3>
                     <p style="color: var(--accent); font-size: 0.8rem; margin: 0 0 1rem 0;">${p.category}</p>
                     ${p.thumbnail ? `<p style="font-size: 0.75rem; color: var(--text-dim);">+ Has Thumbnail</p>` : ''}
-                    <button onclick="removeProject(${currentProjects.length - 1 - index})" style="background: rgba(255,50,50,0.1); color: #ff3232; border: 1px solid rgba(255,50,50,0.3); padding: 5px 10px; border-radius: 4px; cursor: pointer; width: 100%;">Remove</button>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button onclick="editProject(${actualIndex})" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 8px; border-radius: 4px; cursor: pointer;">Edit</button>
+                        <button onclick="removeProject(${actualIndex})" style="flex: 1; background: rgba(255,50,50,0.1); color: #ff3232; border: 1px solid rgba(255,50,50,0.3); padding: 8px; border-radius: 4px; cursor: pointer;">Remove</button>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        function editProject(index) {
+            editingIndex = index;
+            const p = currentProjects[index];
+            
+            document.getElementById('title').value = p.title || '';
+            document.getElementById('category').value = p.category || 'Web Development';
+            document.getElementById('type').value = p.type || 'image';
+            document.getElementById('path').value = p.path || '';
+            document.getElementById('thumbnail').value = p.thumbnail || '';
+            document.getElementById('link').value = p.link || '';
+
+            document.getElementById('modal-title').textContent = 'Edit Project';
+            document.getElementById('projectModal').classList.add('active');
         }
 
         function removeProject(actualIndex) {
             if(confirm("Are you sure you want to remove this project?")) {
                 currentProjects.splice(actualIndex, 1);
                 renderProjects();
+                triggerDownload();
             }
         }
 
         function openProjectModal() {
+            editingIndex = -1; // Reset to Add mode
             document.getElementById('projectForm').reset();
+            document.getElementById('modal-title').textContent = 'Add New Project';
             document.getElementById('projectModal').classList.add('active');
-        }
-
-        function openCodeModal() {
-            const codeArea = document.getElementById('generatedCode');
-            // Format beautifully
-            const jsonString = JSON.stringify(currentProjects, null, 4);
-            codeArea.value = `const projects = ${jsonString};\n`;
-            document.getElementById('codeModal').classList.add('active');
         }
 
         function closeModal(id) {
@@ -321,19 +315,37 @@
             const link = document.getElementById('link').value.trim();
             if (link) newProject.link = link;
 
-            currentProjects.push(newProject);
+            if (editingIndex >= 0) {
+                // Edit existing
+                currentProjects[editingIndex] = newProject;
+            } else {
+                // Add new
+                currentProjects.push(newProject);
+            }
+
             renderProjects();
             closeModal('projectModal');
-            
-            // Highlight the export button
-            alert("Project added to list! Don't forget to click 'Export Final Code' to save your changes to the file.");
+            triggerDownload();
         }
 
-        function copyCode() {
-            const codeArea = document.getElementById('generatedCode');
-            codeArea.select();
-            document.execCommand('copy');
-            alert("Code copied to clipboard! Now paste it into your portfolio_data.js file.");
+        function triggerDownload() {
+            // Generate the JavaScript content
+            const jsonString = JSON.stringify(currentProjects, null, 4);
+            const content = \`const projects = \${jsonString};\n\`;
+            
+            // Create a Blob and trigger download
+            const blob = new Blob([content], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'portfolio_data.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert("تم التحديث! تمت عملية التحميل التلقائي لملف portfolio_data.js. \n\nالخطوة الأخيرة: قم بنقل الملف المحمل ووافق على استبداله بالملف القديم في مجلد موقعك، ثم ارفع التغييرات إلى Github.");
         }
 
         // Initial render
