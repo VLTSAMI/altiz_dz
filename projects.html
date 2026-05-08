@@ -148,11 +148,10 @@
     </header>
 
     <div class="filter-container">
-        <button class="filter-btn active" data-filter="all">All Projects</button>
-        <button class="filter-btn" data-filter="Web Development">Web Development</button>
-        <button class="filter-btn" data-filter="Video Production">Video Production</button>
-        <button class="filter-btn" data-filter="Visual Identity">Visual Identity</button>
-        <button class="filter-btn" data-filter="Marketing">Marketing</button>
+        <button class="filter-btn active" data-filter="all" data-i18n="filter_all">All</button>
+        <button class="filter-btn" data-filter="Web Development" data-i18n="filter_web">Web Development</button>
+        <button class="filter-btn" data-filter="Video Production" data-i18n="filter_video">Video Production</button>
+        <button class="filter-btn" data-filter="Creative Branding" data-i18n="filter_branding">Creative Branding</button>
     </div>
 
     <div class="projects-container">
@@ -275,6 +274,13 @@
                 const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
                 if(activeFilter === 'all') {
                     renderProjects(allProjects);
+                } else if(activeFilter === 'Creative Branding') {
+                    // Show new branding + old visual/marketing categories
+                    renderProjects(allProjects.filter(p => 
+                        p.category === 'Creative Branding' || 
+                        p.category === 'Visual Identity' || 
+                        p.category === 'Marketing'
+                    ));
                 } else {
                     renderProjects(allProjects.filter(p => p.category === activeFilter));
                 }
