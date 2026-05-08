@@ -241,92 +241,92 @@ document.addEventListener('DOMContentLoaded', () => {
        Portfolio Rendering (Live Firebase)
        ========================================================================== */
     function renderPortfolio() {
-        const grid = document.getElementById('portfolio-grid');
-        if (!grid) return;
+        // Firebase Config & Init
+    const firebaseConfig = {
+        apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
+        authDomain: "altiz1dz.firebaseapp.com",
+        projectId: "altiz1dz",
+        storageBucket: "altiz1dz.firebasestorage.app",
+        messagingSenderId: "716320058728",
+        appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
+    };
 
-        if (typeof firebase === 'undefined') {
-            console.error("Firebase not loaded yet");
-            return;
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        // Enable Offline Persistence for faster loading
+        firebase.firestore().enablePersistence().catch(err => console.error("Persistence failed", err));
+    }
+    const db = firebase.firestore();
+
+    function fixDriveUrl(url, type = 'image') {
+        if (!url) return "";
+        if (url.includes("drive.google.com")) {
+            let id = "";
+            if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
+            else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
+            if (!id) return url;
+            if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
+            if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
+            return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
         }
+        return url;
+    }
 
-        const db = firebase.firestore();
-
-        // Improved Helper to convert Drive Link
-        function fixDriveUrl(url, type = 'image') {
-            if (!url) return "";
-            if (url.includes("drive.google.com")) {
-                let id = "";
-                if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
-                else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
-                if (!id) return url;
-                
-                if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
-                if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
-                
-                // Use official Google Drive thumbnail endpoint
-                return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-            }
-            return url;
-        }
-
+    const grid = document.getElementById('portfolio-grid');
+    if (grid) {
         db.collection("projects").onSnapshot((snapshot) => {
-            grid.innerHTML = '';
+            if (snapshot.metadata.fromCache && snapshot.empty) return; // Wait for server if cache is empty
             
+            grid.innerHTML = '';
             if (snapshot.empty) {
-                grid.innerHTML = `<div class="portfolio-empty-state" style="grid-column: 1/-1; text-align: center; padding: 2rem;">
-                    <p data-i18n="portfolio_empty">No projects found in database.</p>
-                </div>`;
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; opacity: 0.5;">No projects yet.</div>`;
                 return;
             }
 
             const projects = [];
             snapshot.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
-
-            // Sort by order ASC, then take first 6
             projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-            const topProjects = projects.slice(0, 6);
-
-            topProjects.forEach((p) => {
+            
+            projects.slice(0, 6).forEach((p) => {
                 const path = fixDriveUrl(p.path, p.type);
                 const thumb = fixDriveUrl(p.thumbnail, 'image');
                 const preview = fixDriveUrl(p.path, 'preview');
                 const displayImage = thumb || path;
-
-                let mediaHtml = '';
-                if (p.type === 'video') {
-                    mediaHtml = `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: contain; background: #000;" poster="${thumb}"></video>`;
-                } else {
-                    mediaHtml = `<img src="${displayImage}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: contain; background: #000;" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Preview'">`;
-                }
-
                 const projectLink = (p.link && p.link !== '#') ? p.link : preview;
 
                 const card = document.createElement('div');
                 card.className = 'portfolio-card animate-on-scroll fade-up is-visible';
-                card.style.position = 'relative';
-                card.style.overflow = 'hidden';
-                card.style.borderRadius = '16px';
-                card.style.aspectRatio = '16/9';
+                card.style = "position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 16/9; background: #0a0a0a;";
+                
+                let mediaHtml = p.type === 'video' 
+                    ? `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: contain;" poster="${thumb}"></video>`
+                    : `<img src="${displayImage}" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy">`;
+
                 card.innerHTML = `
                     ${mediaHtml}
-                    <div class="portfolio-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
-                        <span class="portfolio-category" style="color: var(--primary-accent); font-size: 0.8rem; text-transform: uppercase;">${p.category}</span>
-                        <h3 class="portfolio-title" style="margin: 0.5rem 0;">${p.title}</h3>
-                        <a href="${projectLink}" target="_blank" class="portfolio-link" style="color: #fff; text-decoration: none; border-bottom: 1px solid var(--primary-accent); padding-bottom: 2px;">
-                            View Project
+                    <div class="portfolio-overlay" style="position: absolute; inset: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease;">
+                        <span style="color: var(--primary-accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">${p.category}</span>
+                        <h3 style="margin: 5px 0 15px; font-size: 1.1rem;">${p.title}</h3>
+                        <a href="${projectLink}" target="_blank" style="color: #fff; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
+                            View Project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                         </a>
                     </div>
                 `;
+                
+                card.addEventListener('mouseenter', () => card.querySelector('.portfolio-overlay').style.opacity = '1');
+                card.addEventListener('mouseleave', () => card.querySelector('.portfolio-overlay').style.opacity = '0');
+                
                 grid.appendChild(card);
-                if(observer) observer.observe(card);
             });
         }, (error) => {
-            console.error("Home Firebase Error:", error);
+            console.error("Firebase Error:", error);
+            grid.innerHTML = '<p style="text-align:center; color:red;">Connection Error. Please refresh.</p>';
         });
     }
 
     // Call it
     renderPortfolio();
+    }
 
     /* ==========================================================================
        Modal (Removed Cloud Logic)
