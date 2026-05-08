@@ -359,13 +359,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.getElementById('contactName').value;
-            const email = document.getElementById('contactEmail').value;
-            const message = document.getElementById('contactMessage').value;
-            const method = document.querySelector('input[name="method"]:checked').value;
+            const nameInput = document.getElementById('contactName');
+            const emailInput = document.getElementById('contactEmail');
+            const messageInput = document.getElementById('contactMessage');
+            const methodInput = document.querySelector('input[name="method"]:checked');
+            
+            if (!nameInput || !emailInput || !messageInput || !methodInput) {
+                console.error("Form fields not found");
+                return;
+            }
+
+            const name = nameInput.value;
+            const email = emailInput.value;
+            const message = messageInput.value;
+            const method = methodInput.value;
             
             const myEmail = "altizsolutionsdz@gmail.com";
-            const myWhatsApp = "213550000000"; // Replace with your actual number
+            const myWhatsApp = "213676184805"; 
             
             const fullMessage = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
 
@@ -377,6 +387,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const body = encodeURIComponent(fullMessage);
                 window.location.href = `mailto:${myEmail}?subject=${subject}&body=${body}`;
             }
+
+            // Reset form after a short delay
+            setTimeout(() => contactForm.reset(), 1000);
         });
     }
 
