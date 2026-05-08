@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <script src="translations.js"></script>
     <style>
-        body { background: #050505; color: #fff; }
+        body { background: #050505; color: #fff; margin: 0; font-family: 'Inter', sans-serif; }
         .portfolio-header {
             padding: 8rem 2rem 4rem;
             text-align: center;
@@ -64,27 +64,57 @@
             background: var(--primary-accent);
             color: #000;
         }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .portfolio-card {
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .portfolio-card video, .portfolio-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            transition: all 0.3s ease;
+        }
+        .portfolio-category {
+            font-size: 0.8rem;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .portfolio-title {
+            font-size: 1.2rem;
+            margin: 0 0 1rem 0;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .portfolio-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--primary-accent);
+            padding-bottom: 2px;
+        }
 
         /* RTL Support */
-        .rtl-layout {
-            direction: rtl;
-            text-align: right;
-        }
-        .rtl-layout .back-home {
-            left: auto;
-            right: 2rem;
-            flex-direction: row-reverse;
-        }
-        .rtl-layout .filter-btn {
-            font-family: inherit;
-        }
-        .rtl-layout .portfolio-card {
-            text-align: right;
-        }
-        .rtl-layout .portfolio-category {
-            margin-left: auto;
-            margin-right: 0;
-        }
+        .rtl-layout { direction: rtl; text-align: right; }
+        .rtl-layout .back-home { left: auto; right: 2rem; flex-direction: row-reverse; }
     </style>
 </head>
 <body>
@@ -95,7 +125,7 @@
 
     <header class="portfolio-header">
         <h1 class="section-title" style="margin-bottom: 1rem;" data-i18n="our_projects">Our Projects</h1>
-        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;" data-i18n="portfolio_desc">Explore our latest work across digital development, cinematic production, and visual branding.</p>
+        <p style="color: #888; max-width: 600px; margin: 0 auto;" data-i18n="portfolio_desc">Explore our latest work across digital development, cinematic production, and visual branding.</p>
     </header>
 
     <div class="portfolio-container">
@@ -110,11 +140,7 @@
         <div id="portfolio-grid" class="portfolio-grid">
             <!-- Projects will load here -->
         </div>
-
-        <div id="debug-info" style="margin-top: 2rem; padding: 1rem; background: #222; color: #0f0; font-family: monospace; font-size: 12px; display: none; white-space: pre-wrap; text-align: left; border: 1px solid #333;"></div>
-        <button onclick="toggleDebug()" style="margin: 2rem auto; display: block; background: none; border: 1px solid #333; color: #555; cursor: pointer; font-size: 10px;">Debug Sync</button>
     </div>
-
 
     <!-- Portfolio Data -->
     <script src="portfolio_data.js"></script>
@@ -144,7 +170,7 @@
                 }
 
                 const card = document.createElement('div');
-                card.className = 'portfolio-card active';
+                card.className = 'portfolio-card';
                 card.innerHTML = `
                     ${mediaHtml}
                     <div class="portfolio-overlay">
@@ -161,19 +187,18 @@
             }
         }
 
-        // Initial load
-        window.onload = () => loadProjects();
+        // Wait for script to load
+        window.addEventListener('load', () => {
+            loadProjects();
+            
+            filterBtns.forEach(btn => {
+                btn.onclick = () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadProjects(btn.dataset.filter);
+                };
+            });
 
-        // Filtering logic
-        filterBtns.forEach(btn => {
-            btn.onclick = () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                loadProjects(btn.dataset.filter);
-            };
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('preferredLang') === 'ar') {
                 document.body.classList.add('rtl-layout');
             }
