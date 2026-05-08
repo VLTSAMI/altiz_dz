@@ -273,54 +273,84 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const grid = document.getElementById('portfolio-grid');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    let allProjects = [];
+    let currentFilter = 'all';
+
+    function renderFilteredProjects() {
+        if (!grid) return;
+        grid.innerHTML = '';
+        
+        let filtered = currentFilter === 'all' 
+            ? allProjects 
+            : allProjects.filter(p => p.category === currentFilter);
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; opacity: 0.5;">No projects found in this category.</div>`;
+            return;
+        }
+
+        filtered.slice(0, 6).forEach((p) => {
+            const path = fixDriveUrl(p.path, p.type);
+            const thumb = fixDriveUrl(p.thumbnail, 'image');
+            const preview = fixDriveUrl(p.path, 'preview');
+            const displayImage = thumb || path;
+            const projectLink = (p.link && p.link !== '#') ? p.link : preview;
+
+            const card = document.createElement('div');
+            card.className = 'portfolio-card animate-on-scroll fade-up is-visible';
+            card.style = "position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 16/9; background: #0a0a0a;";
+            
+            let mediaHtml = p.type === 'video' 
+                ? `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: contain;" poster="${thumb}"></video>`
+                : `<img src="${displayImage}" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy">`;
+
+            card.innerHTML = `
+                ${mediaHtml}
+                <div class="portfolio-overlay" style="position: absolute; inset: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease;">
+                    <span style="color: var(--primary-accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">${p.category}</span>
+                    <h3 style="margin: 5px 0 15px; font-size: 1.1rem;">${p.title}</h3>
+                    <a href="${projectLink}" target="_blank" style="color: #fff; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
+                        View Project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                    </a>
+                </div>
+            `;
+            
+            card.addEventListener('mouseenter', () => card.querySelector('.portfolio-overlay').style.opacity = '1');
+            card.addEventListener('mouseleave', () => card.querySelector('.portfolio-overlay').style.opacity = '0');
+            
+            grid.appendChild(card);
+        });
+    }
+
     if (grid) {
         db.collection("projects").onSnapshot((snapshot) => {
-            if (snapshot.metadata.fromCache && snapshot.empty) return; // Wait for server if cache is empty
+            if (snapshot.metadata.fromCache && snapshot.empty) return;
             
-            grid.innerHTML = '';
-            if (snapshot.empty) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 2rem; opacity: 0.5;">No projects yet.</div>`;
-                return;
-            }
-
-            const projects = [];
-            snapshot.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
-            projects.sort((a, b) => (a.order || 0) - (b.order || 0));
+            allProjects = [];
+            snapshot.forEach(doc => allProjects.push({ id: doc.id, ...doc.data() }));
+            allProjects.sort((a, b) => (a.order || 0) - (b.order || 0));
             
-            projects.slice(0, 6).forEach((p) => {
-                const path = fixDriveUrl(p.path, p.type);
-                const thumb = fixDriveUrl(p.thumbnail, 'image');
-                const preview = fixDriveUrl(p.path, 'preview');
-                const displayImage = thumb || path;
-                const projectLink = (p.link && p.link !== '#') ? p.link : preview;
-
-                const card = document.createElement('div');
-                card.className = 'portfolio-card animate-on-scroll fade-up is-visible';
-                card.style = "position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 16/9; background: #0a0a0a;";
-                
-                let mediaHtml = p.type === 'video' 
-                    ? `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: contain;" poster="${thumb}"></video>`
-                    : `<img src="${displayImage}" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy">`;
-
-                card.innerHTML = `
-                    ${mediaHtml}
-                    <div class="portfolio-overlay" style="position: absolute; inset: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease;">
-                        <span style="color: var(--primary-accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">${p.category}</span>
-                        <h3 style="margin: 5px 0 15px; font-size: 1.1rem;">${p.title}</h3>
-                        <a href="${projectLink}" target="_blank" style="color: #fff; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
-                            View Project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                        </a>
-                    </div>
-                `;
-                
-                card.addEventListener('mouseenter', () => card.querySelector('.portfolio-overlay').style.opacity = '1');
-                card.addEventListener('mouseleave', () => card.querySelector('.portfolio-overlay').style.opacity = '0');
-                
-                grid.appendChild(card);
-            });
+            renderFilteredProjects();
         }, (error) => {
             console.error("Firebase Error:", error);
             grid.innerHTML = '<p style="text-align:center; color:red;">Connection Error. Please refresh.</p>';
+        });
+
+        // Filter Button Logic
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.style.background = 'rgba(255,255,255,0.05)';
+                    b.style.color = '#fff';
+                });
+                btn.classList.add('active');
+                btn.style.background = 'var(--primary-accent)';
+                btn.style.color = '#000';
+                currentFilter = btn.dataset.filter;
+                renderFilteredProjects();
+            });
         });
     }
 

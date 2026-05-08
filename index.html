@@ -223,8 +223,16 @@
                     <h2 class="section-title" data-i18n="portfolio_title">Our Works</h2>
                     <p class="section-desc" data-i18n="portfolio_desc">A showcase of logic-driven creativity and technical excellence.</p>
                 </div>
+            
+            <div class="filter-container" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap;">
+                <button class="filter-btn active" data-filter="all" style="padding: 0.6rem 1.5rem; border-radius: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; transition: 0.3s;" data-i18n="filter_all">All</button>
+                <button class="filter-btn" data-filter="Web Development" style="padding: 0.6rem 1.5rem; border-radius: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; transition: 0.3s;" data-i18n="filter_web">Web</button>
+                <button class="filter-btn" data-filter="Video Production" style="padding: 0.6rem 1.5rem; border-radius: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; transition: 0.3s;" data-i18n="filter_video">Video</button>
+                <button class="filter-btn" data-filter="Visual Identity" style="padding: 0.6rem 1.5rem; border-radius: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; transition: 0.3s;" data-i18n="filter_visual">Visual</button>
+                <button class="filter-btn" data-filter="Marketing" style="padding: 0.6rem 1.5rem; border-radius: 50px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; transition: 0.3s;" data-i18n="filter_marketing">Marketing</button>
+            </div>
 
-                <div class="portfolio-grid" id="portfolio-grid">
+            <div class="portfolio-grid" id="portfolio-grid">
                     <!-- Project cards will be dynamically injected here -->
                     <div class="portfolio-empty-state">
                         <p>Initializing project database...</p>
