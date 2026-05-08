@@ -44,11 +44,15 @@
         .tab-pane.active { display: block; }
         .plan-item { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
         .sequence-item { background: var(--card); border: 1px solid var(--border); padding: 1rem 1.5rem; border-radius: 15px; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 20px; cursor: grab; }
-        .sequence-item:active { cursor: grabbing; }
         .handle { color: var(--text-dim); cursor: grab; font-size: 1.5rem; }
+        #status-bar { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; display: none; z-index: 1000; font-weight: 600; }
+        .status-success { background: var(--accent); color: #000; }
+        .status-error { background: var(--danger); color: #fff; }
     </style>
 </head>
 <body>
+    <div id="status-bar"></div>
+
     <div class="sidebar">
         <div class="logo">ALTIZ.STUDIO</div>
         <nav>
@@ -97,7 +101,7 @@
                 </div>
                 <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Dismiss</button>
-                    <button type="submit" class="btn">Save Changes</button>
+                    <button type="submit" class="btn" id="projectSubmitBtn">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -131,7 +135,7 @@
                 </div>
                 <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn">Update Cloud</button>
+                    <button type="submit" class="btn" id="planSubmitBtn">Update Cloud</button>
                 </div>
             </form>
         </div>
@@ -152,6 +156,14 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+
+        function showStatus(msg, type) {
+            const bar = document.getElementById('status-bar');
+            bar.innerText = msg;
+            bar.className = 'status-' + type;
+            bar.style.display = 'block';
+            setTimeout(() => bar.style.display = 'none', 3000);
+        }
 
         function showTab(t) {
             document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
@@ -175,7 +187,6 @@
             return t === 'video' ? `https://docs.google.com/uc?export=download&id=${id}` : `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
         }
 
-        // Projects & Sorting
         let projectsData = [];
         db.collection("projects").onSnapshot(snap => {
             projectsData = [];
@@ -193,7 +204,7 @@
                 g.innerHTML += `<div class="project-card">
                     <img src="${fixDriveUrl(thumb, 'image')}" class="media-preview">
                     <h3>${p.title}</h3>
-                    <p style="color:var(--accent); font-size:0.8rem">ORDER: ${p.order || 0} | ${p.category}</p>
+                    <p style="color:var(--accent); font-size:0.8rem">ORDER: ${p.order || 0}</p>
                     <div style="display:flex; gap:10px; margin-top:15px;">
                         <button class="btn btn-secondary" style="flex:1" onclick="editProject('${p.id}')">Edit</button>
                         <button class="btn btn-danger" onclick="deleteProject('${p.id}')">×</button>
@@ -214,18 +225,14 @@
                     <div style="color:var(--accent)">#${p.order || 0}</div>
                 </div>`;
             });
-
             new Sortable(s, {
-                animation: 150,
-                handle: '.handle',
+                animation: 150, handle: '.handle',
                 onEnd: async function() {
-                    const items = s.querySelectorAll('.sequence-item');
                     const batch = db.batch();
-                    items.forEach((item, index) => {
-                        const id = item.getAttribute('data-id');
-                        batch.update(db.collection("projects").doc(id), { order: index });
+                    s.querySelectorAll('.sequence-item').forEach((item, index) => {
+                        batch.update(db.collection("projects").doc(item.getAttribute('data-id')), { order: index });
                     });
-                    await batch.commit();
+                    await batch.commit().then(() => showStatus("Order Saved!", "success")).catch(e => showStatus(e.message, "error"));
                 }
             });
         }
@@ -253,6 +260,8 @@
 
         async function handleProjectSave(e) {
             e.preventDefault();
+            const btn = document.getElementById('projectSubmitBtn');
+            btn.innerText = "Saving...";
             const id = document.getElementById('projectId').value;
             const data = {
                 title: document.getElementById('title').value,
@@ -263,12 +272,16 @@
                 link: document.getElementById('link').value,
                 order: parseInt(document.getElementById('order').value) || 0
             };
-            if (id) await db.collection("projects").doc(id).update(data);
-            else await db.collection("projects").add(data);
-            closeModal();
+            try {
+                if (id) await db.collection("projects").doc(id).update(data);
+                else await db.collection("projects").add(data);
+                showStatus("Project Saved!", "success");
+                closeModal();
+            } catch (err) { showStatus(err.message, "error"); }
+            btn.innerText = "Save Changes";
         }
 
-        async function deleteProject(id) { if (confirm("Delete project?")) await db.collection("projects").doc(id).delete(); }
+        async function deleteProject(id) { if (confirm("Delete project?")) await db.collection("projects").doc(id).delete().then(() => showStatus("Deleted", "success")); }
 
         // Plans
         let cloudPlans = {};
@@ -284,7 +297,7 @@
             l.innerHTML = '';
             Object.keys(data).forEach(id => {
                 const p = { ...data[id], ...cloudPlans[id] };
-                l.innerHTML += `<div class="plan-item"><div><h3>${id.toUpperCase()}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Configure</button></div>`;
+                l.innerHTML += `<div class="plan-item"><div><h3>${id.toUpperCase().replace(/_/g, ' ')}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Configure</button></div>`;
             });
         }
 
@@ -302,6 +315,8 @@
 
         async function handlePlanSave(e) {
             e.preventDefault();
+            const btn = document.getElementById('planSubmitBtn');
+            btn.innerText = "Updating...";
             const id = document.getElementById('planId').value;
             const payload = {};
             ['en', 'ar', 'fr'].forEach(lang => {
@@ -309,8 +324,12 @@
                 payload[`s1_name_${lang}`] = document.getElementById(`s1_name_${lang}`).value;
                 payload[`s1_desc_${lang}`] = document.getElementById(`s1_desc_${lang}`).value;
             });
-            await db.collection("plans").doc(id).set(payload, { merge: true });
-            closeModal();
+            try {
+                await db.collection("plans").doc(id).set(payload, { merge: true });
+                showStatus("Pricing Updated!", "success");
+                closeModal();
+            } catch (err) { showStatus(err.message, "error"); }
+            btn.innerText = "Update Cloud";
         }
     </script>
 </body>
