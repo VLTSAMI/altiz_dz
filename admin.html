@@ -127,14 +127,23 @@
             box-sizing: border-box;
             outline: none;
         }
+        #status-indicator {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+        .status-loading { background: rgba(255, 165, 0, 0.1); color: orange; }
+        .status-error { background: rgba(255, 0, 0, 0.1); color: #ff4444; }
+        .status-ok { background: rgba(34, 197, 94, 0.1); color: var(--accent); }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="logo">ALTIZ.LIVE</div>
         <nav>
-            <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase;">Cloud Database</p>
-            <div style="color: var(--accent); font-weight: bold; padding: 10px 0;">● Projects connected</div>
+            <p style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase;">Database Status</p>
+            <div id="status-indicator" class="status-loading">Checking connection...</div>
         </nav>
     </div>
 
@@ -148,8 +157,7 @@
         </div>
 
         <div class="project-grid" id="project-grid">
-            <!-- Firestore projects will load here -->
-            <p id="loading-text">Connecting to Firebase...</p>
+            <p id="loading-text">Connecting to Firebase Cloud...</p>
         </div>
     </div>
 
@@ -199,51 +207,83 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <!-- Firebase SDKs (v8 compat for easier integration) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
+        // CONFIG DIRECTLY IN FILE TO PREVENT LOADING ERRORS
+        const firebaseConfig = {
+            apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
+            authDomain: "altiz1dz.firebaseapp.com",
+            projectId: "altiz1dz",
+            storageBucket: "altiz1dz.firebasestorage.app",
+            messagingSenderId: "716320058728",
+            appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
+        };
+
+        const statusIndicator = document.getElementById('status-indicator');
         const grid = document.getElementById('project-grid');
         const modal = document.getElementById('projectModal');
         const form = document.getElementById('projectForm');
 
-        // Real-time listener for projects
-        db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-            grid.innerHTML = '';
-            if (snapshot.empty) {
-                grid.innerHTML = '<p style="color: var(--text-dim);">No projects found in database.</p>';
-                return;
-            }
-            snapshot.forEach((doc) => {
-                const p = doc.data();
-                const id = doc.id;
-                const card = document.createElement('div');
-                card.className = 'project-card';
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            console.log("Firebase Initialized");
+
+            // Real-time listener for projects
+            db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                statusIndicator.className = 'status-ok';
+                statusIndicator.textContent = '● Online (Connected)';
+                grid.innerHTML = '';
                 
-                let mediaHtml = '';
-                if (p.type === 'video') {
-                    mediaHtml = `<video src="${p.path}" muted poster="${p.thumbnail || ''}"></video>`;
-                } else {
-                    mediaHtml = `<img src="${p.path}" onerror="this.src='https://via.placeholder.com/300x150/111/444?text=Preview'">`;
+                if (snapshot.empty) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; border: 2px dashed rgba(255,255,255,0.05); border-radius: 12px;"><p style="color: var(--text-dim);">Database is empty. Click "+ Add Live Project" to start.</p></div>';
+                    return;
                 }
 
-                card.innerHTML = `
-                    ${mediaHtml}
-                    <h3 style="margin: 0;">${p.title}</h3>
-                    <p style="color: var(--accent); margin: 5px 0 15px 0;">${p.category}</p>
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="editProject('${id}')" style="flex:1; background:#222; color:#fff; border:none; padding:8px; border-radius:4px; cursor:pointer;">Edit</button>
-                        <button onclick="deleteProject('${id}')" style="flex:1; background:rgba(255,0,0,0.1); color:#ff4444; border:none; padding:8px; border-radius:4px; cursor:pointer;">Delete</button>
-                    </div>
-                `;
-                grid.appendChild(card);
+                snapshot.forEach((doc) => {
+                    const p = doc.data();
+                    const id = doc.id;
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    
+                    let mediaHtml = '';
+                    if (p.type === 'video') {
+                        mediaHtml = `<video src="${p.path}" muted poster="${p.thumbnail || ''}"></video>`;
+                    } else {
+                        mediaHtml = `<img src="${p.path}" onerror="this.src='https://via.placeholder.com/300x150/111/444?text=Preview'">`;
+                    }
+
+                    card.innerHTML = `
+                        ${mediaHtml}
+                        <h3 style="margin: 0;">${p.title || 'Untitled'}</h3>
+                        <p style="color: var(--accent); margin: 5px 0 15px 0;">${p.category || 'No Category'}</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="editProject('${id}')" style="flex:1; background:#222; color:#fff; border:none; padding:8px; border-radius:4px; cursor:pointer;">Edit</button>
+                            <button onclick="deleteProject('${id}')" style="flex:1; background:rgba(255,0,0,0.1); color:#ff4444; border:none; padding:8px; border-radius:4px; cursor:pointer;">Delete</button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }, (error) => {
+                console.error("Firestore Error:", error);
+                statusIndicator.className = 'status-error';
+                statusIndicator.textContent = '● Error: Check Rules';
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #ff4444; padding: 2rem; border: 1px solid rgba(255,0,0,0.2); border-radius: 10px;">
+                    <h3>Connection Error</h3>
+                    <p>${error.message}</p>
+                    <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">Make sure your Firestore Security Rules are set to public for testing.</p>
+                </div>`;
             });
-        }, (error) => {
-            console.error("Firestore Error:", error);
-            grid.innerHTML = '<p style="color: #ff4444;">Error: Check Firestore Security Rules.</p>';
-        });
+
+            window.db = db; // Global access
+        } catch (err) {
+            statusIndicator.className = 'status-error';
+            statusIndicator.textContent = '● Init Error';
+            grid.innerHTML = `<p style="color:red">Init Error: ${err.message}</p>`;
+        }
 
         function openModal(editData = null) {
             form.reset();

@@ -244,12 +244,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.getElementById('portfolio-grid');
         if (!grid) return;
 
+        if (typeof firebase === 'undefined') {
+            console.error("Firebase not loaded yet");
+            return;
+        }
+
+        const db = firebase.firestore();
+
         db.collection("projects").orderBy("createdAt", "desc").limit(6).onSnapshot((snapshot) => {
             grid.innerHTML = '';
             
             if (snapshot.empty) {
-                grid.innerHTML = `<div class="portfolio-empty-state">
-                    <p data-i18n="portfolio_empty">Check back soon for new projects!</p>
+                grid.innerHTML = `<div class="portfolio-empty-state" style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                    <p data-i18n="portfolio_empty">No projects found in database.</p>
                 </div>`;
                 return;
             }
@@ -285,18 +292,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 grid.appendChild(card);
                 if(observer) observer.observe(card);
             });
-            
-            // Re-apply translation logic for new elements
-            const lang = localStorage.getItem('preferredLang') || 'en';
-            if(lang !== 'en') {
-                grid.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
-                });
-            }
+        }, (error) => {
+            console.error("Home Firebase Error:", error);
         });
     }
 
+    // Call it
     renderPortfolio();
 
     /* ==========================================================================

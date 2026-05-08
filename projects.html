@@ -125,58 +125,59 @@
     </div>
 
     <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script src="translations.js"></script>
     <script>
+        // CONFIG DIRECTLY
+        const firebaseConfig = {
+            apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
+            authDomain: "altiz1dz.firebaseapp.com",
+            projectId: "altiz1dz",
+            storageBucket: "altiz1dz.firebasestorage.app",
+            messagingSenderId: "716320058728",
+            appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('projects-grid');
             const spinner = document.getElementById('loading-spinner');
 
-            // Set Language from localStorage
+            // Initialize
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            // Set Language
             const lang = localStorage.getItem('preferredLang') || 'en';
             document.documentElement.lang = lang;
             if(lang === 'ar') document.body.classList.add('rtl-layout');
 
-            // Apply translations
+            // Translate
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
+                if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
             });
 
-            // Live Fetch from Firebase
+            // Fetch
             db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 spinner.style.display = 'none';
                 grid.innerHTML = '';
-
                 if (snapshot.empty) {
                     grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; opacity: 0.5;">No projects found.</p>';
                     return;
                 }
-
                 snapshot.forEach((docSnap) => {
                     const p = docSnap.data();
                     const card = document.createElement('div');
                     card.className = 'project-card';
+                    let mediaHtml = p.type === 'video' 
+                        ? `<video src="${p.path}" autoplay muted loop playsinline poster="${p.thumbnail || ''}"></video>`
+                        : `<img src="${p.path}" alt="${p.title}" loading="lazy">`;
                     
-                    let mediaHtml = '';
-                    if (p.type === 'video') {
-                        let posterAttr = p.thumbnail ? `poster="${p.thumbnail}"` : '';
-                        mediaHtml = `<video src="${p.path}" autoplay muted loop playsinline ${posterAttr}></video>`;
-                    } else {
-                        mediaHtml = `<img src="${p.path}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Preview'">`;
-                    }
-
                     const projectLink = (p.link && p.link !== '#') ? p.link : p.path;
-
                     card.innerHTML = `
-                        <div class="project-media">
-                            ${mediaHtml}
-                        </div>
+                        <div class="project-media">${mediaHtml}</div>
                         <div class="project-info">
                             <span class="project-category">${p.category}</span>
                             <h3 class="project-title">${p.title}</h3>
@@ -184,16 +185,13 @@
                                 View Full Project
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                             </a>
-                        </div>
-                    `;
+                        </div>`;
                     grid.appendChild(card);
                 });
             }, (error) => {
-                console.error("Firebase Error:", error);
-                spinner.innerHTML = "Error loading data. Please check connection.";
+                spinner.innerHTML = "Error: " + error.message;
             });
         });
     </script>
 </body>
-
 </html>
