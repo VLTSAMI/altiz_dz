@@ -235,7 +235,7 @@
                     style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 4rem;">
                     <!-- Web Dev Card -->
                     <a href="projects.html?filter=Web Development" class="category-card"
-                        style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px); overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.08); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
+                        style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px); overflow: hidden; background: #0a0a0a; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
                         <div
                             style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%); z-index: 1;">
                         </div>
@@ -260,7 +260,7 @@
 
                     <!-- Video Card -->
                     <a href="projects.html?filter=Video Production" class="category-card"
-                        style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px); overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.08); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
+                        style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px); overflow: hidden; background: #0a0a0a; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
                         <div
                             style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%); z-index: 1;">
                         </div>
@@ -285,7 +285,7 @@
 
                     <!-- Creative Branding Card (Merged) -->
                     <a href="projects.html?filter=Creative Branding" class="category-card"
-                        style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px); overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.08); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
+                        style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px); overflow: hidden; background: #0a0a0a; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
                         <div
                             style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%); z-index: 1;">
                         </div>
@@ -317,8 +317,7 @@
                     }
                     .category-card:hover {
                         transform: translateY(-15px) scale(1.02);
-                        border-color: var(--primary-accent) !important;
-                        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 20px rgba(34, 197, 94, 0.2);
+                        box-shadow: inset 0 0 0 2px var(--primary-accent), 0 30px 60px rgba(0, 0, 0, 0.6);
                     }
                     .category-card:hover .icon-box {
                         opacity: 1 !important;
@@ -341,19 +340,7 @@
                         transform: scale(0.98);
                         filter: drop-shadow(0 0 5px var(--primary-accent));
                     }
-                    .category-card::after {
-                        content: '';
-                        position: absolute;
-                        inset: 0;
-                        border-radius: 28px;
-                        border: 2px solid transparent;
-                        transition: 0.5s;
-                        z-index: 3;
-                    }
-                    .category-card:hover::after {
-                        border-color: rgba(34, 197, 94, 0.4);
-                        box-shadow: inset 0 0 20px rgba(34, 197, 94, 0.1);
-                    }
+                     /* Unification complete - Removed conflicting corner logic */
                 </style>
             </div>
         </section>
