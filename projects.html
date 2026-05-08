@@ -28,7 +28,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
             padding: 0.6rem 1.5rem;
-            border-radius: 50px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.9rem;
@@ -57,7 +57,7 @@
         .project-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -110,7 +110,7 @@
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             padding: 0.75rem 1.25rem;
-            border-radius: 50px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
             text-decoration: none;
             color: #fff;
             display: flex;

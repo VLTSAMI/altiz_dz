@@ -913,7 +913,7 @@ body {
     color: var(--primary-accent);
     border: 1px solid var(--primary-accent);
     padding: 0.2rem 0.5rem;
-    border-radius: 4px;
+    clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
     margin-left: 0.6rem;
     vertical-align: middle;
     letter-spacing: 0.5px;
