@@ -238,23 +238,24 @@ document.addEventListener('DOMContentLoaded', () => {
     loadLocalPlans();
 
     /* ==========================================================================
-       Portfolio Rendering
+       Portfolio Rendering (Live Firebase)
        ========================================================================== */
     function renderPortfolio() {
         const grid = document.getElementById('portfolio-grid');
         if (!grid) return;
 
-        try {
-            if (typeof projects === 'undefined' || projects.length === 0) {
+        db.collection("projects").orderBy("createdAt", "desc").limit(6).onSnapshot((snapshot) => {
+            grid.innerHTML = '';
+            
+            if (snapshot.empty) {
                 grid.innerHTML = `<div class="portfolio-empty-state">
                     <p data-i18n="portfolio_empty">Check back soon for new projects!</p>
                 </div>`;
                 return;
             }
 
-            grid.innerHTML = '';
-            // Limit to first 6 projects on home page for a clean look
-            projects.slice(0, 6).forEach((p) => {
+            snapshot.forEach((doc) => {
+                const p = doc.data();
                 let mediaHtml = '';
                 if (p.type === 'video') {
                     let posterAttr = p.thumbnail ? `poster="${p.thumbnail}"` : '';
@@ -285,24 +286,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(observer) observer.observe(card);
             });
             
-            // Apply translation if needed
-            const currentLang = localStorage.getItem('preferredLang') || 'en';
-            if(currentLang !== 'en') {
-                const elements = grid.querySelectorAll('[data-i18n]');
-                elements.forEach(el => {
+            // Re-apply translation logic for new elements
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            if(lang !== 'en') {
+                grid.querySelectorAll('[data-i18n]').forEach(el => {
                     const key = el.getAttribute('data-i18n');
-                    if (translations[currentLang] && translations[currentLang][key]) {
-                        el.innerHTML = translations[currentLang][key];
-                    }
+                    if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
                 });
             }
-        } catch (e) {
-            console.error("Error rendering portfolio: ", e);
-        }
+        });
     }
 
-    // Give a tiny delay so portfolio_data.js loads
-    setTimeout(renderPortfolio, 100);
+    renderPortfolio();
 
     /* ==========================================================================
        Modal (Removed Cloud Logic)
