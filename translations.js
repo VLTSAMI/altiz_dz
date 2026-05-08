@@ -36,6 +36,7 @@ const translations = {
         "portfolio_desc": "ابتكارات برمجية تجمع بين الدقة المنطقية والتميز الإبداعي.",
         "portfolio_empty": "يتم تحديث قاعدة بيانات المشاريع حالياً. عد قريباً!",
         "view_project": "مشاهدة المشروع",
+        "btn_view_projects": "شاهد المشاريع",
 
         // Pricing
         "pricing_title": "خطط الاستثمار",
@@ -137,6 +138,7 @@ const translations = {
         "portfolio_desc": "A showcase of logic-driven creativity and technical excellence.",
         "portfolio_empty": "Initializing project database...",
         "view_project": "View Project",
+        "btn_view_projects": "View Projects",
 
         // Pricing
         "pricing_title": "Investment Plans",
@@ -238,6 +240,7 @@ const translations = {
         "portfolio_desc": "Une vitrine de créativité logique et d'excellence technique.",
         "portfolio_empty": "Initialisation...",
         "view_project": "Voir Projet",
+        "btn_view_projects": "Voir Projets",
 
         // Pricing
         "pricing_title": "Plans d'Investissement",
