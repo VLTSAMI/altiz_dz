@@ -21,23 +21,22 @@
         .main { flex: 1; padding: 4rem; margin-left: 280px; max-width: 1200px; box-sizing: border-box; }
         .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
         h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin: 0; letter-spacing: -1px; }
-        .btn { background: var(--accent); color: #000; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn { background: var(--accent); color: #000; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
         .btn-secondary { background: #222; color: #fff; }
         .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: #fff; }
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
-        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; transition: 0.3s; position: relative; }
-        .project-card:hover { border-color: var(--accent); background: var(--card-hover); }
+        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; transition: 0.3s; }
         .media-preview { width: 100%; height: 160px; background: #111; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; border: 1px solid var(--border); }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 100; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .modal-content { background: var(--card); width: 100%; max-width: 800px; padding: 3rem; border-radius: 24px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card); width: 90%; max-width: 800px; padding: 3rem; border-radius: 24px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; margin-bottom: 0.6rem; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; }
-        input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; color: #fff; outline: none; transition: 0.3s; box-sizing: border-box; }
+        input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; color: #fff; outline: none; box-sizing: border-box; }
         .plan-item { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .sequence-item { background: var(--card); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 15px; }
     </style>
 </head>
 <body>
@@ -46,25 +45,32 @@
         <nav>
             <div class="nav-link active" id="nav-projects" onclick="showTab('projects')">Portfolio Projects</div>
             <div class="nav-link" id="nav-plans" onclick="showTab('plans')">Service Plans</div>
+            <div class="nav-link" id="nav-sequence" onclick="showTab('sequence')">Project Sequence</div>
         </nav>
     </div>
 
     <div class="main">
-        <div id="projects-tab" class="tabs-content">
+        <div id="projects-tab" class="tab-content">
             <div class="header"><div><p style="color:var(--accent);margin:0">Portfolio</p><h1>Your Work</h1></div><button class="btn" onclick="openProjectModal()">New Project</button></div>
-            <div class="project-grid" id="project-grid">Syncing Cloud...</div>
+            <div class="project-grid" id="project-grid">Syncing...</div>
         </div>
 
-        <div id="plans-tab" class="tabs-content" style="display:none">
-            <div class="header"><div><p style="color:var(--accent);margin:0">Pricing</p><h1>Service Plans</h1></div></div>
-            <div id="plans-list">Syncing Engine...</div>
+        <div id="plans-tab" class="tab-content" style="display:none">
+            <div class="header"><h1>Service Plans</h1></div>
+            <div id="plans-list">Syncing...</div>
+        </div>
+
+        <div id="sequence-tab" class="tab-content" style="display:none">
+            <div class="header"><h1>Project Sequence</h1></div>
+            <p style="color:var(--text-dim); margin-bottom:2rem">Use the Arrows to change the order of projects in the gallery.</p>
+            <div id="sequence-list">Syncing...</div>
         </div>
     </div>
 
     <!-- Project Modal -->
     <div id="projectModal" class="modal">
         <div class="modal-content">
-            <h2 id="projectModalTitle">Project Details</h2>
+            <h2>Project Details</h2>
             <form id="projectForm" onsubmit="handleProjectSave(event)">
                 <input type="hidden" id="projectId">
                 <div class="form-grid">
@@ -73,7 +79,11 @@
                 </div>
                 <div class="form-grid">
                     <div class="form-group"><label>Type</label><select id="type"><option value="image">Image</option><option value="video">Video</option></select></div>
-                    <div class="form-group"><label>Media Link (Drive/Direct)</label><input id="path" required></div>
+                    <div class="form-group"><label>Main Media Link (Drive/Direct)</label><input id="path" required></div>
+                </div>
+                <div class="form-group">
+                    <label>Thumbnail / Poster URL (Optional - Recommended for Videos)</label>
+                    <input id="thumbnail" placeholder="Leave empty to use main media link as thumbnail">
                 </div>
                 <div class="form-group"><label>External Link (Optional)</label><input id="link"></div>
                 <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
@@ -84,27 +94,8 @@
         </div>
     </div>
 
-    <!-- Plan Modal -->
-    <div id="planModal" class="modal">
-        <div class="modal-content">
-            <h2 id="planModalTitle">Configure Plan</h2>
-            <form id="planForm" onsubmit="handlePlanSave(event)">
-                <input type="hidden" id="planId">
-                <div class="form-grid">
-                    <div class="form-group"><label>Price (EN)</label><input id="price_en"></div>
-                    <div class="form-group" dir="rtl"><label>السعر (AR)</label><input id="price_ar"></div>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group"><label>Feature (EN)</label><input id="s1_name_en"></div>
-                    <div class="form-group" dir="rtl"><label>الميزة (AR)</label><input id="s1_name_ar"></div>
-                </div>
-                <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn">Update Cloud</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- Plan Modal (Simplified for stability) -->
+    <div id="planModal" class="modal"><div class="modal-content"><h2>Configure Plan</h2><form id="planForm" onsubmit="handlePlanSave(event)"><input type="hidden" id="planId"><div class="form-group"><label>Price (EN)</label><input id="price_en"></div><div class="form-group"><label>Price (AR)</label><input id="price_ar"></div><div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn">Update Cloud</button></div></form></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -123,7 +114,7 @@
         const db = firebase.firestore();
 
         function showTab(tab) {
-            document.querySelectorAll('.tabs-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tab + '-tab').style.display = 'block';
             document.getElementById('nav-' + tab).classList.add('active');
@@ -137,27 +128,56 @@
             return type === 'video' ? `https://docs.google.com/uc?export=download&id=${id}` : `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
         }
 
-        // Projects Management
         let projectsData = [];
         db.collection("projects").onSnapshot(snap => {
             const grid = document.getElementById('project-grid');
+            const seqList = document.getElementById('sequence-list');
             projectsData = [];
+            snap.forEach(doc => projectsData.push({ id: doc.id, ...doc.data() }));
+            projectsData.sort((a, b) => (a.order || 0) - (b.order || 0));
+            
             grid.innerHTML = '';
-            snap.forEach(doc => {
-                const p = { id: doc.id, ...doc.data() };
-                projectsData.push(p);
+            seqList.innerHTML = '';
+            
+            projectsData.forEach((p, index) => {
+                const thumb = p.thumbnail || p.path;
                 grid.innerHTML += `
                     <div class="project-card">
-                        <img src="${fixDriveUrl(p.path, p.type)}" class="media-preview">
+                        <img src="${fixDriveUrl(thumb, 'image')}" class="media-preview">
                         <h3>${p.title}</h3>
-                        <p style="color:var(--accent); font-size:0.9rem">${p.category}</p>
                         <div style="display:flex; gap:10px; margin-top:15px;">
-                            <button class="btn btn-secondary" style="flex:1; padding:0.5rem" onclick="editProject('${p.id}')">Edit</button>
-                            <button class="btn btn-danger" style="padding:0.5rem" onclick="deleteProject('${p.id}')">×</button>
+                            <button class="btn btn-secondary" style="flex:1" onclick="editProject('${p.id}')">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteProject('${p.id}')">×</button>
+                        </div>
+                    </div>`;
+
+                seqList.innerHTML += `
+                    <div class="sequence-item">
+                        <div style="width:50px; height:50px; background:#111; border-radius:5px; overflow:hidden">
+                            <img src="${fixDriveUrl(thumb, 'image')}" style="width:100%;height:100%;object-fit:cover">
+                        </div>
+                        <div style="flex:1">${p.title}</div>
+                        <div style="display:flex; gap:5px">
+                            <button class="btn btn-secondary" style="padding:5px 10px" onclick="moveProject('${p.id}', -1)">↑</button>
+                            <button class="btn btn-secondary" style="padding:5px 10px" onclick="moveProject('${p.id}', 1)">↓</button>
                         </div>
                     </div>`;
             });
         });
+
+        async function moveProject(id, direction) {
+            const index = projectsData.findIndex(p => p.id === id);
+            if (index === -1) return;
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= projectsData.length) return;
+
+            const target = projectsData[newIndex];
+            const current = projectsData[index];
+            
+            const tempOrder = target.order || 0;
+            await db.collection("projects").doc(current.id).update({ order: tempOrder });
+            await db.collection("projects").doc(target.id).update({ order: current.order || 0 });
+        }
 
         function openProjectModal() {
             document.getElementById('projectForm').reset();
@@ -173,12 +193,9 @@
             document.getElementById('category').value = p.category || 'Web Development';
             document.getElementById('type').value = p.type || 'image';
             document.getElementById('path').value = p.path || '';
+            document.getElementById('thumbnail').value = p.thumbnail || '';
             document.getElementById('link').value = p.link || '';
             document.getElementById('projectModal').classList.add('active');
-        }
-
-        async function deleteProject(id) {
-            if (confirm("Delete this project?")) await db.collection("projects").doc(id).delete();
         }
 
         async function handleProjectSave(e) {
@@ -189,15 +206,18 @@
                 category: document.getElementById('category').value,
                 type: document.getElementById('type').value,
                 path: document.getElementById('path').value,
+                thumbnail: document.getElementById('thumbnail').value,
                 link: document.getElementById('link').value,
-                order: Date.now()
+                order: id ? projectsData.find(x=>x.id===id).order : projectsData.length
             };
             if (id) await db.collection("projects").doc(id).update(data);
             else await db.collection("projects").add(data);
             closeModal();
         }
 
-        // Plans logic
+        async function deleteProject(id) { if (confirm("Delete?")) await db.collection("projects").doc(id).delete(); }
+
+        // Plans
         let cloudPlans = {};
         db.collection("plans").onSnapshot(snap => {
             cloudPlans = {};
@@ -207,22 +227,19 @@
 
         function renderPlansList() {
             const list = document.getElementById('plans-list');
-            const localData = window.pricingData || pricingData || {}; 
+            const data = window.pricingData || pricingData || {}; 
             list.innerHTML = '';
-            Object.keys(localData).forEach(id => {
-                const p = { ...localData[id], ...cloudPlans[id] };
-                list.innerHTML += `<div class="plan-item"><div><h3>${id.replace(/_/g, ' ').toUpperCase()}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Configure</button></div>`;
+            Object.keys(data).forEach(id => {
+                const p = { ...data[id], ...cloudPlans[id] };
+                list.innerHTML += `<div class="plan-item"><div><h3>${id.replace(/_/g, ' ').toUpperCase()}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Edit</button></div>`;
             });
         }
 
         function editPlan(id) {
-            const localData = window.pricingData || pricingData || {};
-            const p = { ...localData[id], ...cloudPlans[id] };
+            const data = { ...(window.pricingData || pricingData)[id], ...cloudPlans[id] };
             document.getElementById('planId').value = id;
-            document.getElementById('price_en').value = p.price_en || '';
-            document.getElementById('price_ar').value = p.price_ar || '';
-            document.getElementById('s1_name_en').value = p.s1_name_en || '';
-            document.getElementById('s1_name_ar').value = p.s1_name_ar || '';
+            document.getElementById('price_en').value = data.price_en || '';
+            document.getElementById('price_ar').value = data.price_ar || '';
             document.getElementById('planModal').classList.add('active');
         }
 
@@ -231,9 +248,7 @@
             const id = document.getElementById('planId').value;
             await db.collection("plans").doc(id).set({
                 price_en: document.getElementById('price_en').value,
-                price_ar: document.getElementById('price_ar').value,
-                s1_name_en: document.getElementById('s1_name_en').value,
-                s1_name_ar: document.getElementById('s1_name_ar').value
+                price_ar: document.getElementById('price_ar').value
             }, { merge: true });
             closeModal();
         }
