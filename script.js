@@ -92,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Dynamic Sync Engine (Firestore) ---
     function applyLocalOverrides(lang) {
-        // Use window.pricingData from pricing_data.js and window.activePricingData from Firestore
         const baseData = window.pricingData || {};
         const cloudData = window.activePricingData || {};
         const combined = { ...baseData, ...cloudData };
@@ -116,16 +115,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initPricingSystem() {
         if (typeof firebase === 'undefined') return;
-        // Use global db if available, else get from firebase
-        const firestore = (typeof db !== 'undefined') ? db : firebase.firestore();
+        const firestore = firebase.firestore();
 
+        // Immediate load attempt for faster UI
+        firestore.collection("plans").get().then(snap => {
+            const cloudPlans = {};
+            snap.forEach(doc => { cloudPlans[doc.id] = doc.data(); });
+            window.activePricingData = cloudPlans;
+            applyLocalOverrides(localStorage.getItem('preferredLang') || 'en');
+        });
+
+        // Real-time listener
         firestore.collection("plans").onSnapshot(snap => {
             const cloudPlans = {};
             snap.forEach(doc => { cloudPlans[doc.id] = doc.data(); });
             window.activePricingData = cloudPlans;
-            
-            const currentLang = localStorage.getItem('preferredLang') || 'en';
-            applyLocalOverrides(currentLang);
+            applyLocalOverrides(localStorage.getItem('preferredLang') || 'en');
         });
     }
 
@@ -150,6 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const key = el.getAttribute('data-i18n');
             if (translations[lang] && translations[lang][key]) {
                 el.innerHTML = translations[lang][key];
+                // Reset sync flag if it was set, so overrides can re-run
+                el.removeAttribute('data-sync-active');
             }
         });
 
@@ -159,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const enText = el.getAttribute('data-en');
             if (lang === 'en') el.innerHTML = enText;
             else if (translations[lang] && translations[lang][enText]) el.innerHTML = translations[lang][enText];
+            el.removeAttribute('data-sync-active');
         });
 
         const inputs = document.querySelectorAll('[data-i18n-placeholder]');
@@ -167,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (translations[lang] && translations[lang][key]) input.placeholder = translations[lang][key];
         });
 
-        // Override with dynamic cloud data
+        // Important: Always run overrides last to ensure cloud data wins
         applyLocalOverrides(lang);
     }
     
@@ -189,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================================== */
     function renderPortfolio() {
         if (typeof firebase === 'undefined') return;
-        const firestore = (typeof db !== 'undefined') ? db : firebase.firestore();
+        const firestore = firebase.firestore();
         const grid = document.getElementById('portfolio-grid');
         if (!grid) return;
 
