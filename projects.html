@@ -226,12 +226,12 @@
                     
                     let mediaHtml = '';
                     if (p.type === 'video') {
-                        mediaHtml = `<video src="${path}" muted loop playsinline preload="auto" poster="${thumb}" 
-                            onmouseover="this.play()" 
-                            onmouseout="this.pause(); this.currentTime=0;" 
-                            style="cursor: pointer; transition: opacity 0.3s ease; background: #000;"></video>`;
+                        mediaHtml = `<video src="${path}" autoplay muted loop playsinline poster="${thumb}" 
+                            style="width: 100%; height: 100%; object-fit: contain; background: #000;"></video>`;
                     } else {
-                        mediaHtml = `<img src="${path}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Image+Not+Found'">`;
+                        mediaHtml = `<img src="${path}" alt="${p.title}" loading="lazy" 
+                            style="width: 100%; height: 100%; object-fit: contain; background: #000;"
+                            onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Image+Not+Found'">`;
                     }
                     
                     const projectLink = (p.link && p.link !== '#') ? p.link : preview;
