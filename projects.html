@@ -261,6 +261,17 @@
                 // Sort by order ASC
                 allProjects.sort((a, b) => (a.order || 0) - (b.order || 0));
                 
+                // Handle URL Filter
+                const urlParams = new URLSearchParams(window.location.search);
+                const filterParam = urlParams.get('filter');
+                if (filterParam) {
+                    const targetBtn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
+                    if (targetBtn) {
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        targetBtn.classList.add('active');
+                    }
+                }
+
                 const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
                 if(activeFilter === 'all') {
                     renderProjects(allProjects);
