@@ -713,39 +713,7 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const submitBtn = document.getElementById('realSubmitBtn');
-            if (submitBtn) {
-                submitBtn.addEventListener('click', function() {
-                    const name = document.getElementById('contactName').value;
-                    const email = document.getElementById('contactEmail').value;
-                    const message = document.getElementById('contactMessage').value;
-                    const method = document.querySelector('input[name="method"]:checked').value;
-                    
-                    if (!name || !email || !message) {
-                        alert("Please fill in all fields.");
-                        return;
-                    }
 
-                    const myEmail = "altizsolutionsdz@gmail.com";
-                    const myWhatsApp = "213676184805"; 
-                    const msg = `Hello, I am ${name} (${email}).\n\nProject Details:\n${message}`;
-
-                    if (method === 'whatsapp') {
-                        window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
-                    } else {
-                        window.location.href = `mailto:${myEmail}?subject=Project Inquiry&body=${encodeURIComponent(msg)}`;
-                    }
-
-                    // Reset
-                    document.getElementById('contactName').value = '';
-                    document.getElementById('contactEmail').value = '';
-                    document.getElementById('contactMessage').value = '';
-                });
-            }
-        });
-    </script>
     <script src="pricing_data.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
