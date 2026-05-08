@@ -354,30 +354,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Contact Form Logic
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.onsubmit = (e) => { 
-            e.preventDefault();
-        };
-        
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
+    // Contact Form Logic (Manual Trigger to prevent refresh)
+    const submitBtn = document.getElementById('realSubmitBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function() {
             const nameInput = document.getElementById('contactName');
             const emailInput = document.getElementById('contactEmail');
             const messageInput = document.getElementById('contactMessage');
             const methodInput = document.querySelector('input[name="method"]:checked');
             
-            if (!nameInput || !emailInput || !messageInput || !methodInput) {
+            if (!nameInput.value || !emailInput.value || !messageInput.value) {
+                alert("Please fill in all details.");
                 return;
             }
 
             const name = nameInput.value;
             const email = emailInput.value;
             const message = messageInput.value;
-            const method = methodInput.value;
+            const method = methodInput ? methodInput.value : 'whatsapp';
             
             const myEmail = "altizsolutionsdz@gmail.com";
             const myWhatsApp = "213676184805"; 
@@ -387,11 +381,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (method === 'whatsapp') {
                 window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
             } else {
-                window.location.href = `mailto:${myEmail}?subject=Inquiry&body=${encodeURIComponent(msg)}`;
+                window.location.href = `mailto:${myEmail}?subject=Project Inquiry&body=${encodeURIComponent(msg)}`;
             }
 
-            setTimeout(() => contactForm.reset(), 500);
-            return false;
+            // Clear inputs manually
+            nameInput.value = '';
+            emailInput.value = '';
+            messageInput.value = '';
         });
     }
 

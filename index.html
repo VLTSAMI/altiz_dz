@@ -654,13 +654,13 @@
                         </div>
                     </div>
 
-                    <form id="contactForm" class="contact-form glass animate-on-scroll slide-left">
+                    <div id="contactForm" class="contact-form glass animate-on-scroll slide-left">
                         <div class="form-group">
-                            <label for="name" data-i18n="label_name">Identifier (Name)</label>
+                            <label for="contactName" data-i18n="label_name">Identifier (Name)</label>
                             <input type="text" id="contactName" required placeholder="Enter your name" data-i18n-placeholder="placeholder_name">
                         </div>
                         <div class="form-group">
-                            <label for="email" data-i18n="label_email">Communication Node (Email)</label>
+                            <label for="contactEmail" data-i18n="label_email">Communication Node (Email)</label>
                             <input type="email" id="contactEmail" required placeholder="name@domain.com" data-i18n-placeholder="placeholder_email">
                         </div>
                         <div class="form-group">
@@ -675,11 +675,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="message" data-i18n="label_message">Payload (Message)</label>
+                            <label for="contactMessage" data-i18n="label_message">Payload (Message)</label>
                             <textarea id="contactMessage" rows="5" required placeholder="Describe your project requirements..." data-i18n-placeholder="placeholder_message"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 btn-submit" data-i18n="btn_submit">Transmit Data</button>
-                    </form>
+                        <button type="button" id="realSubmitBtn" class="btn btn-primary w-100 btn-submit" data-i18n="btn_submit">Transmit Data</button>
+                    </div>
                 </div>
             </div>
         </section>
