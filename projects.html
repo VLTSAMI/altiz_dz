@@ -9,9 +9,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         .projects-header {
-            padding: 8rem 2rem 4rem;
+            padding: 8rem 2rem 2rem;
             text-align: center;
             background: radial-gradient(circle at top, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            padding: 0 1rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary-accent);
+            color: #000;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
         }
 
         .projects-container {
@@ -119,6 +147,14 @@
         <p class="section-desc" data-i18n="portfolio_desc">A showcase of our latest digital creations and success stories.</p>
     </header>
 
+    <div class="filter-container">
+        <button class="filter-btn active" data-filter="all">All Projects</button>
+        <button class="filter-btn" data-filter="Web Development">Web Development</button>
+        <button class="filter-btn" data-filter="Video Production">Video Production</button>
+        <button class="filter-btn" data-filter="Visual Identity">Visual Identity</button>
+        <button class="filter-btn" data-filter="Marketing">Marketing</button>
+    </div>
+
     <div class="projects-container">
         <div id="loading-spinner">Connecting to Live Database...</div>
         <div class="projects-grid" id="projects-grid"></div>
@@ -130,7 +166,6 @@
     
     <script src="translations.js"></script>
     <script>
-        // CONFIG DIRECTLY
         const firebaseConfig = {
             apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
             authDomain: "altiz1dz.firebaseapp.com",
@@ -140,51 +175,46 @@
             appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
         };
 
+        // Helper to convert Drive Link
+        function fixDriveUrl(url) {
+            if (!url) return "";
+            if (url.includes("drive.google.com")) {
+                const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+                return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
+            }
+            return url;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('projects-grid');
             const spinner = document.getElementById('loading-spinner');
+            const filterBtns = document.querySelectorAll('.filter-btn');
 
-            // Initialize
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
 
-            // Set Language
+            let allProjects = [];
+
+            // Set Language logic
             const lang = localStorage.getItem('preferredLang') || 'en';
             document.documentElement.lang = lang;
             if(lang === 'ar') document.body.classList.add('rtl-layout');
-
-            // Translate
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
             });
 
-            // Helper to convert Drive Link
-            function fixDriveUrl(url) {
-                if (!url) return "";
-                if (url.includes("drive.google.com")) {
-                    const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
-                    return id ? `https://lh3.googleusercontent.com/d/${id}` : url;
-                }
-                return url;
-            }
-
-            // Fetch
-            db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-                spinner.style.display = 'none';
+            function renderProjects(projects) {
                 grid.innerHTML = '';
-                if (snapshot.empty) {
-                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; opacity: 0.5;">No projects found.</p>';
+                if (projects.length === 0) {
+                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; opacity: 0.5;">No projects found in this category.</p>';
                     return;
                 }
-                snapshot.forEach((docSnap) => {
-                    const p = docSnap.data();
+                projects.forEach(p => {
                     const card = document.createElement('div');
                     card.className = 'project-card';
-                    
                     const path = fixDriveUrl(p.path);
                     const thumb = fixDriveUrl(p.thumbnail);
-
                     let mediaHtml = p.type === 'video' 
                         ? `<video src="${path}" autoplay muted loop playsinline poster="${thumb}"></video>`
                         : `<img src="${path}" alt="${p.title}" loading="lazy">`;
@@ -196,16 +226,43 @@
                             <span class="project-category">${p.category}</span>
                             <h3 class="project-title">${p.title}</h3>
                             <a href="${projectLink}" target="_blank" class="portfolio-link" style="margin-top: 1rem; display: inline-flex; align-items: center; gap: 5px; color: var(--primary-accent); text-decoration: none; font-size: 0.9rem;">
-                                View Full Project
+                                View Project
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                             </a>
                         </div>`;
                     grid.appendChild(card);
                 });
-            }, (error) => {
-                spinner.innerHTML = "Error: " + error.message;
+            }
+
+            // Fetch Data
+            db.collection("projects").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                spinner.style.display = 'none';
+                allProjects = [];
+                snapshot.forEach(doc => allProjects.push(doc.data()));
+                
+                const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+                if(activeFilter === 'all') {
+                    renderProjects(allProjects);
+                } else {
+                    renderProjects(allProjects.filter(p => p.category === activeFilter));
+                }
+            });
+
+            // Filter logic
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filter = btn.dataset.filter;
+                    if(filter === 'all') {
+                        renderProjects(allProjects);
+                    } else {
+                        renderProjects(allProjects.filter(p => p.category === filter));
+                    }
+                });
             });
         });
     </script>
 </body>
+
 </html>
