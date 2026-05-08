@@ -454,28 +454,72 @@
             // Update Sequence List
             const seqList = document.getElementById('sequence-list');
             seqList.innerHTML = '';
-            projects.forEach(p => {
+            projects.forEach((p, index) => {
                 const item = document.createElement('div');
-                item.style = "display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border);";
+                item.className = 'sequence-item';
+                item.draggable = true;
+                item.dataset.id = p.id;
+                item.style = "display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border); cursor: grab; background: var(--card); transition: background 0.2s;";
                 item.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <span style="color: var(--accent); font-weight: bold; width: 30px;">#${p.order || 0}</span>
+                    <div style="display: flex; align-items: center; gap: 1rem; pointer-events: none;">
+                        <span style="color: var(--accent); font-weight: bold; width: 30px;">#${index + 1}</span>
                         <img src="${fixDriveUrl(p.thumbnail || p.path, 'image')}" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;">
                         <span>${p.title}</span>
                     </div>
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <input type="number" value="${p.order || 0}" 
-                            onchange="updateProjectOrder('${p.id}', this.value)"
-                            style="width: 60px; padding: 5px; background: #111; border: 1px solid var(--border); color: #fff; border-radius: 5px; text-align: center;">
+                    <div style="color: var(--text-dim); pointer-events: none;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16M4 16h16"></path></svg>
                     </div>
                 `;
+                
+                // Drag and Drop Events
+                item.addEventListener('dragstart', (e) => {
+                    e.target.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', p.id);
+                });
+                item.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
+                
                 seqList.appendChild(item);
+            });
+
+            seqList.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const draggingItem = document.querySelector('.dragging');
+                const afterElement = getDragAfterElement(seqList, e.clientY);
+                if (afterElement == null) {
+                    seqList.appendChild(draggingItem);
+                } else {
+                    seqList.insertBefore(draggingItem, afterElement);
+                }
+            });
+
+            seqList.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                const items = [...seqList.querySelectorAll('.sequence-item')];
+                const batch = db.batch();
+                items.forEach((item, index) => {
+                    const ref = db.collection("projects").doc(item.dataset.id);
+                    batch.update(ref, { order: index + 1 });
+                });
+                await batch.commit();
             });
         });
 
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.sequence-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
         async function updateProjectOrder(id, newOrder) {
             await db.collection("projects").doc(id).update({
-                order: parseInt(newOrder) || 0,
+                order: parseInt(newOrder) || 1,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
         }
@@ -495,6 +539,14 @@
             };
             if (id) await db.collection("projects").doc(id).update(data);
             else {
+                // Auto-increment order
+                const snap = await db.collection("projects").get();
+                let maxOrder = 0;
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    if (p.order > maxOrder) maxOrder = p.order;
+                });
+                data.order = maxOrder + 1;
                 data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                 await db.collection("projects").add(data);
             }
