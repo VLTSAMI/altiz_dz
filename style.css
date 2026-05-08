@@ -687,18 +687,7 @@ body {
     position: relative;
 }
 
-.glass::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    border-left: 2px solid transparent;
-    transition: border-color var(--transition-normal);
-    pointer-events: none;
-}
-
-.glass:hover::before {
-    border-left-color: var(--primary-accent);
-}
+/* Left border line removed - L-corners handle hover indication */
 
 .glass:hover {
     border-color: var(--card-border);
