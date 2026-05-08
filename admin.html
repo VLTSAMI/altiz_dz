@@ -406,12 +406,18 @@
         }
 
         // Projects logic
-        db.collection("projects").orderBy("order", "asc").onSnapshot(snap => {
+        db.collection("projects").onSnapshot(snap => {
             const grid = document.getElementById('project-grid');
             grid.innerHTML = '';
-            snap.forEach(doc => {
-                const p = doc.data();
-                const id = doc.id;
+            
+            // Convert to array and sort manually in JS to avoid disappearing projects without 'order' field
+            const projects = [];
+            snap.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
+            
+            projects.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            projects.forEach(p => {
+                const id = p.id;
                 const path = fixDriveUrl(p.path, p.type);
                 const thumb = fixDriveUrl(p.thumbnail, 'image');
                 const card = document.createElement('div');

@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return url;
         }
 
-        db.collection("projects").orderBy("order", "asc").limit(6).onSnapshot((snapshot) => {
+        db.collection("projects").onSnapshot((snapshot) => {
             grid.innerHTML = '';
             
             if (snapshot.empty) {
@@ -279,8 +279,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            snapshot.forEach((doc) => {
-                const p = doc.data();
+            const projects = [];
+            snapshot.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
+
+            // Sort by order ASC, then take first 6
+            projects.sort((a, b) => (a.order || 0) - (b.order || 0));
+            const topProjects = projects.slice(0, 6);
+
+            topProjects.forEach((p) => {
                 const path = fixDriveUrl(p.path, p.type);
                 const thumb = fixDriveUrl(p.thumbnail, 'image');
                 const preview = fixDriveUrl(p.path, 'preview');

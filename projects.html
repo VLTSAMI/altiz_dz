@@ -253,10 +253,13 @@
             }
 
             // Fetch Data
-            db.collection("projects").orderBy("order", "asc").onSnapshot((snapshot) => {
+            db.collection("projects").onSnapshot((snapshot) => {
                 spinner.style.display = 'none';
                 allProjects = [];
-                snapshot.forEach(doc => allProjects.push(doc.data()));
+                snapshot.forEach(doc => allProjects.push({ id: doc.id, ...doc.data() }));
+                
+                // Sort by order ASC
+                allProjects.sort((a, b) => (a.order || 0) - (b.order || 0));
                 
                 const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
                 if(activeFilter === 'all') {
