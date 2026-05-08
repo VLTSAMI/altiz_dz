@@ -257,7 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
             projects.slice(0, 6).forEach((p) => {
                 let mediaHtml = '';
                 if (p.type === 'video') {
-                    mediaHtml = `<video src="${p.path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>`;
+                    let posterAttr = p.thumbnail ? `poster="${p.thumbnail}"` : '';
+                    mediaHtml = `<video src="${p.path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;" ${posterAttr}></video>`;
                 } else {
                     mediaHtml = `<img src="${p.path}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">`;
                 }
