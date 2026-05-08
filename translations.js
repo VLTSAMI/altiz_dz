@@ -2,11 +2,11 @@ const translations = {
     "ar": {
         "dir": "rtl",
         // Navbar
-        "nav_solutions": "حلولنا",
-        "nav_portfolio": "أعمالنا",
-        "nav_pricing": "الأسعار",
+        "nav_solutions": "الحلول التقنية",
+        "nav_portfolio": "معرض الأعمال",
+        "nav_pricing": "باقات الاستثمار",
         "nav_contact": "اتصل بنا",
-        "btn_start_project": "ابدأ مشروعك",
+        "btn_start_project": "إطلاق المشروع",
 
         // Hero
         "hero_title": "ALTIZ",
@@ -32,8 +32,8 @@ const translations = {
         "solutions_branding_desc": "تصميم شعار احترافي، لافتات، وكتالوجات لتأسيس حضور قوي ومميز.",
 
         // Portfolio
-        "portfolio_title": "أعمالنا",
-        "portfolio_desc": "معرض للإبداع القائم على المنطق والتميز التقني.",
+        "portfolio_title": "مشاريعنا التقنية",
+        "portfolio_desc": "ابتكارات برمجية تجمع بين الدقة المنطقية والتميز الإبداعي.",
         "portfolio_empty": "يتم تحديث قاعدة بيانات المشاريع حالياً. عد قريباً!",
         "view_project": "مشاهدة المشروع",
 

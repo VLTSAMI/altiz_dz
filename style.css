@@ -115,8 +115,11 @@ img {
 
 /* Section Headers */
 .section-header {
-    text-align: center;
+    text-align: center !important;
     margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .section-title {
@@ -126,6 +129,7 @@ img {
     margin-bottom: 1rem;
     position: relative;
     display: inline-block;
+    text-align: center !important;
 }
 
 .section-title::after {
@@ -145,6 +149,7 @@ img {
     font-size: 1.1rem;
     max-width: 600px;
     margin: 1.5rem auto 0;
+    text-align: center !important;
 }
 
 .highlight {
@@ -1361,13 +1366,15 @@ footer p {
         background: var(--nav-bg);
         flex-direction: column;
         padding: 2rem;
-        gap: 1.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        backdrop-filter: blur(12px);
+        gap: 2rem;
+        transform: translateY(-100%);
+        transition: transform var(--transition-normal);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .nav-links.active {
         display: flex;
+        transform: translateY(0);
     }
     
     .nav-actions {
