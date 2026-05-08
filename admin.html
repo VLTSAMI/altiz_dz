@@ -24,22 +24,20 @@
         .btn { background: var(--accent); color: #000; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
         .btn-secondary { background: #222; color: #fff; }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
-        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; transition: 0.3s; }
+        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; transition: 0.3s; position: relative; }
         .project-card:hover { border-color: var(--accent); background: var(--card-hover); }
+        .media-preview { width: 100%; height: 160px; background: #111; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; border: 1px solid var(--border); }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 100; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
         .modal-content { background: var(--card); width: 100%; max-width: 800px; padding: 3rem; border-radius: 24px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; margin-bottom: 0.6rem; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; }
         input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; color: #fff; outline: none; transition: 0.3s; box-sizing: border-box; }
-        input:focus { border-color: var(--accent); }
         .plan-item { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .modal-tabs { display: flex; gap: 10px; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .tab-trigger { padding: 10px 20px; border-radius: 8px; cursor: pointer; color: var(--text-dim); font-weight: 600; }
-        .tab-trigger.active { background: var(--accent-glow); color: var(--accent); }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
     </style>
 </head>
 <body>
@@ -63,22 +61,41 @@
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <h2 id="projectModalTitle">Project Details</h2>
+            <form id="projectForm" onsubmit="handleProjectSave(event)">
+                <input type="hidden" id="projectId">
+                <div class="form-grid">
+                    <div class="form-group"><label>Title</label><input id="title" required></div>
+                    <div class="form-group"><label>Category</label><select id="category"><option>Web Development</option><option>Video Production</option><option>Creative Branding</option></select></div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Type</label><select id="type"><option value="image">Image</option><option value="video">Video</option></select></div>
+                    <div class="form-group"><label>Media Link (Drive/Direct)</label><input id="path" required></div>
+                </div>
+                <div class="form-group"><label>External Link (Optional)</label><input id="link"></div>
+                <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn">Deploy Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Plan Modal -->
     <div id="planModal" class="modal">
         <div class="modal-content">
             <h2 id="planModalTitle">Configure Plan</h2>
-            <div class="modal-tabs">
-                <div class="tab-trigger active" onclick="switchPlanTab('en')">English</div>
-                <div class="tab-trigger" onclick="switchPlanTab('ar')">العربية</div>
-            </div>
             <form id="planForm" onsubmit="handlePlanSave(event)">
                 <input type="hidden" id="planId">
-                <div id="tab-en" class="tab-pane active">
+                <div class="form-grid">
                     <div class="form-group"><label>Price (EN)</label><input id="price_en"></div>
-                    <div class="form-group"><label>Feature (EN)</label><input id="s1_name_en"></div>
-                </div>
-                <div id="tab-ar" class="tab-pane">
                     <div class="form-group" dir="rtl"><label>السعر (AR)</label><input id="price_ar"></div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Feature (EN)</label><input id="s1_name_en"></div>
                     <div class="form-group" dir="rtl"><label>الميزة (AR)</label><input id="s1_name_ar"></div>
                 </div>
                 <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
@@ -112,24 +129,73 @@
             document.getElementById('nav-' + tab).classList.add('active');
         }
 
-        function switchPlanTab(lang) {
-            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + lang).classList.add('active');
-            event.target.classList.add('active');
-        }
-
         function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
 
-        // Projects logic
+        function fixDriveUrl(url, type) {
+            if (!url || !url.includes("drive.google.com")) return url;
+            const id = url.split("/d/")[1]?.split("/")[0] || url.split("id=")[1]?.split("&")[0];
+            return type === 'video' ? `https://docs.google.com/uc?export=download&id=${id}` : `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+        }
+
+        // Projects Management
+        let projectsData = [];
         db.collection("projects").onSnapshot(snap => {
             const grid = document.getElementById('project-grid');
+            projectsData = [];
             grid.innerHTML = '';
             snap.forEach(doc => {
-                const p = doc.data();
-                grid.innerHTML += `<div class="project-card"><h3>${p.title}</h3><p style="color:var(--accent)">${p.category}</p></div>`;
+                const p = { id: doc.id, ...doc.data() };
+                projectsData.push(p);
+                grid.innerHTML += `
+                    <div class="project-card">
+                        <img src="${fixDriveUrl(p.path, p.type)}" class="media-preview">
+                        <h3>${p.title}</h3>
+                        <p style="color:var(--accent); font-size:0.9rem">${p.category}</p>
+                        <div style="display:flex; gap:10px; margin-top:15px;">
+                            <button class="btn btn-secondary" style="flex:1; padding:0.5rem" onclick="editProject('${p.id}')">Edit</button>
+                            <button class="btn btn-danger" style="padding:0.5rem" onclick="deleteProject('${p.id}')">×</button>
+                        </div>
+                    </div>`;
             });
         });
+
+        function openProjectModal() {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.getElementById('projectModal').classList.add('active');
+        }
+
+        function editProject(id) {
+            const p = projectsData.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('projectId').value = p.id;
+            document.getElementById('title').value = p.title || '';
+            document.getElementById('category').value = p.category || 'Web Development';
+            document.getElementById('type').value = p.type || 'image';
+            document.getElementById('path').value = p.path || '';
+            document.getElementById('link').value = p.link || '';
+            document.getElementById('projectModal').classList.add('active');
+        }
+
+        async function deleteProject(id) {
+            if (confirm("Delete this project?")) await db.collection("projects").doc(id).delete();
+        }
+
+        async function handleProjectSave(e) {
+            e.preventDefault();
+            const id = document.getElementById('projectId').value;
+            const data = {
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                type: document.getElementById('type').value,
+                path: document.getElementById('path').value,
+                link: document.getElementById('link').value,
+                order: Date.now()
+            };
+            if (id) await db.collection("projects").doc(id).update(data);
+            else await db.collection("projects").add(data);
+            closeModal();
+        }
 
         // Plans logic
         let cloudPlans = {};
@@ -141,15 +207,11 @@
 
         function renderPlansList() {
             const list = document.getElementById('plans-list');
-            // Use the global pricingData variable from pricing_data.js
             const localData = window.pricingData || pricingData || {}; 
             list.innerHTML = '';
             Object.keys(localData).forEach(id => {
                 const p = { ...localData[id], ...cloudPlans[id] };
-                const item = document.createElement('div');
-                item.className = 'plan-item';
-                item.innerHTML = `<div><h3>${id.replace(/_/g, ' ').toUpperCase()}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Configure</button>`;
-                list.appendChild(item);
+                list.innerHTML += `<div class="plan-item"><div><h3>${id.replace(/_/g, ' ').toUpperCase()}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Configure</button></div>`;
             });
         }
 
@@ -167,13 +229,12 @@
         async function handlePlanSave(e) {
             e.preventDefault();
             const id = document.getElementById('planId').value;
-            const data = {
+            await db.collection("plans").doc(id).set({
                 price_en: document.getElementById('price_en').value,
                 price_ar: document.getElementById('price_ar').value,
                 s1_name_en: document.getElementById('s1_name_en').value,
                 s1_name_ar: document.getElementById('s1_name_ar').value
-            };
-            await db.collection("plans").doc(id).set(data, { merge: true });
+            }, { merge: true });
             closeModal();
         }
     </script>
