@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altiz Premium Admin | Ultimate Control</title>
+    <title>Altiz Premium Admin | Secure Access</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
@@ -15,6 +15,13 @@
         }
 
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; min-height: 100vh; overflow-x: hidden; }
+        
+        /* Login Screen */
+        #login-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
+        .login-box { background: var(--card); border: 1px solid var(--border); padding: 3rem; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
+        .login-box h2 { font-family: 'Space Grotesk', sans-serif; margin-bottom: 2rem; color: var(--accent); }
+        
+        /* Dashboard Layout */
         .sidebar { width: 280px; background: var(--card); border-right: 1px solid var(--border); padding: 2.5rem 1.5rem; position: fixed; height: 100vh; box-sizing: border-box; z-index: 10; }
         .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 3rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
         .nav-link { color: var(--text-dim); text-decoration: none; padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.3s; font-weight: 500; }
@@ -51,6 +58,18 @@
     </style>
 </head>
 <body>
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>Admin Access</h2>
+            <div class="form-group">
+                <label>Access Key</label>
+                <input type="password" id="admin-pass" placeholder="Enter password..." onkeydown="if(event.key==='Enter') checkAuth()">
+            </div>
+            <button class="btn w-100" onclick="checkAuth()" style="width:100%">Unlock Dashboard</button>
+            <p id="login-err" style="color:var(--danger); margin-top:1rem; display:none">Access Denied: Incorrect Key</p>
+        </div>
+    </div>
+
     <div id="status-bar"></div>
 
     <div class="sidebar">
@@ -59,6 +78,7 @@
             <div class="nav-link active" id="nav-projects" onclick="showTab('projects')">Portfolio</div>
             <div class="nav-link" id="nav-plans" onclick="showTab('plans')">Pricing</div>
             <div class="nav-link" id="nav-sequence" onclick="showTab('sequence')">Sorting</div>
+            <div class="nav-link" onclick="logout()" style="margin-top:2rem; color:var(--danger)">Logout</div>
         </nav>
     </div>
 
@@ -146,6 +166,30 @@
     <script src="pricing_data.js"></script>
 
     <script>
+        // --- Security Configuration ---
+        const ADMIN_PASSWORD = "ALTIZ_ADMIN_2026"; // Default password
+
+        function checkAuth() {
+            const input = document.getElementById('admin-pass').value;
+            if (input === ADMIN_PASSWORD) {
+                sessionStorage.setItem('admin_auth', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+            } else {
+                document.getElementById('login-err').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_auth');
+            location.reload();
+        }
+
+        // Check on load
+        if (sessionStorage.getItem('admin_auth') === 'true') {
+            document.getElementById('login-overlay').style.display = 'none';
+        }
+
+        // --- Firebase & Dashboard Logic ---
         const firebaseConfig = {
             apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
             authDomain: "altiz1dz.firebaseapp.com",
@@ -198,6 +242,7 @@
 
         function renderPortfolio() {
             const g = document.getElementById('project-grid');
+            if(!g) return;
             g.innerHTML = '';
             projectsData.forEach(p => {
                 const thumb = p.thumbnail || p.path;
@@ -215,6 +260,7 @@
 
         function renderSequence() {
             const s = document.getElementById('sequence-list');
+            if(!s) return;
             s.innerHTML = '';
             projectsData.forEach(p => {
                 const thumb = p.thumbnail || p.path;
@@ -293,6 +339,7 @@
 
         function renderPlansList() {
             const l = document.getElementById('plans-list');
+            if(!l) return;
             const data = window.pricingData || pricingData || {};
             l.innerHTML = '';
             Object.keys(data).forEach(id => {
