@@ -13,63 +13,78 @@
             --input-bg: rgba(255, 255, 255, 0.03); --danger: #ef4444;
         }
 
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; min-height: 100vh; overflow-x: hidden; }
         .sidebar { width: 280px; background: var(--card); border-right: 1px solid var(--border); padding: 2.5rem 1.5rem; position: fixed; height: 100vh; box-sizing: border-box; z-index: 10; }
         .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 3rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
-        .nav-link { color: var(--text-dim); text-decoration: none; padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.3s; }
+        .nav-link { color: var(--text-dim); text-decoration: none; padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.3s; font-weight: 500; }
         .nav-link.active { background: var(--accent-glow); color: var(--accent); }
-        .main { flex: 1; padding: 4rem; margin-left: 280px; box-sizing: border-box; }
+        .main { flex: 1; padding: 4rem; margin-left: 280px; max-width: 1200px; box-sizing: border-box; }
         .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
-        h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin: 0; }
-        .btn { background: var(--accent); color: #000; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin: 0; letter-spacing: -1px; }
+        .btn { background: var(--accent); color: #000; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
         .btn-secondary { background: #222; color: #fff; }
-        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
-        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; }
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
+        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; transition: 0.3s; }
+        .project-card:hover { border-color: var(--accent); background: var(--card-hover); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 100; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .modal-content { background: var(--card); width: 90%; max-width: 800px; padding: 3rem; border-radius: 24px; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card); width: 100%; max-width: 800px; padding: 3rem; border-radius: 24px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--text-dim); }
-        input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; color: #fff; box-sizing: border-box; }
-        .plan-item { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        label { display: block; margin-bottom: 0.6rem; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; }
+        input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; color: #fff; outline: none; transition: 0.3s; box-sizing: border-box; }
+        input:focus { border-color: var(--accent); }
+        .plan-item { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .modal-tabs { display: flex; gap: 10px; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .tab-trigger { padding: 10px 20px; border-radius: 8px; cursor: pointer; color: var(--text-dim); font-weight: 600; }
+        .tab-trigger.active { background: var(--accent-glow); color: var(--accent); }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="logo">ALTIZ.STUDIO</div>
         <nav>
-            <div class="nav-link active" onclick="showTab('projects')">Projects</div>
-            <div class="nav-link" onclick="showTab('plans')">Service Plans</div>
+            <div class="nav-link active" id="nav-projects" onclick="showTab('projects')">Portfolio Projects</div>
+            <div class="nav-link" id="nav-plans" onclick="showTab('plans')">Service Plans</div>
         </nav>
     </div>
 
     <div class="main">
-        <div id="projects-tab" class="tab-content">
-            <div class="header"><h1>Projects</h1><button class="btn" onclick="openModal('project')">New Project</button></div>
-            <div id="project-grid" class="project-grid">Loading...</div>
+        <div id="projects-tab" class="tabs-content">
+            <div class="header"><div><p style="color:var(--accent);margin:0">Portfolio</p><h1>Your Work</h1></div><button class="btn" onclick="openProjectModal()">New Project</button></div>
+            <div class="project-grid" id="project-grid">Syncing Cloud...</div>
         </div>
 
-        <div id="plans-tab" class="tab-content" style="display:none;">
-            <div class="header"><h1>Service Plans</h1></div>
-            <div id="plans-list">Loading...</div>
+        <div id="plans-tab" class="tabs-content" style="display:none">
+            <div class="header"><div><p style="color:var(--accent);margin:0">Pricing</p><h1>Service Plans</h1></div></div>
+            <div id="plans-list">Syncing Engine...</div>
         </div>
     </div>
 
-    <!-- Modals (Simplified) -->
-    <div id="projectModal" class="modal"><div class="modal-content"><h2>Project Details</h2><form id="projectForm"><div class="form-group"><label>Title</label><input id="p-title" required></div><button type="submit" class="btn">Save</button><button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button></form></div></div>
-
+    <!-- Modals -->
     <div id="planModal" class="modal">
         <div class="modal-content">
-            <h2 id="plan-title">Edit Plan</h2>
-            <form id="planForm" onsubmit="savePlan(event)">
-                <input type="hidden" id="p-id">
-                <div class="form-group"><label>Price (EN)</label><input id="p-price-en"></div>
-                <div class="form-group"><label>Price (AR)</label><input id="p-price-ar"></div>
-                <div class="form-group"><label>Feature (EN)</label><input id="p-feat-en"></div>
-                <div class="form-group"><label>Feature (AR)</label><input id="p-feat-ar"></div>
-                <button type="submit" class="btn">Update Cloud</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <h2 id="planModalTitle">Configure Plan</h2>
+            <div class="modal-tabs">
+                <div class="tab-trigger active" onclick="switchPlanTab('en')">English</div>
+                <div class="tab-trigger" onclick="switchPlanTab('ar')">العربية</div>
+            </div>
+            <form id="planForm" onsubmit="handlePlanSave(event)">
+                <input type="hidden" id="planId">
+                <div id="tab-en" class="tab-pane active">
+                    <div class="form-group"><label>Price (EN)</label><input id="price_en"></div>
+                    <div class="form-group"><label>Feature (EN)</label><input id="s1_name_en"></div>
+                </div>
+                <div id="tab-ar" class="tab-pane">
+                    <div class="form-group" dir="rtl"><label>السعر (AR)</label><input id="price_ar"></div>
+                    <div class="form-group" dir="rtl"><label>الميزة (AR)</label><input id="s1_name_ar"></div>
+                </div>
+                <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn">Update Cloud</button>
+                </div>
             </form>
         </div>
     </div>
@@ -79,7 +94,7 @@
     <script src="pricing_data.js"></script>
 
     <script>
-        const config = {
+        const firebaseConfig = {
             apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
             authDomain: "altiz1dz.firebaseapp.com",
             projectId: "altiz1dz",
@@ -87,64 +102,78 @@
             messagingSenderId: "716320058728",
             appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
         };
-        firebase.initializeApp(config);
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        function showTab(t) {
-            document.querySelectorAll('.tab-content').forEach(x => x.style.display = 'none');
-            document.getElementById(t + '-tab').style.display = 'block';
+        function showTab(tab) {
+            document.querySelectorAll('.tabs-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(tab + '-tab').style.display = 'block';
+            document.getElementById('nav-' + tab).classList.add('active');
+        }
+
+        function switchPlanTab(lang) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + lang).classList.add('active');
+            event.target.classList.add('active');
         }
 
         function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
 
-        // Projects
+        // Projects logic
         db.collection("projects").onSnapshot(snap => {
-            const g = document.getElementById('project-grid');
-            g.innerHTML = '';
+            const grid = document.getElementById('project-grid');
+            grid.innerHTML = '';
             snap.forEach(doc => {
                 const p = doc.data();
-                g.innerHTML += `<div class="project-card"><h3>${p.title}</h3><p>${p.category}</p></div>`;
+                grid.innerHTML += `<div class="project-card"><h3>${p.title}</h3><p style="color:var(--accent)">${p.category}</p></div>`;
             });
         });
 
-        // Plans
+        // Plans logic
         let cloudPlans = {};
         db.collection("plans").onSnapshot(snap => {
             cloudPlans = {};
             snap.forEach(doc => cloudPlans[doc.id] = doc.data());
-            renderPlans();
+            renderPlansList();
         });
 
-        function renderPlans() {
-            const l = document.getElementById('plans-list');
-            const data = window.pricingData || {};
-            l.innerHTML = '';
-            Object.keys(data).forEach(id => {
-                const p = { ...data[id], ...cloudPlans[id] };
-                l.innerHTML += `<div class="plan-item"><div><h3>${id}</h3><p>${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Edit</button></div>`;
+        function renderPlansList() {
+            const list = document.getElementById('plans-list');
+            // Use the global pricingData variable from pricing_data.js
+            const localData = window.pricingData || pricingData || {}; 
+            list.innerHTML = '';
+            Object.keys(localData).forEach(id => {
+                const p = { ...localData[id], ...cloudPlans[id] };
+                const item = document.createElement('div');
+                item.className = 'plan-item';
+                item.innerHTML = `<div><h3>${id.replace(/_/g, ' ').toUpperCase()}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Configure</button>`;
+                list.appendChild(item);
             });
         }
 
         function editPlan(id) {
-            const data = { ...pricingData[id], ...cloudPlans[id] };
-            document.getElementById('p-id').value = id;
-            document.getElementById('p-price-en').value = data.price_en || '';
-            document.getElementById('p-price-ar').value = data.price_ar || '';
-            document.getElementById('p-feat-en').value = data.s1_name_en || '';
-            document.getElementById('p-feat-ar').value = data.s1_name_ar || '';
+            const localData = window.pricingData || pricingData || {};
+            const p = { ...localData[id], ...cloudPlans[id] };
+            document.getElementById('planId').value = id;
+            document.getElementById('price_en').value = p.price_en || '';
+            document.getElementById('price_ar').value = p.price_ar || '';
+            document.getElementById('s1_name_en').value = p.s1_name_en || '';
+            document.getElementById('s1_name_ar').value = p.s1_name_ar || '';
             document.getElementById('planModal').classList.add('active');
         }
 
-        async function savePlan(e) {
+        async function handlePlanSave(e) {
             e.preventDefault();
-            const id = document.getElementById('p-id').value;
-            const payload = {
-                price_en: document.getElementById('p-price-en').value,
-                price_ar: document.getElementById('p-price-ar').value,
-                s1_name_en: document.getElementById('p-feat-en').value,
-                s1_name_ar: document.getElementById('p-feat-ar').value
+            const id = document.getElementById('planId').value;
+            const data = {
+                price_en: document.getElementById('price_en').value,
+                price_ar: document.getElementById('price_ar').value,
+                s1_name_en: document.getElementById('s1_name_en').value,
+                s1_name_ar: document.getElementById('s1_name_ar').value
             };
-            await db.collection("plans").doc(id).set(payload, { merge: true });
+            await db.collection("plans").doc(id).set(data, { merge: true });
             closeModal();
         }
     </script>

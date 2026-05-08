@@ -1,4 +1,4 @@
-const pricingData = {
+var pricingData = {
     "visual_identity_basic": {
         "price_en": "2,000 DZD", "price_ar": "2,000 د.ج", "price_fr": "2,000 DZD",
         "s1_name_en": "Logo Design", "s1_name_ar": "تصميم شعار", "s1_name_fr": "Design de Logo",
