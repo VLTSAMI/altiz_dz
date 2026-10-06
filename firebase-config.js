@@ -1,3 +1,4 @@
+// Altiz Solutions DZ - Firebase Configuration & Initialization
 const firebaseConfig = {
     apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
     authDomain: "altiz1dz.firebaseapp.com",
@@ -8,9 +9,18 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase (Compat Version)
-if (!firebase.apps.length) {
+if (typeof firebase !== 'undefined' && (!firebase.apps || !firebase.apps.length)) {
     firebase.initializeApp(firebaseConfig);
 }
-const db = firebase.firestore();
-const storage = firebase.storage ? firebase.storage() : null;
-const auth = firebase.auth ? firebase.auth() : null;
+
+const db = (typeof firebase !== 'undefined' && typeof firebase.firestore === 'function') 
+    ? firebase.firestore() 
+    : null;
+
+const auth = (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') 
+    ? firebase.auth() 
+    : null;
+
+const storage = (typeof firebase !== 'undefined' && typeof firebase.storage === 'function') 
+    ? firebase.storage() 
+    : null;

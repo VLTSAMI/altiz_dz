@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Altiz Premium Admin | Secure Cyber Access</title>
+    <link rel="icon" type="image/png" href="altiz-logo-clean.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
@@ -83,11 +84,11 @@
             <form onsubmit="handleAuthLogin(event)">
                 <div class="form-group" style="text-align: left;">
                     <label>Admin Email</label>
-                    <input type="email" id="admin-email" placeholder="admin@altiz.dz" value="admin@altiz.dz" required>
+                    <input type="email" id="admin-email" placeholder="admin@altiz.dz" required autocomplete="username">
                 </div>
                 <div class="form-group" style="text-align: left;">
                     <label>Password / Access Key</label>
-                    <input type="password" id="admin-pass" placeholder="••••••••••••" required>
+                    <input type="password" id="admin-pass" placeholder="••••••••••••" required autocomplete="current-password">
                 </div>
                 <button type="submit" class="btn w-100" style="width:100%; margin-top: 1rem;">Authenticate</button>
             </form>
@@ -179,9 +180,9 @@
             <form onsubmit="handlePlanSave(event)">
                 <input type="hidden" id="planId">
                 <div class="modal-tabs">
-                    <div class="tab-trigger active" onclick="switchPlanTab('en')">English</div>
-                    <div class="tab-trigger" onclick="switchPlanTab('ar')">العربية</div>
-                    <div class="tab-trigger" onclick="switchPlanTab('fr')">Français</div>
+                    <div class="tab-trigger active" onclick="switchPlanTab('en', this)">English</div>
+                    <div class="tab-trigger" onclick="switchPlanTab('ar', this)">العربية</div>
+                    <div class="tab-trigger" onclick="switchPlanTab('fr', this)">Français</div>
                 </div>
                 <div id="tab-en" class="tab-pane active">
                     <div class="form-group"><label>Price (EN)</label><input type="text" id="price_en"></div>
@@ -203,31 +204,18 @@
         </div>
     </div>
 
-    <!-- Firebase App, Auth & Firestore SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Firebase App, Auth & Firestore SDKs (Unified 9.6.10 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js?v=3.2"></script>
+    <script src="utils.js?v=3.2"></script>
 
     <script>
-        // --- Firebase Configuration ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
-            authDomain: "altiz1dz.firebaseapp.com",
-            projectId: "altiz1dz",
-            storageBucket: "altiz1dz.firebasestorage.app",
-            messagingSenderId: "716320058728",
-            appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // --- Real Authentication Engine ---
+        // --- Real Authentication Engine (Direct Firebase Auth, Master Key Removed) ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 unlockDashboard(user.email);
-            } else if (sessionStorage.getItem('admin_master_session') === 'true') {
-                unlockDashboard("Master Admin (Key Session)");
             } else {
                 lockDashboard();
             }
@@ -240,18 +228,10 @@
             const errEl = document.getElementById('login-err');
             errEl.style.display = 'none';
 
-            // Attempt 1: Real Firebase Authentication
             try {
                 await auth.signInWithEmailAndPassword(email, pass);
-                return;
             } catch (authError) {
-                // Attempt 2: Secure Master Key Fallback
-                if (pass === "ALTIZ_ADMIN_2026" || pass === "altiz2026") {
-                    sessionStorage.setItem('admin_master_session', 'true');
-                    unlockDashboard(email || "Master Admin");
-                    return;
-                }
-                errEl.innerText = "Access Denied: " + (authError.message || "Invalid Key");
+                errEl.innerText = "Access Denied: " + (authError.message || "Invalid Credentials");
                 errEl.style.display = 'block';
             }
         }
@@ -266,7 +246,6 @@
         }
 
         async function logout() {
-            sessionStorage.removeItem('admin_master_session');
             try { await auth.signOut(); } catch(e){}
             location.reload();
         }
@@ -286,20 +265,19 @@
             document.getElementById('nav-' + t).classList.add('active');
         }
 
-        function switchPlanTab(l) {
+        function switchPlanTab(l, el) {
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + l).classList.add('active');
-            event.target.classList.add('active');
+            if (el) {
+                el.classList.add('active');
+            } else {
+                const fallbackTab = document.querySelector(`.tab-trigger[onclick*="'${l}'"]`);
+                if (fallbackTab) fallbackTab.classList.add('active');
+            }
         }
 
         function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
-
-        function fixDriveUrl(u, t) {
-            if (!u || !u.includes("drive.google.com")) return u;
-            const id = u.split("/d/")[1]?.split("/")[0] || u.split("id=")[1]?.split("&")[0];
-            return t === 'video' ? `https://docs.google.com/uc?export=download&id=${id}` : `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-        }
 
         // --- Portfolio Operations ---
         let projectsData = [];
@@ -317,10 +295,12 @@
             g.innerHTML = '';
             projectsData.forEach(p => {
                 const thumb = p.thumbnail || p.path;
+                const safeCat = escapeHtml(p.category || 'General');
+                const safeTitle = escapeHtml(p.title || 'Untitled');
                 g.innerHTML += `<div class="project-card">
                     <img src="${fixDriveUrl(thumb, 'image')}" class="media-preview" onerror="this.src='https://via.placeholder.com/320x160/111/444?text=Preview+Error'">
-                    <span style="color:var(--accent); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; font-weight:700;">${p.category}</span>
-                    <h3 style="margin:5px 0 15px; font-size:1.2rem">${p.title}</h3>
+                    <span style="color:var(--accent); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; font-weight:700;">${safeCat}</span>
+                    <h3 style="margin:5px 0 15px; font-size:1.2rem">${safeTitle}</h3>
                     <div style="display:flex; gap:10px">
                         <button class="btn btn-secondary" style="flex:1" onclick="editProject('${p.id}')">Edit</button>
                         <button class="btn btn-danger" onclick="deleteProject('${p.id}')">Delete</button>
@@ -335,10 +315,12 @@
             list.innerHTML = '';
             projectsData.forEach(p => {
                 const thumb = p.thumbnail || p.path;
+                const safeCat = escapeHtml(p.category || 'General');
+                const safeTitle = escapeHtml(p.title || 'Untitled');
                 list.innerHTML += `<div class="sequence-item" data-id="${p.id}">
                     <span class="handle">☰</span>
                     <img src="${fixDriveUrl(thumb, 'image')}" style="width:40px;height:40px;clip-path:var(--cyber-clip-sm);object-fit:cover" onerror="this.src='https://via.placeholder.com/40/111/444?text=P'">
-                    <div style="flex:1"><strong>${p.title}</strong> <span style="color:var(--text-dim)">(${p.category})</span></div>
+                    <div style="flex:1"><strong>${safeTitle}</strong> <span style="color:var(--text-dim)">(${safeCat})</span></div>
                     <span style="color:var(--accent); font-weight:700;">#${p.order || 0}</span>
                 </div>`;
             });

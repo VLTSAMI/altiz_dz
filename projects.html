@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Projects | Altiz Solutions</title>
-    <link rel="stylesheet" href="style.css?v=3.2">
+    <link rel="icon" type="image/png" href="altiz-logo-clean.png">
+    <link rel="stylesheet" href="style.css?v=3.6">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <style>
         .projects-header {
@@ -180,67 +181,36 @@
         <div class="projects-grid" id="projects-grid"></div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <script src="translations.js"></script>
+    <!-- Firebase SDKs (Unified 9.6.10 Compat) & Utilities -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js?v=3.2"></script>
+    <script src="utils.js?v=3.2"></script>
+    <script src="translations.js?v=3.2"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
-            authDomain: "altiz1dz.firebaseapp.com",
-            projectId: "altiz1dz",
-            storageBucket: "altiz1dz.firebasestorage.app",
-            messagingSenderId: "716320058728",
-            appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
-        };
-
-        // Improved Helper to convert Drive Link
-        function fixDriveUrl(url, type = 'image') {
-            if (!url) return "";
-            if (url.includes("drive.google.com")) {
-                let id = "";
-                if (url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
-                else if (url.includes("id=")) id = url.split("id=")[1].split("&")[0];
-                if (!id) return url;
-
-                if (type === 'video') return `https://docs.google.com/uc?export=download&id=${id}`;
-                if (type === 'preview') return `https://drive.google.com/file/d/${id}/view`;
-                
-                // Use official Google Drive thumbnail endpoint
-                return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
-            }
-            return url;
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('projects-grid');
             const skeleton = document.getElementById('loading-skeleton');
             const filterBtns = document.querySelectorAll('.filter-btn');
 
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-
             let allProjects = [];
 
-            // Set Language logic
+            // Unified Language & RTL logic
             const lang = localStorage.getItem('preferredLang') || 'en';
             document.documentElement.lang = lang;
-            if(lang === 'ar') {
-                document.body.classList.add('rtl-layout');
-                document.body.style.direction = 'rtl';
-            }
+            document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+            document.body.classList.toggle('rtl-layout', lang === 'ar');
 
             // Apply translations to all data-i18n elements
             const t_obj = translations[lang] || translations['en'];
-            function applyTranslations(lang) {
-                const t = translations[lang] || translations['en'];
+            function applyTranslations(targetLang) {
+                const t = translations[targetLang] || translations['en'];
                 document.querySelectorAll('[data-i18n]').forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (t[key] !== undefined) el.innerHTML = t[key];
                 });
-                // Set RTL/LTR
-                document.documentElement.dir = t.dir || 'ltr';
+                document.documentElement.dir = t.dir || (targetLang === 'ar' ? 'rtl' : 'ltr');
+                document.body.classList.toggle('rtl-layout', targetLang === 'ar');
             }
             applyTranslations(lang);
 
@@ -256,7 +226,7 @@
             function renderProjects(projects) {
                 grid.innerHTML = '';
                 if (projects.length === 0) {
-                    grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; opacity: 0.5;">${t_obj['portfolio_empty'] || 'No projects found.'}</p>`;
+                    grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; opacity: 0.5;">${escapeHtml(t_obj['portfolio_empty'] || 'No projects found.')}</p>`;
                     return;
                 }
                 projects.forEach(p => {
@@ -271,24 +241,31 @@
                     const translatedCat = catMap[p.category] || p.category;
                     const viewProjectText = t_obj['view_project'] || 'View Project';
 
+                    const safeTitle = escapeHtml(p.title || 'Untitled');
+                    const safeCat = escapeHtml(translatedCat);
+                    const safeDisplayImage = escapeHtml(displayImage);
+                    const safePath = escapeHtml(path);
+                    const safeThumb = escapeHtml(thumb);
+                    const projectLink = (p.link && p.link !== '#') ? p.link : preview;
+                    const safeProjectLink = escapeHtml(projectLink);
+
                     let mediaHtml = '';
                     if (p.type === 'video') {
-                        mediaHtml = `<video src="${path}" autoplay muted loop playsinline poster="${thumb}" 
+                        mediaHtml = `<video src="${safePath}" autoplay muted loop playsinline poster="${safeThumb}" 
                             style="width: 100%; height: 100%; object-fit: contain; background: #000;"></video>`;
                     } else {
-                        mediaHtml = `<img src="${displayImage}" alt="${p.title}" loading="lazy" 
+                        mediaHtml = `<img src="${safeDisplayImage}" alt="${safeTitle}" loading="lazy" 
                             style="width: 100%; height: 100%; object-fit: contain; background: #000;"
                             onerror="this.src='https://via.placeholder.com/400x225/111/444?text=Image+Not+Found'">`;
                     }
                     
-                    const projectLink = (p.link && p.link !== '#') ? p.link : preview;
                     card.innerHTML = `
                         <div class="project-media">${mediaHtml}</div>
                         <div class="project-info">
-                            <span class="project-category">${translatedCat}</span>
-                            <h3 class="project-title">${p.title}</h3>
-                            <a href="${projectLink}" target="_blank" class="portfolio-link" style="margin-top: 1rem; display: inline-flex; align-items: center; gap: 5px; color: var(--primary-accent); text-decoration: none; font-size: 0.9rem;">
-                                ${viewProjectText}
+                            <span class="project-category">${safeCat}</span>
+                            <h3 class="project-title">${safeTitle}</h3>
+                            <a href="${safeProjectLink}" target="_blank" rel="noopener noreferrer" class="portfolio-link" style="margin-top: 1rem; display: inline-flex; align-items: center; gap: 5px; color: var(--primary-accent); text-decoration: none; font-size: 0.9rem;">
+                                ${escapeHtml(viewProjectText)}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                             </a>
                         </div>`;

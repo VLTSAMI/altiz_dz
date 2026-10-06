@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Altiz Solutions DZ - Elevating Brands Through Logic & Art. High-End Web Development, Cinematic Production, and Branding.">
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:title" content="Altiz Solutions DZ | Professional Agency">
+    <meta property="og:description" content="Elevating Brands Through Logic & Art. High-End Web Development, Cinematic Production, and Branding.">
+    <meta property="og:image" content="altiz-logo-clean.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Altiz Solutions DZ | Professional Agency">
+    <meta name="twitter:description" content="Elevating Brands Through Logic & Art. High-End Web Development, Cinematic Production, and Branding.">
+    <meta name="twitter:image" content="altiz-logo-clean.png">
+    <link rel="icon" type="image/png" href="altiz-logo-clean.png">
     <title>Altiz Solutions DZ | Professional Agency</title>
 
     <!-- Google Fonts: Syne (Display), Space Grotesk (Headers) and Inter (Body) -->
@@ -42,7 +52,7 @@
                 </ul>
             </nav>
             <div class="lang-selector">
-                <button class="lang-btn" id="lang-btn">
+                <button class="lang-btn" id="lang-btn" aria-label="Select Language" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -62,7 +72,7 @@
             <div class="nav-actions">
                 <a href="#contact" class="btn btn-cta" data-i18n="btn_start_project">Start a Project</a>
             </div>
-            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+            <button class="mobile-menu-btn" aria-label="Toggle Menu" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -136,6 +146,41 @@
             </div>
         </section>
 
+        <!-- Trust Building: Animated Stats Section -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card cyber-clip animate-on-scroll fade-up">
+                        <div class="stat-number-wrap">
+                            <span class="stat-number" data-target="45">0</span>
+                            <span class="stat-plus">+</span>
+                        </div>
+                        <p class="stat-label" data-i18n="stat_projects">Completed Projects</p>
+                    </div>
+                    <div class="stat-card cyber-clip animate-on-scroll fade-up" style="--delay: 1">
+                        <div class="stat-number-wrap">
+                            <span class="stat-number" data-target="30">0</span>
+                            <span class="stat-plus">+</span>
+                        </div>
+                        <p class="stat-label" data-i18n="stat_clients">Satisfied Clients</p>
+                    </div>
+                    <div class="stat-card cyber-clip animate-on-scroll fade-up" style="--delay: 2">
+                        <div class="stat-number-wrap">
+                            <span class="stat-number" data-target="99">0</span>
+                            <span class="stat-plus">%</span>
+                        </div>
+                        <p class="stat-label" data-i18n="stat_delivery">On-Time Delivery Rate</p>
+                    </div>
+                    <div class="stat-card cyber-clip animate-on-scroll fade-up" style="--delay: 3">
+                        <div class="stat-number-wrap">
+                            <span class="stat-number" data-target="24">0</span>
+                            <span class="stat-plus">/7</span>
+                        </div>
+                        <p class="stat-label" data-i18n="stat_support">Continuous Tech Support</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Solutions Section -->
         <section class="solutions section-padding" id="solutions">
@@ -790,26 +835,14 @@
         </div>
     </footer>
 
-    <!-- Samples Modal -->
-    <div id="samples-modal" class="modal-overlay">
-        <div class="modal-content glass">
-            <div class="modal-header">
-                <h3 id="modal-tier-name">Tier Samples</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div id="samples-grid" class="portfolio-grid">
-                <!-- Filtered samples go here -->
-            </div>
-        </div>
-    </div>
-
-
+    <!-- Firebase SDK (Unified 9.6.10 Compat) & Configuration -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js?v=3.0"></script>
+    <script src="firebase-config.js?v=3.2"></script>
+    <script src="utils.js?v=3.2"></script>
 
-    <!-- Interactive Logic -->
-    <script src="translations.js?v=3.1"></script>
+    <!-- Interactive Logic & Translations -->
+    <script src="translations.js?v=3.2"></script>
     <script src="script.js?v=3.2"></script>
 </body>
 

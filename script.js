@@ -187,9 +187,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
     if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', () => navLinks.classList.toggle('active'));
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenuBtn.addEventListener('click', () => {
+            const isActive = navLinks.classList.toggle('active');
+            mobileMenuBtn.setAttribute('aria-expanded', String(isActive));
+        });
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => navLinks.classList.remove('active'));
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            });
         });
     }
 
@@ -200,10 +207,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabContents = document.querySelectorAll('.pricing-tab-content');
 
     tabBtns.forEach(btn => {
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', btn.classList.contains('active') ? 'true' : 'false');
         btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
+            tabBtns.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
             tabContents.forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
             const targetId = btn.getAttribute('data-target');
             const targetContent = document.getElementById(targetId);
             if (targetContent) targetContent.classList.add('active');
@@ -364,18 +377,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (lang === 'ar') {
             document.body.classList.add('rtl-layout');
-            document.documentElement.dir = 'ltr';
-            document.body.dir = 'rtl';
+            document.documentElement.dir = 'rtl';
             if (langBtnText) langBtnText.textContent = 'AR';
         } else if (lang === 'fr') {
             document.body.classList.remove('rtl-layout');
             document.documentElement.dir = 'ltr';
-            document.body.dir = 'ltr';
             if (langBtnText) langBtnText.textContent = 'FR';
         } else {
             document.body.classList.remove('rtl-layout');
             document.documentElement.dir = 'ltr';
-            document.body.dir = 'ltr';
             if (langBtnText) langBtnText.textContent = 'EN';
         }
 
@@ -421,81 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPricingSystem();
 
     /* ==========================================================================
-       05 - Portfolio Rendering with Cyber Skeleton Loader
-       ========================================================================== */
-    function renderPortfolio() {
-        const grid = document.getElementById('portfolio-grid');
-        if (!grid) return;
-
-        // Render sleek skeleton cards immediately while fetching
-        grid.innerHTML = `
-            <div class="skeleton-card cyber-clip">
-                <div class="skeleton-media"></div>
-                <div class="skeleton-line sm"></div>
-                <div class="skeleton-line md"></div>
-            </div>
-            <div class="skeleton-card cyber-clip">
-                <div class="skeleton-media"></div>
-                <div class="skeleton-line sm"></div>
-                <div class="skeleton-line md"></div>
-            </div>
-            <div class="skeleton-card cyber-clip">
-                <div class="skeleton-media"></div>
-                <div class="skeleton-line sm"></div>
-                <div class="skeleton-line md"></div>
-            </div>
-        `;
-
-        if (typeof firebase === 'undefined') return;
-        const firestore = firebase.firestore();
-
-        firestore.collection("projects").onSnapshot(snapshot => {
-            grid.innerHTML = '';
-            const projects = [];
-            snapshot.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
-            projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-            if (projects.length === 0) {
-                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No projects initialized yet.</p>`;
-                return;
-            }
-
-            projects.slice(0, 6).forEach(p => {
-                const path = p.path && p.path.includes("drive.google.com") 
-                    ? `https://docs.google.com/uc?export=download&id=${p.path.split("/d/")[1]?.split("/")[0] || p.path.split("id=")[1]?.split("&")[0]}`
-                    : p.path;
-                const thumb = p.thumbnail && p.thumbnail.includes("drive.google.com")
-                    ? `https://drive.google.com/thumbnail?id=${p.thumbnail.split("/d/")[1]?.split("/")[0] || p.thumbnail.split("id=")[1]?.split("&")[0]}&sz=w1000`
-                    : (p.thumbnail || path);
-
-                const card = document.createElement('div');
-                card.className = 'portfolio-card animate-on-scroll fade-up is-visible';
-                
-                let mediaHtml = p.type === 'video' 
-                    ? `<video src="${path}" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;" poster="${thumb}"></video>`
-                    : `<img src="${thumb}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">`;
-
-                const currentLang = localStorage.getItem('preferredLang') || 'en';
-                const viewProjectText = (translations[currentLang] && translations[currentLang]['view_project']) || 'View Project';
-
-                card.innerHTML = `
-                    ${mediaHtml}
-                    <div class="portfolio-overlay">
-                        <span style="color: var(--primary-accent); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">${p.category}</span>
-                        <h3 style="margin: 6px 0 12px; font-size: 1.15rem; color: #fff;">${p.title}</h3>
-                        <a href="${p.link || '#'}" target="_blank" style="color: #fff; text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
-                            ${viewProjectText} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                        </a>
-                    </div>`;
-                
-                grid.appendChild(card);
-            });
-        });
-    }
-    renderPortfolio();
-
-    /* ==========================================================================
-       06 - Trust Building: Animated Stats Counter
+       03 - Trust Building: Animated Stats Counter
        ========================================================================== */
     function initStatsCounter() {
         const statCards = document.querySelectorAll('.stat-card');
@@ -537,20 +473,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initStatsCounter();
 
-
-
     /* ==========================================================================
-       06 - Trust Building: Interactive FAQ Accordion
+       04 - Trust Building: Interactive FAQ Accordion
        ========================================================================== */
     function initFaqAccordion() {
         const faqItems = document.querySelectorAll('.faq-item');
         faqItems.forEach(item => {
             const question = item.querySelector('.faq-question');
             if (question) {
-                question.addEventListener('click', () => {
+                question.setAttribute('role', 'button');
+                question.setAttribute('tabindex', '0');
+                question.setAttribute('aria-expanded', item.classList.contains('active') ? 'true' : 'false');
+
+                const toggleFaq = () => {
                     const wasActive = item.classList.contains('active');
-                    faqItems.forEach(i => i.classList.remove('active'));
-                    if (!wasActive) item.classList.add('active');
+                    faqItems.forEach(i => {
+                        i.classList.remove('active');
+                        const q = i.querySelector('.faq-question');
+                        if (q) q.setAttribute('aria-expanded', 'false');
+                    });
+                    if (!wasActive) {
+                        item.classList.add('active');
+                        question.setAttribute('aria-expanded', 'true');
+                    }
+                };
+
+                question.addEventListener('click', toggleFaq);
+                question.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleFaq();
+                    }
                 });
             }
         });
@@ -558,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFaqAccordion();
 
     /* ==========================================================================
-       Contact Form Submission
+       05 - Contact Form Submission
        ========================================================================== */
     const submitBtn = document.getElementById('realSubmitBtn');
     if (submitBtn) {
