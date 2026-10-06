@@ -54,8 +54,32 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; margin-bottom: 0.6rem; font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
-        input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; clip-path: var(--cyber-clip); color: #fff; outline: none; transition: 0.3s; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); }
+        input, select, textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            clip-path: var(--cyber-clip);
+            color: #fff;
+            color-scheme: dark;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+        }
+        select {
+            background-color: #0d0d12;
+            cursor: pointer;
+        }
+        select option {
+            background-color: #0d0d12 !important;
+            color: #ffffff !important;
+            padding: 10px 14px;
+        }
         
         .modal-tabs { display: flex; gap: 10px; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .tab-trigger { padding: 10px 20px; clip-path: var(--cyber-clip-sm); cursor: pointer; color: var(--text-dim); font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
