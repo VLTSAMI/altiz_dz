@@ -431,50 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPricingSystem();
 
     /* ==========================================================================
-       03 - Trust Building: Animated Stats Counter
-       ========================================================================== */
-    function initStatsCounter() {
-        const statCards = document.querySelectorAll('.stat-card');
-        if (!statCards.length) return;
-
-        let hasRun = false;
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !hasRun) {
-                    hasRun = true;
-                    document.querySelectorAll('.stat-number').forEach(counter => {
-                        const target = +counter.getAttribute('data-target');
-                        const duration = 1600;
-                        const startTime = performance.now();
-
-                        function updateCount(currentTime) {
-                            const elapsed = currentTime - startTime;
-                            const progress = Math.min(elapsed / duration, 1);
-                            // Silk cubic ease-out: 1 - (1 - progress)^3
-                            const easeOut = 1 - Math.pow(1 - progress, 3);
-                            const current = Math.round(target * easeOut);
-                            counter.textContent = current;
-
-                            if (progress < 1) {
-                                requestAnimationFrame(updateCount);
-                            } else {
-                                counter.textContent = target;
-                            }
-                        }
-                        requestAnimationFrame(updateCount);
-                    });
-                    statsObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.2 });
-
-        const statsSection = document.querySelector('.stats-section');
-        if (statsSection) statsObserver.observe(statsSection);
-    }
-    initStatsCounter();
-
-    /* ==========================================================================
-       04 - Trust Building: Interactive FAQ Accordion
+       03 - Trust Building: Interactive FAQ Accordion
        ========================================================================== */
     function initFaqAccordion() {
         const faqItems = document.querySelectorAll('.faq-item');
