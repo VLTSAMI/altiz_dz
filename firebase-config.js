@@ -8,6 +8,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase (Compat Version)
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const db = firebase.firestore();
-const storage = firebase.storage();
+const storage = firebase.storage ? firebase.storage() : null;
+const auth = firebase.auth ? firebase.auth() : null;

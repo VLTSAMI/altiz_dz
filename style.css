@@ -1,38 +1,83 @@
 /* ==========================================================================
-   CSS Variables & Theme Definitions
+   CSS Variables & Design System Tokens (Cyberpunk Altiz DZ)
    ========================================================================== */
 
-   :root {
-    /* Fonts */
-    --font-heading: 'Space Grotesk', sans-serif;
-    --font-body: 'Inter', sans-serif;
+:root {
+    /* 1. Typography Hierarchy */
+    --font-display: 'Syne', sans-serif;          /* High-impact titles (Section Titles, Hero Headline) */
+    --font-heading: 'Space Grotesk', sans-serif; /* Subheadings, Card Titles, Buttons, Tabs */
+    --font-body: 'Inter', sans-serif;            /* Clean editorial reading copy */
+    --font-mono: 'Courier New', Courier, monospace; /* Terminal, Code, Technical tags */
+
+    /* 2. Unified Spacing Scale */
+    --space-xs: 1rem;       /* 16px */
+    --space-sm: 2rem;       /* 32px */
+    --space-md: 4rem;       /* 64px */
+    --space-lg: 6rem;       /* 96px */
+    --space-xl: 8rem;       /* 128px */
 
     /* Base Layout */
     --container-width: 1200px;
-    --section-padding: 6rem 0;
+    --section-padding: var(--space-lg) 0;
     --nav-height: 80px;
 
-    /* Cyberpunk Theme Colors */
+    /* 3. Unified Cyberpunk Sharp Geometry Tokens (Clip-Path Scale) */
+    --clip-xs: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    --clip-sm: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    --clip-md: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+    --clip-lg: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+
+    /* Backwards compatibility aliases */
+    --cyber-clip-sm: var(--clip-xs);
+    --cyber-clip: var(--clip-md);
+    --cyber-clip-lg: var(--clip-lg);
+
+    /* 4. Layered Cyber Green Color Palette */
+    --primary-50: #f0fdf4;   /* Ultra-light tint */
+    --primary-100: #dcfce7;  /* Hover backgrounds / subtle glow */
+    --primary-200: #bbf7d0;  /* Subtle borders */
+    --primary-300: #86efac;  /* Icons & secondary badges */
+    --primary-400: #4ade80;  /* Secondary highlights */
+    --primary-500: #22c55e;  /* Primary Cyber Green */
+    --primary-600: #16a34a;  /* Hover states */
+    --primary-700: #15803d;  /* Active / pressed states */
+    --primary-800: #166534;  /* Dark accents */
+    --primary-900: #14532d;  /* Deepest green glow */
+
+    --primary-accent: var(--primary-500);
+    --primary-glow: rgba(34, 197, 94, 0.4);
+    --primary-glow-subtle: rgba(34, 197, 94, 0.15);
+    --primary-glow-strong: rgba(34, 197, 94, 0.8);
+    --emerald-glow: #10b981;
+
+    /* Theme Neutrals */
     --bg-color: #030303;       /* Deep Black */
     --bg-alt: #0a0a0a;         /* Slightly lighter black */
     --text-color: #e2e8f0;
-    --text-muted: #cbd5e1; /* Brighter for better contrast */
-    --primary-accent: #22c55e; /* Cyber Green */
-    --primary-glow: rgba(34, 197, 94, 0.4);
-    --primary-glow-strong: rgba(34, 197, 94, 0.8);
-    --emerald-glow: #10b981;
-    
-    /* UI Elements */
+    --text-muted: #cbd5e1;
+
+    /* UI Surfaces */
     --nav-bg: rgba(3, 3, 3, 0.85);
     --card-bg: rgba(16, 16, 20, 0.5); /* Glassmorphism base */
     --card-border: rgba(34, 197, 94, 0.15);
     --border-hover: rgba(34, 197, 94, 0.5);
     --box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 
-    /* Transition Speeds */
-    --transition-fast: 0.2s ease-in-out;
-    --transition-normal: 0.3s ease-in-out;
-    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    /* 5. Unified Button Sizing Tokens */
+    --btn-padding-sm: 0.6rem 1.5rem;
+    --btn-font-sm: 0.85rem;
+    --btn-padding: 0.9rem 2.2rem;
+    --btn-font: 0.9rem;
+    --btn-padding-lg: 1.1rem 2.8rem;
+    --btn-font-lg: 1rem;
+
+    /* 6. Silk Motion Tokens (Smooth, fluid, elegant, composed) */
+    --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-silk-subtle: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-silk-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 0.22s var(--ease-silk);
+    --transition-normal: 0.36s var(--ease-silk);
+    --transition-slow: 0.55s var(--ease-silk);
 }
 
 /* ==========================================================================
@@ -71,12 +116,38 @@ body::before {
     z-index: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+/* 7. Typography Hierarchy */
+h1, .hero-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--text-color);
+}
+
+h2, .section-title {
+    font-family: var(--font-display);
     font-weight: 700;
     line-height: 1.2;
     color: var(--text-color);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+}
+
+h3, h4, h5, h6,
+.solution-title,
+.tier-name,
+.modal-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-color);
+}
+
+p, span, li, a, input, textarea, select {
+    font-family: var(--font-body);
+}
+
+code, pre, .terminal-body, .terminal-prompt, .terminal-command, .badge-code {
+    font-family: var(--font-mono);
 }
 
 a {
@@ -116,13 +187,14 @@ img {
 /* Section Headers */
 .section-header {
     text-align: center !important;
-    margin-bottom: 4rem;
+    margin-bottom: var(--space-md);
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .section-title {
+    font-family: var(--font-display);
     font-size: clamp(2rem, 4vw, 3rem);
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -157,39 +229,71 @@ img {
 }
 
 /* ==========================================================================
-   Buttons (Y2K / Sharp Edges)
+   Buttons (Unified Cyberpunk Scale)
    ========================================================================== */
 
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.8rem 2rem;
+    padding: var(--btn-padding);
     font-family: var(--font-heading);
     font-weight: 600;
     cursor: pointer;
-    transition: all var(--transition-normal);
+    transition: transform var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 0.9rem;
+    font-size: var(--btn-font);
     position: relative;
     overflow: hidden;
-    /* Sharp Y2K cuts */
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    clip-path: var(--clip-sm);
+    border: none;
+    user-select: none;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-sm,
+.btn-cta {
+    padding: var(--btn-padding-sm);
+    font-size: var(--btn-font-sm);
+    clip-path: var(--clip-xs);
+}
+
+.btn-lg {
+    padding: var(--btn-padding-lg);
+    font-size: var(--btn-font-lg);
+    clip-path: var(--clip-sm);
+}
+
+.btn-submit {
+    padding: 1rem 2.4rem;
+    font-size: 0.95rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: 1px;
+    clip-path: var(--clip-sm);
 }
 
 .btn-primary {
-    background-color: var(--primary-accent);
+    background-color: var(--primary-500);
     color: #000;
-    border: none;
     box-shadow: 0 0 15px var(--primary-glow);
 }
 
 .btn-primary:hover {
-    background-color: #000;
-    color: var(--primary-accent);
-    box-shadow: inset 0 0 0 2px var(--primary-accent), 0 0 25px var(--primary-glow-strong);
+    background-color: var(--primary-600);
+    color: #fff;
+    box-shadow: 0 0 25px var(--primary-glow-strong);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    background-color: var(--primary-700);
+    transform: scale(0.98);
 }
 
 .btn-outline {
@@ -201,20 +305,28 @@ img {
 .btn-outline:hover {
     box-shadow: inset 0 0 0 1px var(--primary-accent), 0 0 15px var(--primary-glow);
     color: var(--primary-accent);
+    transform: translateY(-2px);
+}
+
+.btn-outline:active {
+    transform: scale(0.98);
 }
 
 .btn-cta {
     background-color: transparent;
     color: var(--primary-accent);
     box-shadow: inset 0 0 0 1px var(--primary-accent);
-    padding: 0.6rem 1.5rem;
-    font-size: 0.85rem;
 }
 
 .btn-cta:hover {
-    background-color: var(--primary-accent);
+    background-color: var(--primary-500);
     color: #000;
     box-shadow: 0 0 20px var(--primary-glow-strong);
+    transform: translateY(-2px);
+}
+
+.btn-cta:active {
+    transform: scale(0.98);
 }
 
 .w-100 {
@@ -494,86 +606,91 @@ body {
 }
 
 .hero-content {
-    max-width: 900px;
+    width: 100%;
+    max-width: 960px;
     text-align: center;
     margin: 0 auto;
 }
 
-.hero-brand-display {
+.hero-brand-display,
+.rtl-layout .hero-brand-display {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
 }
 
 .hero-icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Negative margin to compensate for the image's built-in empty space */
-    margin-bottom: -3.5rem;
-    margin-top: -3.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .hero-icon {
-    width: 650px; /* Even larger size */
-    max-width: 150%; /* Allow it to overflow a bit on mobile if needed, though 100% is safer, let's stick to 120% */
+    width: 175px;
+    max-width: 100%;
     height: auto;
-    /* Invert to white, then apply double drop-shadow for a strong neon green glow */
-    filter: invert(1) drop-shadow(0 0 15px rgba(34, 197, 94, 0.8)) drop-shadow(0 0 40px rgba(34, 197, 94, 0.5));
-    
-    /* Apply entrance animation, followed by continuous floating/pulsing */
-    animation: logoEntrance 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards, logoFloat 4s ease-in-out 1.5s infinite;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    filter: invert(1) drop-shadow(0 0 15px rgba(34, 197, 94, 0.75)) drop-shadow(0 0 40px rgba(34, 197, 94, 0.45));
+    animation: logoFloat 6s ease-in-out infinite;
+    transition: transform var(--transition-normal), filter var(--transition-normal);
 }
 
-@keyframes logoEntrance {
-    0% {
-        transform: scale(0.5) translateY(40px);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-    }
+.hero-icon:hover {
+    transform: scale(1.04) translateY(-3px);
+    filter: invert(1) drop-shadow(0 0 25px rgba(34, 197, 94, 0.95)) drop-shadow(0 0 60px rgba(34, 197, 94, 0.65));
 }
 
 @keyframes logoFloat {
     0%, 100% {
         transform: translateY(0);
-        filter: invert(1) drop-shadow(0 0 15px rgba(34, 197, 94, 0.8)) drop-shadow(0 0 40px rgba(34, 197, 94, 0.5));
     }
     50% {
-        /* Subtle float (-6px) */
-        transform: translateY(-6px);
-        filter: invert(1) drop-shadow(0 0 25px rgba(34, 197, 94, 1)) drop-shadow(0 0 70px rgba(34, 197, 94, 0.7));
+        transform: translateY(-8px);
     }
 }
 
-.hero-brand-title {
-    font-family: var(--font-heading);
-    font-size: clamp(3rem, 6vw, 4.5rem);
-    font-weight: 700;
-    /* Aligns perfectly with the icon's width */
-    letter-spacing: clamp(8px, 1.5vw, 16px);
-    color: var(--text-color);
-    margin: 0;
-    line-height: 1;
-    text-align: center;
-    text-shadow: 0 0 15px rgba(255,255,255,0.1);
+.hero-brand-title,
+.rtl-layout .hero-brand-title {
+    margin: 0 auto;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    line-height: 0;
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
 }
 
-.hero-brand-subtitle {
-    font-family: var(--font-body);
-    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+.hero-wordmark {
+    display: block;
+    width: min(349px, 78vw);
+    height: auto;
+    margin: 14px auto 18px;
+    filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.45)) drop-shadow(0 0 28px rgba(0, 0, 0, 0.8));
+}
+
+.hero-brand-subtitle,
+.rtl-layout .hero-brand-subtitle {
+    font-family: 'Inter', sans-serif !important;
+    font-size: clamp(0.95rem, 1.4vw, 1.25rem);
     font-weight: 500;
-    letter-spacing: clamp(2px, 1vw, 5px);
+    letter-spacing: clamp(4px, 1.2vw, 8px);
     color: var(--text-muted);
     text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    margin-top: 0.8rem;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.8rem !important;
+    margin-top: 1.2rem;
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
 }
 
 .neon-divider {
@@ -636,16 +753,17 @@ body {
     align-items: center;
     gap: 0.5rem;
     z-index: 2;
-    opacity: 0.6;
-    animation: bounce 2s infinite;
+    opacity: 0.75;
+    transition: opacity var(--transition-normal);
 }
 
 .mouse {
-    width: 24px;
-    height: 36px;
-    border: 2px solid var(--text-muted);
+    width: 22px;
+    height: 34px;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
     border-radius: 12px;
     position: relative;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.08);
 }
 
 .mouse::before {
@@ -654,10 +772,12 @@ body {
     top: 6px;
     left: 50%;
     transform: translateX(-50%);
-    width: 4px;
+    width: 3px;
     height: 6px;
     background: var(--primary-accent);
     border-radius: 2px;
+    box-shadow: 0 0 8px var(--primary-accent);
+    animation: mouseWheel 2s var(--ease-silk) infinite;
 }
 
 .scroll-indicator p {
@@ -668,10 +788,22 @@ body {
     font-family: var(--font-heading);
 }
 
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
-    40% { transform: translateY(-10px) translateX(-50%); }
-    60% { transform: translateY(-5px) translateX(-50%); }
+@keyframes mouseWheel {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 0);
+    }
+    30% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0.2;
+        transform: translate(-50%, 10px);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, 12px);
+    }
 }
 
 /* ==========================================================================
@@ -683,17 +815,16 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.05);
-    /* Sharp Y2K corners */
-    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    /* Sharp Y2K corners unified */
+    clip-path: var(--clip-md);
     position: relative;
+    transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
-/* Left border line removed - L-corners handle hover indication */
-
 .glass:hover {
-    border-color: var(--card-border);
+    border-color: var(--primary-accent);
     background: rgba(20, 20, 25, 0.7);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(34, 197, 94, 0.05);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.5), inset 0 0 20px rgba(34, 197, 94, 0.05);
 }
 
 /* ==========================================================================
@@ -709,21 +840,24 @@ body {
 
 .solution-card {
     padding: 2.5rem 2rem;
-    transition: transform var(--transition-normal), border-color var(--transition-normal);
+    transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .solution-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
+    border-color: var(--primary-accent);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-glow-subtle);
 }
 
 .card-decor-top, .card-decor-bottom {
     position: absolute;
-    width: 25px;
-    height: 25px;
+    width: 18px;
+    height: 18px;
     border: 1.5px solid var(--primary-accent);
     opacity: 0;
-    transition: all var(--transition-fast);
-    z-index: 5;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+    pointer-events: none;
 }
 
 .card-decor-top {
@@ -742,9 +876,12 @@ body {
 
 .solution-card:hover .card-decor-top,
 .solution-card:hover .card-decor-bottom,
+.category-card:hover .card-decor-top,
+.category-card:hover .card-decor-bottom,
 .category-card-wrapper:hover .card-decor-top,
 .category-card-wrapper:hover .card-decor-bottom {
     opacity: 1;
+    filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.6));
 }
 
 .icon-wrapper {
@@ -756,7 +893,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 1.5rem;
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    clip-path: var(--clip-xs);
 }
 
 .solution-card h3 {
@@ -785,15 +922,15 @@ body {
     margin-top: 1.2rem;
     padding: 0.5rem 1.1rem;
     font-size: 0.85rem;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-heading);
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--primary-accent);
     border: 1px solid rgba(34, 197, 94, 0.4);
-    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    clip-path: var(--clip-xs);
     background: rgba(34, 197, 94, 0.05);
-    transition: all 0.3s ease;
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
 }
 
@@ -811,7 +948,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-sm);
     flex-wrap: wrap;
 }
 
@@ -826,13 +963,18 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: all var(--transition-fast);
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+    clip-path: var(--clip-sm);
+    user-select: none;
 }
 
 .tab-btn:hover {
     color: var(--text-color);
     border-color: rgba(34, 197, 94, 0.3);
+}
+
+.tab-btn:active {
+    transform: scale(0.98);
 }
 
 .tab-btn.active {
@@ -848,13 +990,13 @@ body {
 
 .pricing-tab-content.active {
     display: block;
-    animation: fadeUpTab 0.5s ease forwards;
+    animation: fadeUpTab 0.38s var(--ease-silk) forwards;
 }
 
 @keyframes fadeUpTab {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(8px);
     }
     to {
         opacity: 1;
@@ -923,7 +1065,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     padding: 0.3rem 0.8rem;
-    clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+    clip-path: var(--clip-xs);
 }
 
 .badge-pro {
@@ -932,7 +1074,7 @@ body {
     color: var(--primary-accent);
     border: 1px solid var(--primary-accent);
     padding: 0.2rem 0.5rem;
-    clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+    clip-path: var(--clip-xs);
     margin-left: 0.6rem;
     vertical-align: middle;
     letter-spacing: 0.5px;
@@ -1151,7 +1293,7 @@ body {
     color: var(--text-color);
     margin-right: 0.5rem;
     transition: all var(--transition-fast);
-    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    clip-path: var(--clip-xs);
 }
 
 .cyber-social:hover {
@@ -1188,8 +1330,8 @@ body {
     color: #fff;
     font-family: var(--font-body);
     transition: all var(--transition-fast);
-    /* Y2K input fields */
-    clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+    /* Unified input fields clip-path */
+    clip-path: var(--clip-xs);
 }
 
 .form-group input:focus,
@@ -1201,7 +1343,7 @@ body {
 
 .btn-submit {
     margin-top: 1rem;
-    padding: 1rem;
+    padding: 1rem 2.4rem;
 }
 
 /* ==========================================================================
@@ -1210,7 +1352,7 @@ body {
 
 footer {
     background-color: #000;
-    padding: 2rem 0;
+    padding: var(--space-sm) 0;
     border-top: 1px solid rgba(255,255,255,0.05);
 }
 
@@ -1248,7 +1390,7 @@ footer p {
     border: 1px solid rgba(255,255,255,0.1);
     color: var(--text-color);
     transition: all var(--transition-fast);
-    clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+    clip-path: var(--clip-xs);
 }
 
 .back-to-top:hover {
@@ -1258,59 +1400,40 @@ footer p {
 }
 
 /* ==========================================================================
-   Animations & Scroll Reveal
+   Animations & Scroll Reveal (Silk Motion System)
    ========================================================================== */
 
 .animate-on-scroll {
     opacity: 0;
     visibility: hidden;
     will-change: transform, opacity;
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transition: opacity 0.55s var(--ease-silk), transform 0.55s var(--ease-silk);
 }
 
 .animate-on-scroll.is-visible {
     opacity: 1;
     visibility: visible;
-    transform: none;
+    transform: translate(0, 0);
 }
 
-.fade-up { transform: translateY(30px); }
-.slide-right { transform: translateX(-40px); }
-.slide-left { transform: translateX(40px); }
-.slide-up { transform: translateY(50px); }
+.fade-up { transform: translateY(16px); }
+.slide-right { transform: translateX(-16px); }
+.slide-left { transform: translateX(16px); }
+.slide-up { transform: translateY(18px); }
 
 .is-visible[style*="--delay"] {
-    transition-delay: calc(var(--delay) * 0.15s);
+    transition-delay: calc(var(--delay) * 0.06s);
 }
 
-/* Glitch Effect on Title */
+/* Subtle, Elegant Cyber Glow on Title (Eye-Comfortable, No Jitter) */
 .glitch {
     position: relative;
+    text-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    transition: text-shadow var(--transition-normal);
 }
 
-.glitch::before,
-.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.8;
-}
-
-.glitch::before {
-    left: 2px;
-    text-shadow: -2px 0 #ff00c1;
-    clip: rect(44px, 450px, 56px, 0);
-    animation: glitch-anim 5s infinite linear alternate-reverse;
-}
-
-.glitch::after {
-    left: -2px;
-    text-shadow: -2px 0 var(--primary-accent);
-    clip: rect(44px, 450px, 56px, 0);
-    animation: glitch-anim2 5s infinite linear alternate-reverse;
+.glitch:hover {
+    text-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
 }
 
 @keyframes glitch-anim {
@@ -1434,28 +1557,29 @@ footer p {
 
 .portfolio-card {
     position: relative;
-    border-radius: 12px;
+    clip-path: var(--clip-md);
     overflow: hidden;
     aspect-ratio: 16/9;
     background: var(--card-bg);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .portfolio-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-4px);
     border-color: var(--primary-accent);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow-subtle);
 }
 
 .portfolio-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
+    transition: transform 0.6s var(--ease-silk);
 }
 
 .portfolio-card:hover img {
-    transform: scale(1.1);
+    transform: scale(1.04);
 }
 
 .portfolio-overlay {
@@ -1467,7 +1591,7 @@ footer p {
     justify-content: flex-end;
     padding: 1.5rem;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-normal);
 }
 
 .portfolio-card:hover .portfolio-overlay {
@@ -1666,11 +1790,13 @@ footer p {
 
 .pricing-card {
     height: 100%;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .pricing-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-4px);
+    border-color: var(--primary-accent);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow-subtle);
 }
 
 .pro-highlight {
@@ -1706,9 +1832,479 @@ footer p {
 
 .rtl-layout .grid-section-header {
     flex-direction: row-reverse;
+    letter-spacing: normal;
 }
 
 .rtl-layout .grid-section-header::after {
     background: linear-gradient(to left, rgba(34, 197, 94, 0.4), transparent);
 }
+
+/* ==========================================================================
+   Interactive Hero Canvas & Cyber Particles
+   ========================================================================== */
+.hero-particles-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.hero-content a,
+.hero-content button,
+.hero-content input {
+    pointer-events: auto;
+}
+
+/* ==========================================================================
+   Clean Modular Category Cards (Replaces inline styles)
+   ========================================================================== */
+.category-card-wrapper {
+    position: relative;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-card-wrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.category-card {
+    text-decoration: none;
+    position: relative;
+    height: 380px;
+    clip-path: var(--cyber-clip-lg);
+    overflow: hidden;
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2.5rem;
+}
+
+.category-card-wrapper:hover .category-card {
+    border-color: rgba(34, 197, 94, 0.4);
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.12);
+}
+
+.category-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 70%);
+    z-index: 1;
+}
+
+.category-icon-box {
+    position: absolute;
+    top: 2.5rem;
+    right: 2.5rem;
+    color: var(--primary-accent);
+    opacity: 0.25;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+}
+
+.category-icon-box svg {
+    display: block;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1), stroke-width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: drop-shadow(0 0 0px transparent);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.category-card-wrapper:hover .category-icon-box {
+    opacity: 1 !important;
+}
+
+.category-card-wrapper:hover .category-icon-box svg {
+    transform: scale(1.06);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.9)) drop-shadow(0 0 28px rgba(34, 197, 94, 0.5)) !important;
+}
+
+.category-card-wrapper:active .category-icon-box svg {
+    transform: scale(0.98);
+}
+
+.category-card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.category-card-title {
+    color: #fff;
+    font-size: 2rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+
+.category-divider {
+    width: 45px;
+    height: 3px;
+    background: var(--primary-accent);
+    margin: 1rem 0;
+    clip-path: var(--cyber-clip-sm);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.category-card-desc {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   Clean Contact Form (Replaces inline styles)
+   ========================================================================== */
+.cyber-contact-form {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    clip-path: var(--cyber-clip-lg);
+    padding: 3rem;
+    backdrop-filter: blur(15px);
+    position: relative;
+}
+
+.form-label {
+    color: var(--primary-accent);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.8rem;
+    display: block;
+    font-weight: 700;
+}
+
+.cyber-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.2rem;
+    clip-path: var(--cyber-clip);
+    color: #fff;
+    outline: none;
+    transition: 0.3s;
+    font-size: 0.95rem;
+    font-family: var(--font-body);
+}
+
+.cyber-input:focus {
+    border-color: var(--primary-accent) !important;
+    background: rgba(34, 197, 94, 0.05) !important;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+}
+
+.method-selector {
+    display: flex;
+    gap: 1rem;
+}
+
+.method-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    clip-path: var(--cyber-clip);
+    cursor: pointer;
+    transition: 0.3s;
+    color: var(--text-color);
+}
+
+.method-option:has(input:checked) {
+    background: var(--primary-accent);
+    color: #000 !important;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+}
+
+.method-option:has(input:checked) svg {
+    color: #000;
+}
+
+.submit-cyber-btn {
+    width: 100%;
+    padding: 1.2rem;
+    clip-path: var(--cyber-clip-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 10px 20px rgba(34, 197, 94, 0.2);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    background: var(--primary-accent);
+    color: #000;
+    border: none;
+}
+
+.submit-cyber-btn:hover {
+    box-shadow: 0 0 30px var(--primary-glow-strong);
+}
+
+/* ==========================================================================
+   Skeleton Loading Architecture (Replaces boring plain texts)
+   ========================================================================== */
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+    width: 100%;
+}
+
+.skeleton-card {
+    background: rgba(16, 16, 20, 0.6);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    clip-path: var(--cyber-clip-lg);
+    aspect-ratio: 16/9;
+    position: relative;
+    overflow: hidden;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.skeleton-media {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 25%, rgba(34, 197, 94, 0.08) 50%, rgba(255, 255, 255, 0.02) 75%);
+    background-size: 200% 100%;
+    animation: cyberPulse 1.8s infinite;
+}
+
+.skeleton-line {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+    clip-path: var(--cyber-clip-sm);
+    position: relative;
+    z-index: 2;
+    animation: cyberPulse 1.8s infinite;
+}
+
+.skeleton-line.sm { width: 35%; height: 10px; background: rgba(34, 197, 94, 0.2); }
+.skeleton-line.md { width: 60%; height: 16px; }
+.skeleton-line.lg { width: 45%; }
+
+@keyframes cyberPulse {
+    0% { background-position: 200% 0; opacity: 0.4; }
+    50% { opacity: 0.8; }
+    100% { background-position: -200% 0; opacity: 0.4; }
+}
+
+/* ==========================================================================
+   Trust Building: Animated Stats Section
+   ========================================================================== */
+.stats-section {
+    padding: 3rem 0;
+    background: rgba(10, 10, 14, 0.4);
+    border-top: 1px solid rgba(34, 197, 94, 0.1);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+    position: relative;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.stat-card {
+    background: rgba(16, 16, 20, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    clip-path: var(--cyber-clip);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: var(--transition-normal);
+}
+
+.stat-card:hover {
+    border-color: var(--primary-accent);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(34, 197, 94, 0.1);
+}
+
+.stat-number-wrap {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+}
+
+.stat-plus {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-accent);
+    margin-left: 4px;
+}
+
+.rtl-layout .stat-plus {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   Trust Building: Client Testimonials
+
+
+/* ==========================================================================
+   Trust Building: FAQ Accordion
+   ========================================================================== */
+.faq-accordion {
+    max-width: 850px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.faq-item {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    clip-path: var(--cyber-clip);
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+
+.faq-item.active {
+    border-color: var(--primary-accent);
+    background: rgba(16, 24, 20, 0.6);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+}
+
+.faq-question {
+    padding: 1.5rem 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #fff;
+    user-select: none;
+    transition: color 0.3s;
+}
+
+.faq-question:hover {
+    color: var(--primary-accent);
+}
+
+.faq-icon {
+    font-size: 1.4rem;
+    color: var(--primary-accent);
+    transition: transform var(--transition-normal);
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+.rtl-layout .faq-icon {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0 2rem;
+    transition: max-height 0.38s var(--ease-silk), opacity 0.3s var(--ease-silk), padding 0.38s var(--ease-silk);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 280px;
+    opacity: 1;
+    padding: 0 2rem 1.8rem;
+}
+
+/* ==========================================================================
+   Unified Cyberpunk Sharp Dialogs & Overlays
+   ========================================================================== */
+.modal-content {
+    clip-path: var(--clip-lg) !important;
+    border-radius: 0 !important;
+    border: 1px solid var(--primary-accent) !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px var(--primary-glow-subtle) !important;
+}
+
+.pricing-tier {
+    clip-path: var(--clip-lg) !important;
+    border-radius: 0 !important;
+}
+
+/* ==========================================================================
+   Motion Accessibility (Respect User Preferences)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .hero-icon {
+        animation: none !important;
+    }
+
+    .glitch::before,
+    .glitch::after {
+        animation: none !important;
+    }
+}
+
 

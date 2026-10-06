@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 349 57" width="349" height="57" fill="#e2e8f0">
+  <!-- A -->
+  <path fill-rule="evenodd" d="M0 57 L17 0 H27 L44 57 H33.5 L30.5 46 H13.5 L10.5 57 Z M16.5 37 H27.5 L22 17.5 Z"/>
+  <!-- L -->
+  <path transform="translate(90 0)" d="M0 0 H10 V47.5 H34 V57 H0 Z"/>
+  <!-- T -->
+  <path transform="translate(168 0)" d="M0 0 H40 V9.5 H25 V57 H15 V9.5 H0 Z"/>
+  <!-- I -->
+  <rect x="254" y="0" width="10" height="57"/>
+  <!-- Z -->
+  <path transform="translate(312 0)" d="M0 0 H36 V9 L11 47.5 H36 V57 H0 V48 L25 9.5 H0 Z"/>
+</svg>

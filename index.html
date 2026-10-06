@@ -8,15 +8,15 @@
         content="Altiz Solutions DZ - Elevating Brands Through Logic & Art. High-End Web Development, Cinematic Production, and Branding.">
     <title>Altiz Solutions DZ | Professional Agency</title>
 
-    <!-- Google Fonts: Space Grotesk (Headers) and Inter (Body) -->
+    <!-- Google Fonts: Syne (Display), Space Grotesk (Headers) and Inter (Body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap"
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 
 <body>
@@ -30,6 +30,7 @@
                     <li><a href="#solutions" data-i18n="nav_solutions">Solutions</a></li>
                     <li><a href="projects.html" data-i18n="nav_portfolio">Portfolio</a></li>
                     <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
+                    <li><a href="#faq" data-i18n="nav_faq">FAQ</a></li>
                     <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
                     <li class="mobile-only-lang">
                         <ul class="lang-links-mobile">
@@ -76,13 +77,14 @@
         <!-- Hero Section -->
         <section class="hero" id="home">
             <div class="cyber-grid"></div>
+            <canvas id="hero-particles" class="hero-particles-canvas"></canvas>
             <div class="container hero-content animate-on-scroll fade-up">
                 <div class="hero-brand-display">
                     <div class="hero-icon-wrapper">
-                        <img src="altiz logo.png" alt="Altiz Logo" class="hero-icon">
+                        <img src="altiz-logo-centered.png" alt="Altiz Logo" class="hero-icon">
                     </div>
-                    <h1 class="hero-brand-title" data-i18n="hero_title">ALTIZ</h1>
-                    <div class="hero-brand-subtitle" data-i18n="hero_subtitle_branding">SOLUTIONS <span
+                    <h1 class="hero-brand-title"><img src="altiz-wordmark.svg" alt="ALTIZ" class="hero-wordmark"></h1>
+                    <div class="hero-brand-subtitle">SOLUTIONS <span
                             class="neon-divider">|</span> DZ</div>
                 </div>
                 <h2 class="hero-subtitle" data-i18n="hero_description">
@@ -133,6 +135,7 @@
                 <p data-i18n="scroll_text">Scroll to initialize</p>
             </div>
         </section>
+
 
         <!-- Solutions Section -->
         <section class="solutions section-padding" id="solutions">
@@ -231,157 +234,71 @@
                     <p class="section-desc" data-i18n="portfolio_desc">A showcase of logic-driven creativity and
                         technical excellence.</p>
                 </div>
-                <div class="category-grid"
-                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 4rem;">
+                <div class="category-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-top: 4rem;">
                     <!-- Web Dev Card -->
-                    <div class="category-card-wrapper" style="position: relative;">
-                        <div class="card-decor-top"></div>
-                        <a href="projects.html?filter=Web Development" class="category-card"
-                            style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
-                            <div
-                                style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%); z-index: 1;">
-                            </div>
-                            <div class="icon-box"
-                                style="position: absolute; top: 2.5rem; right: 2.5rem; color: var(--primary-accent); opacity: 0.15; transition: 0.5s;">
-                                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.2">
+                    <div class="category-card-wrapper">
+                        <a href="projects.html?filter=Web Development" class="category-card">
+                            <div class="card-decor-top"></div>
+                            <div class="category-card-overlay"></div>
+                            <div class="category-icon-box">
+                                <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
                                     <polyline points="16 18 22 12 16 6"></polyline>
                                     <polyline points="8 6 2 12 8 18"></polyline>
                                 </svg>
                             </div>
-                            <div style="position: relative; z-index: 2;">
-                                <h3 style="color: #fff; font-size: 2rem; margin: 0; font-family: 'Space Grotesk';"
-                                    data-i18n="filter_web">Web Design</h3>
-                                <div
-                                    style="width: 40px; height: 3px; background: var(--primary-accent); margin: 1rem 0; border-radius: 2px;">
-                                </div>
-                                <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.5;"
-                                    data-i18n="cat_web_desc">Modern & Scalable Solutions</p>
-                                <span class="card-cta-btn" data-i18n="btn_view_projects">View Projects
-                                    &nbsp;&#8599;</span>
+                            <div class="category-card-content">
+                                <h3 class="category-card-title" data-i18n="filter_web">Web Design</h3>
+                                <div class="category-divider"></div>
+                                <p class="category-card-desc" data-i18n="cat_web_desc">Modern & Scalable Solutions</p>
+                                <span class="card-cta-btn" data-i18n="btn_view_projects">View Projects &nbsp;&#8599;</span>
                             </div>
+                            <div class="card-decor-bottom"></div>
                         </a>
-                        <div class="card-decor-bottom"></div>
                     </div>
 
                     <!-- Video Card -->
-                    <div class="category-card-wrapper" style="position: relative;">
-                        <div class="card-decor-top"></div>
-                        <a href="projects.html?filter=Video Production" class="category-card"
-                            style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
-                            <div
-                                style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%); z-index: 1;">
-                            </div>
-                            <div class="icon-box"
-                                style="position: absolute; top: 2.5rem; right: 2.5rem; color: var(--primary-accent); opacity: 0.15; transition: 0.5s;">
-                                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.2">
+                    <div class="category-card-wrapper">
+                        <a href="projects.html?filter=Video Production" class="category-card">
+                            <div class="card-decor-top"></div>
+                            <div class="category-card-overlay"></div>
+                            <div class="category-icon-box">
+                                <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
                                     <polygon points="23 7 16 12 23 17 23 7"></polygon>
                                     <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
                                 </svg>
                             </div>
-                            <div style="position: relative; z-index: 2;">
-                                <h3 style="color: #fff; font-size: 2rem; margin: 0; font-family: 'Space Grotesk';"
-                                    data-i18n="filter_video">Video Editing</h3>
-                                <div
-                                    style="width: 40px; height: 3px; background: var(--primary-accent); margin: 1rem 0; border-radius: 2px;">
-                                </div>
-                                <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.5;"
-                                    data-i18n="cat_video_desc">Cinematic Storytelling</p>
-                                <span class="card-cta-btn" data-i18n="btn_view_projects">View Projects
-                                    &nbsp;&#8599;</span>
+                            <div class="category-card-content">
+                                <h3 class="category-card-title" data-i18n="filter_video">Video Editing</h3>
+                                <div class="category-divider"></div>
+                                <p class="category-card-desc" data-i18n="cat_video_desc">Cinematic Storytelling</p>
+                                <span class="card-cta-btn" data-i18n="btn_view_projects">View Projects &nbsp;&#8599;</span>
                             </div>
+                            <div class="card-decor-bottom"></div>
                         </a>
-                        <div class="card-decor-bottom"></div>
                     </div>
 
-                    <!-- Creative Branding Card (Merged) -->
-                    <div class="category-card-wrapper" style="position: relative;">
-                        <div class="card-decor-top"></div>
-                        <a href="projects.html?filter=Creative Branding" class="category-card"
-                            style="text-decoration: none; position: relative; height: 380px; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); overflow: hidden; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: flex-end; padding: 2.5rem;">
-                            <div
-                                style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%); z-index: 1;">
-                            </div>
-                            <div class="icon-box"
-                                style="position: absolute; top: 2.5rem; right: 2.5rem; color: var(--primary-accent); opacity: 0.15; transition: 0.5s;">
-                                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.2">
+                    <!-- Creative Branding Card -->
+                    <div class="category-card-wrapper">
+                        <a href="projects.html?filter=Creative Branding" class="category-card">
+                            <div class="card-decor-top"></div>
+                            <div class="category-card-overlay"></div>
+                            <div class="category-icon-box">
+                                <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
                                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                                     <polyline points="21 15 16 10 5 21"></polyline>
                                 </svg>
                             </div>
-                            <div style="position: relative; z-index: 2;">
-                                <h3 style="color: #fff; font-size: 2rem; margin: 0; font-family: 'Space Grotesk';"
-                                    data-i18n="filter_branding">Creative Branding</h3>
-                                <div
-                                    style="width: 40px; height: 3px; background: var(--primary-accent); margin: 1rem 0; border-radius: 2px;">
-                                </div>
-                                <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.5;"
-                                    data-i18n="cat_branding_desc">Visual Strategy & Digital Identity</p>
-                                <span class="card-cta-btn" data-i18n="btn_view_projects">View Projects
-                                    &nbsp;&#8599;</span>
+                            <div class="category-card-content">
+                                <h3 class="category-card-title" data-i18n="filter_branding">Creative Branding</h3>
+                                <div class="category-divider"></div>
+                                <p class="category-card-desc" data-i18n="cat_branding_desc">Visual Strategy & Digital Identity</p>
+                                <span class="card-cta-btn" data-i18n="btn_view_projects">View Projects &nbsp;&#8599;</span>
                             </div>
+                            <div class="card-decor-bottom"></div>
                         </a>
-                        <div class="card-decor-bottom"></div>
                     </div>
                 </div>
-
-                <style>
-                    /* Wrapper handles ALL movement so card + corners move together */
-                    .category-card-wrapper {
-                        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                            box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                    }
-
-                    .category-card-wrapper:hover {
-                        transform: translateY(-10px);
-                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-                    }
-
-                    .category-card-wrapper:active {
-                        transform: translateY(-5px);
-                    }
-
-                    .category-card {
-                        transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                        z-index: 1;
-                        display: block;
-                    }
-
-                    /* Text stays fixed - no movement */
-                    .category-card h3,
-                    .category-card p,
-                    .category-card div[style*="height: 3px"] {
-                        transition: none;
-                        transform: none !important;
-                    }
-
-                    .category-card-wrapper:hover .icon-box {
-                        opacity: 1 !important;
-                    }
-
-                    .category-card svg {
-                        transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                        filter: drop-shadow(0 0 0px var(--primary-accent));
-                        stroke-linecap: round;
-                        stroke-linejoin: round;
-                    }
-
-                    .category-card-wrapper:hover svg {
-                        opacity: 1 !important;
-                        color: var(--primary-accent) !important;
-                        stroke-width: 1.5;
-                        transform: scale(1.1);
-                        filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.5));
-                    }
-
-                    .category-card-wrapper:active svg {
-                        transform: scale(0.98);
-                        filter: drop-shadow(0 0 5px var(--primary-accent));
-                    }
-                </style>
             </div>
         </section>
 
@@ -603,6 +520,8 @@
 
                 <div class="pricing-tab-content" id="tab-webdev">
                     <div class="pricing-grid">
+                        <!-- Web & App Engineering Header -->
+                        <div class="grid-section-header" data-i18n="web_solutions_header">Web & Software Development</div>
                         <!-- Landing Page -->
                         <div class="pricing-col animate-on-scroll fade-up" style="--delay: 1">
                             <div class="pricing-card glass h-100 pro-highlight">
@@ -695,6 +614,55 @@
             </div>
         </section>
 
+
+        <!-- Trust Building: Interactive FAQ Section -->
+        <section class="faq section-padding bg-alt" id="faq">
+            <div class="container">
+                <div class="section-header animate-on-scroll fade-up">
+                    <h2 class="section-title" data-i18n="faq_title">Frequently Asked Questions</h2>
+                    <p class="section-desc" data-i18n="faq_desc">Everything you need to know about our workflow, payment terms, and delivery timeline.</p>
+                </div>
+                <div class="faq-accordion animate-on-scroll fade-up">
+                    <div class="faq-item active">
+                        <div class="faq-question">
+                            <span data-i18n="faq_q1">How long does it take to deliver a website or app?</span>
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a1">Landing pages take 3 to 5 business days, while comprehensive platforms and custom systems take 7 to 14 days, including security checks and performance tuning.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span data-i18n="faq_q2">What payment methods are supported?</span>
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a2">We accept BaridiMob, Bank Transfer, CCP in Algeria, and international payment methods. Projects start with a milestone deposit and complete upon final review.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span data-i18n="faq_q3">Do you provide technical support after launch?</span>
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a3">Yes, we include free post-launch support and performance monitoring, with optional ongoing maintenance and evolution retainers.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span data-i18n="faq_q4">Can designs and videos be revised?</span>
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p data-i18n="faq_a4">Absolutely. Each package includes dedicated revision rounds to guarantee the final deliverables match your brand standard with 100% precision.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Contact Section -->
         <section class="contact section-padding" id="contact">
             <div class="container">
@@ -761,66 +729,30 @@
                         </div>
                     </div>
 
-                    <div id="contactForm" class="contact-form glass animate-on-scroll slide-left"
-                        style="padding: 2.5rem; clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px); border: 1px solid rgba(255,255,255,0.1);">
+                    <div id="contactForm" class="cyber-contact-form animate-on-scroll slide-left">
                         <div class="form-group" style="margin-bottom: 2rem;">
-                            <label data-i18n="label_name"
-                                style="color: var(--primary-accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; display: block; font-weight: 700;">[01]
-                                Identifier (Name)</label>
-                            <div style="position: relative;">
-                                <svg style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3);"
-                                    width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                                <input type="text" id="contactName" required data-i18n-placeholder="placeholder_name"
-                                    placeholder="Enter your name"
-                                    style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem 1rem 1rem 3rem; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); color: #fff; outline: none; transition: 0.3s; font-size: 0.95rem;">
-                            </div>
+                            <label class="form-label" data-i18n="label_name">[01] Identifier (Name)</label>
+                            <input type="text" id="contactName" class="cyber-input" required data-i18n-placeholder="placeholder_name" placeholder="Enter your name">
                         </div>
 
                         <div class="form-group" style="margin-bottom: 2rem;">
-                            <label data-i18n="label_email"
-                                style="color: var(--primary-accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; display: block; font-weight: 700;">[02]
-                                Communication Node (Email)</label>
-                            <div style="position: relative;">
-                                <svg style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3);"
-                                    width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path
-                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                    </path>
-                                    <polyline points="22,6 12,13 2,6"></polyline>
-                                </svg>
-                                <input type="email" id="contactEmail" required data-i18n-placeholder="placeholder_email"
-                                    placeholder="name@domain.com"
-                                    style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem 1rem 1rem 3rem; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); color: #fff; outline: none; transition: 0.3s; font-size: 0.95rem;">
-                            </div>
+                            <label class="form-label" data-i18n="label_email">[02] Communication Node (Email)</label>
+                            <input type="email" id="contactEmail" class="cyber-input" required data-i18n-placeholder="placeholder_email" placeholder="name@domain.com">
                         </div>
 
                         <div class="form-group" style="margin-bottom: 2rem;">
-                            <label data-i18n="label_method"
-                                style="color: var(--primary-accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; display: block; font-weight: 700;">[03]
-                                Selection Method</label>
-                            <div class="method-selector"
-                                style="display: flex; background: rgba(255,255,255,0.05); padding: 5px; clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px); border: 1px solid rgba(255,255,255,0.1);">
-                                <label
-                                    style="flex: 1; text-align: center; padding: 0.8rem; cursor: pointer; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; color: #fff;">
+                            <label class="form-label" data-i18n="label_method">[03] Selection Method</label>
+                            <div class="method-selector">
+                                <label class="method-option">
                                     <input type="radio" name="method" value="whatsapp" checked style="display: none;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
-                                        <path
-                                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.7 8.38 8.38 0 0 1 3.8.9L21 3z">
-                                        </path>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.7 8.38 8.38 0 0 1 3.8.9L21 3z"></path>
                                     </svg>
                                     <span data-i18n="method_whatsapp">WhatsApp</span>
                                 </label>
-                                <label
-                                    style="flex: 1; text-align: center; padding: 0.8rem; cursor: pointer; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.5);">
+                                <label class="method-option">
                                     <input type="radio" name="method" value="email" style="display: none;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                                         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                                     </svg>
@@ -830,52 +762,14 @@
                         </div>
 
                         <div class="form-group" style="margin-bottom: 2.5rem;">
-                            <label data-i18n="label_message"
-                                style="color: var(--primary-accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; display: block; font-weight: 700;">[04]
-                                Payload (Message)</label>
-                            <textarea id="contactMessage" rows="4" required data-i18n-placeholder="placeholder_message"
-                                placeholder="Describe your project requirements..."
-                                style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); color: #fff; outline: none; transition: 0.3s; resize: none; font-size: 0.95rem;"></textarea>
+                            <label class="form-label" data-i18n="label_message">[04] Payload (Message)</label>
+                            <textarea id="contactMessage" class="cyber-input" rows="4" required data-i18n-placeholder="placeholder_message" placeholder="Describe your project requirements..." style="resize: none;"></textarea>
                         </div>
 
-                        <button type="button" id="realSubmitBtn" class="btn btn-primary w-100"
-                            style="padding: 1.2rem; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 20px rgba(34, 197, 94, 0.2); position: relative; overflow: hidden;">
-                            <span style="position: relative; z-index: 2;" data-i18n="btn_submit">Transmit Data</span>
-                            <div style="position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transform: translateX(-100%); transition: 0.5s;"
-                                class="btn-shine"></div>
+                        <button type="button" id="realSubmitBtn" class="submit-cyber-btn">
+                            <span data-i18n="btn_submit">Transmit Data</span>
                         </button>
                     </div>
-
-                    <style>
-                        .form-group input:focus,
-                        .form-group textarea:focus {
-                            border-color: var(--primary-accent) !important;
-                            background: rgba(34, 197, 94, 0.05) !important;
-                            box-shadow: 0 0 15px rgba(34, 197, 94, 0.1);
-                        }
-
-                        .method-selector label:has(input:checked) {
-                            background: var(--primary-accent);
-                            color: #000 !important;
-                            font-weight: 700;
-                            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-                        }
-
-                        .method-selector label:has(input:checked) svg {
-                            color: #000;
-                        }
-
-                        #realSubmitBtn:hover .btn-shine {
-                            transform: translateX(100%);
-                        }
-
-                        @media (max-width: 768px) {
-                            #contactForm {
-                                padding: 1.5rem !important;
-                                border-radius: 20px !important;
-                            }
-                        }
-                    </style>
                 </div>
             </div>
         </section>
@@ -910,14 +804,13 @@
     </div>
 
 
-    <script src="pricing_data.js?v=3.0"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js?v=3.0"></script>
 
     <!-- Interactive Logic -->
-    <script src="translations.js?v=3.0"></script>
-    <script src="script.js?v=3.0"></script>
+    <script src="translations.js?v=3.1"></script>
+    <script src="script.js?v=3.2"></script>
 </body>
 
 </html>

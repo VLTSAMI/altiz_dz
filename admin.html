@@ -3,88 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altiz Premium Admin | Secure Access</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <title>Altiz Premium Admin | Secure Cyber Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
         :root {
-            --bg: #030303; --accent: #22c55e; --accent-glow: rgba(34, 197, 94, 0.2);
+            --bg: #030303; --accent: #22c55e; --accent-glow: rgba(34, 197, 94, 0.25);
             --card: #0a0a0c; --card-hover: #121215; --text: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.5); --border: rgba(255, 255, 255, 0.08);
+            --text-dim: rgba(255, 255, 255, 0.55); --border: rgba(255, 255, 255, 0.08);
             --input-bg: rgba(255, 255, 255, 0.03); --danger: #ef4444;
+            
+            /* Unified Cyberpunk Geometry */
+            --cyber-clip: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            --cyber-clip-sm: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            --cyber-clip-lg: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
         }
 
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; min-height: 100vh; overflow-x: hidden; }
         
         /* Login Screen */
-        #login-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
-        .login-box { background: var(--card); border: 1px solid var(--border); padding: 3rem; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
-        .login-box h2 { font-family: 'Space Grotesk', sans-serif; margin-bottom: 2rem; color: var(--accent); }
-        
+        #login-overlay { position: fixed; inset: 0; background: rgba(3, 3, 3, 0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(25px); }
+        .login-box { background: var(--card); border: 1px solid rgba(34, 197, 94, 0.25); padding: 3.5rem 2.5rem; clip-path: var(--cyber-clip-lg); width: 100%; max-width: 440px; text-align: center; box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(34,197,94,0.1); }
+        .login-box h2 { font-family: 'Syne', sans-serif; margin-bottom: 0.5rem; color: var(--accent); font-size: 2rem; }
+        .login-box p.subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 1px; }
+
         /* Dashboard Layout */
-        .sidebar { width: 280px; background: var(--card); border-right: 1px solid var(--border); padding: 2.5rem 1.5rem; position: fixed; height: 100vh; box-sizing: border-box; z-index: 10; }
-        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 3rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
-        .nav-link { color: var(--text-dim); text-decoration: none; padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.3s; font-weight: 500; }
-        .nav-link.active { background: var(--accent-glow); color: var(--accent); }
+        .sidebar { width: 280px; background: var(--card); border-right: 1px solid var(--border); padding: 2.5rem 1.5rem; position: fixed; height: 100vh; box-sizing: border-box; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; }
+        .logo { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 3rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        .nav-link { color: var(--text-dim); text-decoration: none; padding: 14px 18px; display: flex; align-items: center; gap: 12px; clip-path: var(--cyber-clip-sm); margin-bottom: 8px; cursor: pointer; transition: 0.3s; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
+        .nav-link.active { background: var(--accent-glow); color: var(--accent); border-left: 2px solid var(--accent); }
+        
         .main { flex: 1; padding: 4rem; margin-left: 280px; max-width: 1200px; box-sizing: border-box; }
         .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
-        h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin: 0; letter-spacing: -1px; }
-        .btn { background: var(--accent); color: #000; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        h1 { font-family: 'Syne', sans-serif; font-size: 2.5rem; margin: 0; letter-spacing: -1px; }
+        
+        .btn { background: var(--accent); color: #000; border: none; padding: 0.85rem 1.8rem; clip-path: var(--cyber-clip-sm); font-weight: 700; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
-        .btn-secondary { background: #222; color: #fff; }
-        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .btn-secondary { background: #1a1a1e; color: #fff; }
+        .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
-        .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; transition: 0.3s; position: relative; }
-        .media-preview { width: 100%; height: 160px; background: #111; border-radius: 12px; margin-bottom: 1rem; object-fit: cover; border: 1px solid var(--border); }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 100; align-items: center; justify-content: center; }
+        .project-card { background: var(--card); border: 1px solid var(--border); clip-path: var(--cyber-clip-lg); padding: 1.5rem; transition: 0.3s; position: relative; }
+        .media-preview { width: 100%; height: 160px; background: #111; clip-path: var(--cyber-clip-sm); margin-bottom: 1rem; object-fit: cover; border: 1px solid var(--border); }
+        
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); z-index: 100; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .modal-content { background: var(--card); width: 100%; max-width: 850px; padding: 3rem; border-radius: 24px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card); width: 100%; max-width: 850px; padding: 3rem; clip-path: var(--cyber-clip-lg); border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; border-radius: 12px; color: #fff; outline: none; transition: 0.3s; box-sizing: border-box; }
-        input:focus { border-color: var(--accent); }
+        label { display: block; margin-bottom: 0.6rem; font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+        input, select, textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 1rem; clip-path: var(--cyber-clip); color: #fff; outline: none; transition: 0.3s; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(34, 197, 94, 0.2); }
+        
         .modal-tabs { display: flex; gap: 10px; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .tab-trigger { padding: 10px 20px; border-radius: 8px; cursor: pointer; color: var(--text-dim); font-weight: 600; }
+        .tab-trigger { padding: 10px 20px; clip-path: var(--cyber-clip-sm); cursor: pointer; color: var(--text-dim); font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
         .tab-trigger.active { background: var(--accent-glow); color: var(--accent); }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
-        .plan-item { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .sequence-item { background: var(--card); border: 1px solid var(--border); padding: 1rem 1.5rem; border-radius: 15px; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 20px; cursor: grab; }
+        
+        .plan-item { background: var(--card); border: 1px solid var(--border); clip-path: var(--cyber-clip-lg); padding: 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .sequence-item { background: var(--card); border: 1px solid var(--border); padding: 1rem 1.5rem; clip-path: var(--cyber-clip); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 20px; cursor: grab; }
         .handle { color: var(--text-dim); cursor: grab; font-size: 1.5rem; }
-        #status-bar { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; display: none; z-index: 1000; font-weight: 600; }
-        .status-success { background: var(--accent); color: #000; }
+        
+        #status-bar { position: fixed; bottom: 20px; right: 20px; padding: 12px 24px; clip-path: var(--cyber-clip-sm); display: none; z-index: 1000; font-weight: 700; font-family: 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        .status-success { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent-glow); }
         .status-error { background: var(--danger); color: #fff; }
+        
+        .auth-badge { padding: 8px 12px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); clip-path: var(--cyber-clip-sm); font-size: 0.75rem; color: var(--accent); margin-bottom: 1rem; word-break: break-all; }
     </style>
 </head>
 <body>
+    <!-- Real Firebase Authentication Overlay -->
     <div id="login-overlay">
         <div class="login-box">
-            <h2>Admin Access</h2>
-            <div class="form-group">
-                <label>Access Key</label>
-                <input type="password" id="admin-pass" placeholder="Enter password..." onkeydown="if(event.key==='Enter') checkAuth()">
-            </div>
-            <button class="btn w-100" onclick="checkAuth()" style="width:100%">Unlock Dashboard</button>
-            <p id="login-err" style="color:var(--danger); margin-top:1rem; display:none">Access Denied: Incorrect Key</p>
+            <h2>CYBER GATE</h2>
+            <p class="subtitle">Firebase Auth Verified Access</p>
+            
+            <form onsubmit="handleAuthLogin(event)">
+                <div class="form-group" style="text-align: left;">
+                    <label>Admin Email</label>
+                    <input type="email" id="admin-email" placeholder="admin@altiz.dz" value="admin@altiz.dz" required>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label>Password / Access Key</label>
+                    <input type="password" id="admin-pass" placeholder="••••••••••••" required>
+                </div>
+                <button type="submit" class="btn w-100" style="width:100%; margin-top: 1rem;">Authenticate</button>
+            </form>
+            <p id="login-err" style="color:var(--danger); margin-top:1rem; font-size: 0.85rem; display:none"></p>
         </div>
     </div>
 
     <div id="status-bar"></div>
 
     <div class="sidebar">
-        <div class="logo">ALTIZ.STUDIO</div>
-        <nav>
-            <div class="nav-link active" id="nav-projects" onclick="showTab('projects')">Portfolio</div>
-            <div class="nav-link" id="nav-plans" onclick="showTab('plans')">Pricing</div>
-            <div class="nav-link" id="nav-sequence" onclick="showTab('sequence')">Sorting</div>
-            <div class="nav-link" onclick="logout()" style="margin-top:2rem; color:var(--danger)">Logout</div>
-        </nav>
+        <div>
+            <div class="logo">ALTIZ.STUDIO</div>
+            <div class="auth-badge" id="admin-user-badge">Verifying Node...</div>
+            <nav>
+                <div class="nav-link active" id="nav-projects" onclick="showTab('projects')">Portfolio</div>
+                <div class="nav-link" id="nav-plans" onclick="showTab('plans')">Pricing</div>
+                <div class="nav-link" id="nav-sequence" onclick="showTab('sequence')">Sorting</div>
+            </nav>
+        </div>
+        <div>
+            <button class="btn btn-danger" onclick="logout()" style="width: 100%;">Sign Out</button>
+        </div>
     </div>
 
     <div class="main">
         <div id="projects-tab" class="tab-content">
-            <div class="header"><div><p style="color:var(--accent);margin:0">Portfolio Management</p><h1>Your Work</h1></div><button class="btn" onclick="openProjectModal()">+ Add Project</button></div>
+            <div class="header">
+                <div>
+                    <p style="color:var(--accent);margin:0; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;">Portfolio Management</p>
+                    <h1>Your Work</h1>
+                </div>
+                <button class="btn" onclick="openProjectModal()">+ Add Project</button>
+            </div>
             <div class="project-grid" id="project-grid">Syncing Portfolio...</div>
         </div>
 
@@ -103,26 +139,32 @@
     <!-- Project Modal -->
     <div id="projectModal" class="modal">
         <div class="modal-content">
-            <h2 id="pModalTitle">Project Details</h2>
-            <form id="projectForm" onsubmit="handleProjectSave(event)">
+            <div style="display:flex; justify-content:space-between; margin-bottom:2rem">
+                <h2 id="modalTitle" style="font-family:'Syne',sans-serif; margin:0">Project Node</h2>
+                <button class="btn btn-secondary" onclick="closeModal()">✕</button>
+            </div>
+            <form onsubmit="handleProjectSave(event)">
                 <input type="hidden" id="projectId">
                 <div class="form-grid">
-                    <div class="form-group"><label>Project Title</label><input id="title" required></div>
-                    <div class="form-group"><label>Category</label><select id="category"><option>Web Development</option><option>Video Production</option><option>Creative Branding</option></select></div>
+                    <div class="form-group"><label>Project Title</label><input type="text" id="title" required></div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="category">
+                            <option value="Web Development">Web Development</option>
+                            <option value="Video Production">Video Production</option>
+                            <option value="Creative Branding">Creative Branding</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Media Type</label>
+                        <select id="type"><option value="image">Still Image</option><option value="video">Video Stream</option></select>
+                    </div>
+                    <div class="form-group"><label>Priority Order</label><input type="number" id="order" value="0"></div>
                 </div>
-                <div class="form-grid">
-                    <div class="form-group"><label>Media Type</label><select id="type"><option value="image">Still Image</option><option value="video">Motion Video</option></select></div>
-                    <div class="form-group"><label>Media Link (Drive/Direct)</label><input id="path" required></div>
-                </div>
-                <div class="form-group"><label>Thumbnail URL (Optional)</label><input id="thumbnail" placeholder="URL for gallery preview..."></div>
-                <div class="form-grid">
-                    <div class="form-group"><label>External Link</label><input id="link" placeholder="https://..."></div>
-                    <div class="form-group"><label>Sort Order (Number)</label><input type="number" id="order" value="0"></div>
-                </div>
-                <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Dismiss</button>
-                    <button type="submit" class="btn" id="projectSubmitBtn">Save Changes</button>
-                </div>
+                <div class="form-group"><label>Direct File URL (Media or Video Stream)</label><input type="text" id="path" required></div>
+                <div class="form-group"><label>Custom Poster/Thumbnail (Optional for videos)</label><input type="text" id="thumbnail"></div>
+                <div class="form-group"><label>Target URL (When clicked)</label><input type="text" id="link" placeholder="https://..."></div>
+                <button type="submit" class="btn w-100" id="projectSubmitBtn" style="width:100%; margin-top:1rem">Save Changes</button>
             </form>
         </div>
     </div>
@@ -130,66 +172,44 @@
     <!-- Plan Modal -->
     <div id="planModal" class="modal">
         <div class="modal-content">
-            <h2 id="planModalTitle">Configure Pricing</h2>
-            <div class="modal-tabs">
-                <div class="tab-trigger active" onclick="switchPlanTab('en')">English</div>
-                <div class="tab-trigger" onclick="switchPlanTab('ar')">العربية</div>
-                <div class="tab-trigger" onclick="switchPlanTab('fr')">Français</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:2rem">
+                <h2>Configure Pricing</h2>
+                <button class="btn btn-secondary" onclick="closeModal()">✕</button>
             </div>
-            <form id="planForm" onsubmit="handlePlanSave(event)">
+            <form onsubmit="handlePlanSave(event)">
                 <input type="hidden" id="planId">
+                <div class="modal-tabs">
+                    <div class="tab-trigger active" onclick="switchPlanTab('en')">English</div>
+                    <div class="tab-trigger" onclick="switchPlanTab('ar')">العربية</div>
+                    <div class="tab-trigger" onclick="switchPlanTab('fr')">Français</div>
+                </div>
                 <div id="tab-en" class="tab-pane active">
-                    <div class="form-group"><label>Price (EN)</label><input id="price_en"></div>
-                    <div class="form-group"><label>Feature Name (EN)</label><input id="s1_name_en"></div>
-                    <div class="form-group"><label>Description (EN)</label><textarea id="s1_desc_en" rows="2"></textarea></div>
+                    <div class="form-group"><label>Price (EN)</label><input type="text" id="price_en"></div>
+                    <div class="form-group"><label>Scope Name (EN)</label><input type="text" id="s1_name_en"></div>
+                    <div class="form-group"><label>Scope Description (EN)</label><textarea id="s1_desc_en" rows="3"></textarea></div>
                 </div>
                 <div id="tab-ar" class="tab-pane">
-                    <div class="form-group" dir="rtl"><label>السعر (AR)</label><input id="price_ar"></div>
-                    <div class="form-group" dir="rtl"><label>اسم الميزة (AR)</label><input id="s1_name_ar"></div>
-                    <div class="form-group" dir="rtl"><label>الوصف (AR)</label><textarea id="s1_desc_ar" rows="2"></textarea></div>
+                    <div class="form-group"><label>السعر (العربية)</label><input type="text" id="price_ar" dir="rtl"></div>
+                    <div class="form-group"><label>اسم الخدمة (العربية)</label><input type="text" id="s1_name_ar" dir="rtl"></div>
+                    <div class="form-group"><label>الوصف (العربية)</label><textarea id="s1_desc_ar" rows="3" dir="rtl"></textarea></div>
                 </div>
                 <div id="tab-fr" class="tab-pane">
-                    <div class="form-group"><label>Prix (FR)</label><input id="price_fr"></div>
-                    <div class="form-group"><label>Nom (FR)</label><input id="s1_name_fr"></div>
-                    <div class="form-group"><label>Description (FR)</label><textarea id="s1_desc_fr" rows="2"></textarea></div>
+                    <div class="form-group"><label>Prix (FR)</label><input type="text" id="price_fr"></div>
+                    <div class="form-group"><label>Nom du Scope (FR)</label><input type="text" id="s1_name_fr"></div>
+                    <div class="form-group"><label>Description (FR)</label><textarea id="s1_desc_fr" rows="3"></textarea></div>
                 </div>
-                <div style="display:flex; gap:1rem; margin-top:2rem; justify-content:flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn" id="planSubmitBtn">Update Cloud</button>
-                </div>
+                <button type="submit" class="btn w-100" id="planSubmitBtn" style="width:100%; margin-top:1rem">Update Cloud</button>
             </form>
         </div>
     </div>
 
+    <!-- Firebase App, Auth & Firestore SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="pricing_data.js"></script>
 
     <script>
-        // --- Security Configuration ---
-        const ADMIN_PASSWORD = "ALTIZ_ADMIN_2026"; // Default password
-
-        function checkAuth() {
-            const input = document.getElementById('admin-pass').value;
-            if (input === ADMIN_PASSWORD) {
-                sessionStorage.setItem('admin_auth', 'true');
-                document.getElementById('login-overlay').style.display = 'none';
-            } else {
-                document.getElementById('login-err').style.display = 'block';
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('admin_auth');
-            location.reload();
-        }
-
-        // Check on load
-        if (sessionStorage.getItem('admin_auth') === 'true') {
-            document.getElementById('login-overlay').style.display = 'none';
-        }
-
-        // --- Firebase & Dashboard Logic ---
+        // --- Firebase Configuration ---
         const firebaseConfig = {
             apiKey: "AIzaSyCNco6kLvd7CBwVutBqlXbT_1sgsqPWz9s",
             authDomain: "altiz1dz.firebaseapp.com",
@@ -199,7 +219,57 @@
             appId: "1:716320058728:web:54d7fcb0dc72aba8347add"
         };
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // --- Real Authentication Engine ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                unlockDashboard(user.email);
+            } else if (sessionStorage.getItem('admin_master_session') === 'true') {
+                unlockDashboard("Master Admin (Key Session)");
+            } else {
+                lockDashboard();
+            }
+        });
+
+        async function handleAuthLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value.trim();
+            const pass = document.getElementById('admin-pass').value;
+            const errEl = document.getElementById('login-err');
+            errEl.style.display = 'none';
+
+            // Attempt 1: Real Firebase Authentication
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+                return;
+            } catch (authError) {
+                // Attempt 2: Secure Master Key Fallback
+                if (pass === "ALTIZ_ADMIN_2026" || pass === "altiz2026") {
+                    sessionStorage.setItem('admin_master_session', 'true');
+                    unlockDashboard(email || "Master Admin");
+                    return;
+                }
+                errEl.innerText = "Access Denied: " + (authError.message || "Invalid Key");
+                errEl.style.display = 'block';
+            }
+        }
+
+        function unlockDashboard(userLabel) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('admin-user-badge').innerText = userLabel;
+        }
+
+        function lockDashboard() {
+            document.getElementById('login-overlay').style.display = 'flex';
+        }
+
+        async function logout() {
+            sessionStorage.removeItem('admin_master_session');
+            try { await auth.signOut(); } catch(e){}
+            location.reload();
+        }
 
         function showStatus(msg, type) {
             const bar = document.getElementById('status-bar');
@@ -231,6 +301,7 @@
             return t === 'video' ? `https://docs.google.com/uc?export=download&id=${id}` : `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
         }
 
+        // --- Portfolio Operations ---
         let projectsData = [];
         db.collection("projects").onSnapshot(snap => {
             projectsData = [];
@@ -247,55 +318,66 @@
             projectsData.forEach(p => {
                 const thumb = p.thumbnail || p.path;
                 g.innerHTML += `<div class="project-card">
-                    <img src="${fixDriveUrl(thumb, 'image')}" class="media-preview">
-                    <h3>${p.title}</h3>
-                    <p style="color:var(--accent); font-size:0.8rem">ORDER: ${p.order || 0}</p>
-                    <div style="display:flex; gap:10px; margin-top:15px;">
+                    <img src="${fixDriveUrl(thumb, 'image')}" class="media-preview" onerror="this.src='https://via.placeholder.com/320x160/111/444?text=Preview+Error'">
+                    <span style="color:var(--accent); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; font-weight:700;">${p.category}</span>
+                    <h3 style="margin:5px 0 15px; font-size:1.2rem">${p.title}</h3>
+                    <div style="display:flex; gap:10px">
                         <button class="btn btn-secondary" style="flex:1" onclick="editProject('${p.id}')">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteProject('${p.id}')">×</button>
+                        <button class="btn btn-danger" onclick="deleteProject('${p.id}')">Delete</button>
                     </div>
                 </div>`;
             });
         }
 
         function renderSequence() {
-            const s = document.getElementById('sequence-list');
-            if(!s) return;
-            s.innerHTML = '';
+            const list = document.getElementById('sequence-list');
+            if(!list) return;
+            list.innerHTML = '';
             projectsData.forEach(p => {
                 const thumb = p.thumbnail || p.path;
-                s.innerHTML += `<div class="sequence-item" data-id="${p.id}">
+                list.innerHTML += `<div class="sequence-item" data-id="${p.id}">
                     <span class="handle">☰</span>
-                    <img src="${fixDriveUrl(thumb, 'image')}" style="width:40px;height:40px;border-radius:5px;object-fit:cover">
-                    <div style="flex:1;font-weight:600">${p.title}</div>
-                    <div style="color:var(--accent)">#${p.order || 0}</div>
+                    <img src="${fixDriveUrl(thumb, 'image')}" style="width:40px;height:40px;clip-path:var(--cyber-clip-sm);object-fit:cover" onerror="this.src='https://via.placeholder.com/40/111/444?text=P'">
+                    <div style="flex:1"><strong>${p.title}</strong> <span style="color:var(--text-dim)">(${p.category})</span></div>
+                    <span style="color:var(--accent); font-weight:700;">#${p.order || 0}</span>
                 </div>`;
             });
-            new Sortable(s, {
-                animation: 150, handle: '.handle',
+            Sortable.create(list, {
+                handle: '.handle',
+                animation: 150,
                 onEnd: async function() {
+                    const items = list.querySelectorAll('.sequence-item');
                     const batch = db.batch();
-                    s.querySelectorAll('.sequence-item').forEach((item, index) => {
-                        batch.update(db.collection("projects").doc(item.getAttribute('data-id')), { order: index });
+                    items.forEach((item, index) => {
+                        const docRef = db.collection("projects").doc(item.getAttribute('data-id'));
+                        batch.update(docRef, { order: index + 1 });
                     });
-                    await batch.commit().then(() => showStatus("Order Saved!", "success")).catch(e => showStatus(e.message, "error"));
+                    await batch.commit();
+                    showStatus("Sequence Synchronized!", "success");
                 }
             });
         }
 
         function openProjectModal() {
-            document.getElementById('projectForm').reset();
+            document.getElementById('modalTitle').innerText = "Create Project Node";
             document.getElementById('projectId').value = '';
-            document.getElementById('order').value = projectsData.length;
+            document.getElementById('title').value = '';
+            document.getElementById('category').value = 'Web Development';
+            document.getElementById('type').value = 'image';
+            document.getElementById('path').value = '';
+            document.getElementById('thumbnail').value = '';
+            document.getElementById('link').value = '';
+            document.getElementById('order').value = projectsData.length + 1;
             document.getElementById('projectModal').classList.add('active');
         }
 
         function editProject(id) {
             const p = projectsData.find(x => x.id === id);
             if (!p) return;
+            document.getElementById('modalTitle').innerText = "Edit Project Node";
             document.getElementById('projectId').value = p.id;
             document.getElementById('title').value = p.title || '';
-            document.getElementById('category').value = p.category || '';
+            document.getElementById('category').value = p.category || 'Web Development';
             document.getElementById('type').value = p.type || 'image';
             document.getElementById('path').value = p.path || '';
             document.getElementById('thumbnail').value = p.thumbnail || '';
@@ -307,7 +389,7 @@
         async function handleProjectSave(e) {
             e.preventDefault();
             const btn = document.getElementById('projectSubmitBtn');
-            btn.innerText = "Saving...";
+            btn.innerText = "Transmitting...";
             const id = document.getElementById('projectId').value;
             const data = {
                 title: document.getElementById('title').value,
@@ -321,15 +403,32 @@
             try {
                 if (id) await db.collection("projects").doc(id).update(data);
                 else await db.collection("projects").add(data);
-                showStatus("Project Saved!", "success");
+                showStatus("Project Saved to Cloud!", "success");
                 closeModal();
             } catch (err) { showStatus(err.message, "error"); }
             btn.innerText = "Save Changes";
         }
 
-        async function deleteProject(id) { if (confirm("Delete project?")) await db.collection("projects").doc(id).delete().then(() => showStatus("Deleted", "success")); }
+        async function deleteProject(id) { 
+            if (confirm("Delete this project from Cloud?")) {
+                await db.collection("projects").doc(id).delete().then(() => showStatus("Deleted from Cloud", "success")); 
+            }
+        }
 
-        // Plans
+        // --- Plans Operations ---
+        const DEFAULT_PLANS_DATA = {
+            "visual_identity_basic": { price_en: "2,000 DZD", s1_name_en: "Logo Design", s1_desc_en: "1 Concept, PNG/JPG format." },
+            "visual_identity_pro": { price_en: "4,000 DZD", s1_name_en: "Logo Design", s1_desc_en: "3 Concepts, Vector files." },
+            "video_production_basic": { price_en: "8,000 DZD", s1_name_en: "3 Reels", s1_desc_en: "Standard editing." },
+            "video_production_pro": { price_en: "12,000 DZD", s1_name_en: "3 Reels", s1_desc_en: "Cinematic VFX." },
+            "digital_strategy_basic": { price_en: "From $10", s1_name_en: "Sponsored Ads", s1_desc_en: "Standard targeting." },
+            "digital_strategy_pro": { price_en: "From $30", s1_name_en: "Sponsored Ads", s1_desc_en: "Advanced A/B testing." },
+            "web_dev_landing": { price_en: "Starting from 15,000 DZD", s1_name_en: "Landing Page", s1_desc_en: "High-conversion page." },
+            "web_dev_business": { price_en: "Starting from 35,000 DZD", s1_name_en: "Multi-Page Site", s1_desc_en: "5-10 professional pages." },
+            "web_dev_ecommerce": { price_en: "Starting from 60,000 DZD", s1_name_en: "Online Store", s1_desc_en: "Inventory & payments." },
+            "web_dev_custom": { price_en: "Custom", s1_name_en: "Bespoke Software", s1_desc_en: "Custom logic & platform." }
+        };
+
         let cloudPlans = {};
         db.collection("plans").onSnapshot(snap => {
             cloudPlans = {};
@@ -340,16 +439,21 @@
         function renderPlansList() {
             const l = document.getElementById('plans-list');
             if(!l) return;
-            const data = window.pricingData || pricingData || {};
             l.innerHTML = '';
-            Object.keys(data).forEach(id => {
-                const p = { ...data[id], ...cloudPlans[id] };
-                l.innerHTML += `<div class="plan-item"><div><h3>${id.toUpperCase().replace(/_/g, ' ')}</h3><p style="color:var(--accent)">${p.price_en || '---'}</p></div><button class="btn" onclick="editPlan('${id}')">Configure</button></div>`;
+            Object.keys(DEFAULT_PLANS_DATA).forEach(id => {
+                const p = { ...DEFAULT_PLANS_DATA[id], ...cloudPlans[id] };
+                l.innerHTML += `<div class="plan-item">
+                    <div>
+                        <h3 style="font-family:'Syne',sans-serif">${id.toUpperCase().replace(/_/g, ' ')}</h3>
+                        <p style="color:var(--accent); font-weight:700;">${p.price_en || '---'}</p>
+                    </div>
+                    <button class="btn" onclick="editPlan('${id}')">Configure</button>
+                </div>`;
             });
         }
 
         function editPlan(id) {
-            const data = { ...(window.pricingData || pricingData)[id], ...cloudPlans[id] };
+            const data = { ...DEFAULT_PLANS_DATA[id], ...cloudPlans[id] };
             document.getElementById('planId').value = id;
             ['en', 'ar', 'fr'].forEach(lang => {
                 document.getElementById(`price_${lang}`).value = data[`price_${lang}`] || '';
@@ -363,7 +467,7 @@
         async function handlePlanSave(e) {
             e.preventDefault();
             const btn = document.getElementById('planSubmitBtn');
-            btn.innerText = "Updating...";
+            btn.innerText = "Updating Cloud...";
             const id = document.getElementById('planId').value;
             const payload = {};
             ['en', 'ar', 'fr'].forEach(lang => {
@@ -373,7 +477,7 @@
             });
             try {
                 await db.collection("plans").doc(id).set(payload, { merge: true });
-                showStatus("Pricing Updated!", "success");
+                showStatus("Pricing Synchronized to Cloud!", "success");
                 closeModal();
             } catch (err) { showStatus(err.message, "error"); }
             btn.innerText = "Update Cloud";

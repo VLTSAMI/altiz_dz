@@ -1,0 +1,9 @@
+{
+  "name": "altiz-dz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Altiz Solutions DZ Website",
+  "scripts": {
+    "build": "echo 'Static site ready'"
+  }
+}

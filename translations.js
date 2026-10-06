@@ -5,11 +5,13 @@ const translations = {
         "nav_solutions": "الحلول التقنية",
         "nav_portfolio": "معرض الأعمال",
         "nav_pricing": "باقات الاستثمار",
+        "nav_testimonials": "آراء العملاء",
+        "nav_faq": "الأسئلة الشائعة",
         "nav_contact": "اتصل بنا",
         "btn_start_project": "إطلاق المشروع",
 
         // Hero
-        "hero_title": "ALTIZ",
+        "hero_title": "<span>A</span><span>L</span><span>T</span><span>I</span><span>Z</span>",
         "hero_subtitle_branding": "SOLUTIONS <span class=\"neon-divider\">|</span> DZ",
         "hero_description": "من تطوير الويب المتقدم إلى الإنتاج السينمائي.<br>مقرنا في الجزائر، ونخدم العالم.",
         "badge_fast_delivery": "تسليم سريع",
@@ -52,6 +54,7 @@ const translations = {
         "pricing_desc": "أسعار شفافة لأصول رقمية مميزة.",
         "tab_marketing": "التسويق والإبداع",
         "tab_webdev": "برمجة الويب والتطبيقات",
+        "web_solutions_header": "البرمجة والتطوير",
         "visual_identity": "الهوية البصرية",
         "video_production": "إنتاج الفيديو",
         "digital_strategy": "استراتيجية رقمية",
@@ -110,6 +113,28 @@ const translations = {
         "terminal_email_prompt": "echo \"تواصل معنا عبر البريد\"",
         "terminal_world_prompt": "echo \"متاحون للمشاريع العالمية\"",
 
+        // Trust Building: Stats
+        "stat_projects": "مشروع رقمي مكتمل",
+        "stat_clients": "عميل وشريك نجاح",
+        "stat_delivery": "دقة الالتزام بالمواعيد",
+        "stat_support": "دعم تقني وتطوير مستمر",
+
+        // Trust Building: Testimonials
+        "testimonials_title": "شهادات وتجارب العملاء",
+        "testimonials_desc": "تقييمات مباشرة من علامات تجارية ارتقى حضورها بفضل دقة منطقنا وحلولنا البصرية.",
+
+        // Trust Building: FAQ
+        "faq_title": "الأسئلة الشائعة",
+        "faq_desc": "كل ما تحتاج معرفته حول أسلوب عملنا، آليات الدفع، وسرعة التسليم.",
+        "faq_q1": "ما هي المدة المستغرقة لتسليم موقع إلكتروني أو تطبيق؟",
+        "faq_a1": "صفحات الهبوط (Landing Pages) تستغرق بين 3 إلى 5 أيام عمل، في حين أن المتاجر والأنظمة المخصصة تستغرق من 7 إلى 14 يوماً مع اختبار شامل للأداء والأمان.",
+        "faq_q2": "كيف تتم آلية الدفع والتعامل المالي في الجزائر وخارجها؟",
+        "faq_a2": "نوفر دفعاً مرناً عبر BaridiMob أو التحويل البنكي أو CCP أو الدفع الدولي، بدفعة أولى عند بدء المشروع والمتبقي بعد المراجعة والتسليم والتشغيل.",
+        "faq_q3": "هل تقدمون خدمات الدعم الفني بعد إطلاق المشروع؟",
+        "faq_a3": "نعم، نقدم ضمان دعم تقني ومراقبة للأداء بعد التسليم، مع إمكانية الاشتراك في باقات الصيانة والتطوير الدورية.",
+        "faq_q4": "هل يمكن مراجعة وتعديل التصاميم ومقاطع الفيديو؟",
+        "faq_a4": "بالتأكيد، كل باقة تتضمن جولات مراجعة وتعديل دقيقة لضمان تطابق النتيجة النهائية مع معايير علامتك التجارية بنسبة 100%.",
+
         // Footer
         "footer_text": "&copy; 2026 Altiz Solutions DZ. جميع العمليات المنطقية تنفذ بأمان."
     },
@@ -119,11 +144,13 @@ const translations = {
         "nav_solutions": "Solutions",
         "nav_portfolio": "Portfolio",
         "nav_pricing": "Pricing",
+        "nav_testimonials": "Testimonials",
+        "nav_faq": "FAQ",
         "nav_contact": "Contact",
         "btn_start_project": "Start a Project",
 
         // Hero
-        "hero_title": "ALTIZ",
+        "hero_title": "<span>A</span><span>L</span><span>T</span><span>I</span><span>Z</span>",
         "hero_subtitle_branding": "SOLUTIONS <span class=\"neon-divider\">|</span> DZ",
         "hero_description": "From High-End Web Development to Cinematic Production.<br>Based in Algeria, Serving the World.",
         "badge_fast_delivery": "Fast Delivery",
@@ -166,6 +193,7 @@ const translations = {
         "pricing_desc": "Transparent pricing for premium digital assets.",
         "tab_marketing": "Marketing & Creative",
         "tab_webdev": "Web & App Development",
+        "web_solutions_header": "Web & Software Development",
         "visual_identity": "Visual Identity",
         "video_production": "Video Production",
         "digital_strategy": "Digital Strategy",
@@ -224,6 +252,28 @@ const translations = {
         "terminal_email_prompt": "echo \"Reach out via email\"",
         "terminal_world_prompt": "echo \"Available for worldwide projects\"",
 
+        // Trust Building: Stats
+        "stat_projects": "Completed Digital Projects",
+        "stat_clients": "Satisfied Brands & Partners",
+        "stat_delivery": "On-Time Delivery Rate",
+        "stat_support": "Continuous Tech Support",
+
+        // Trust Building: Testimonials
+        "testimonials_title": "Client Transmissions",
+        "testimonials_desc": "Direct feedback from brands elevated through our logic and visual precision.",
+
+        // Trust Building: FAQ
+        "faq_title": "Frequently Asked Questions",
+        "faq_desc": "Everything you need to know about our workflow, payment terms, and delivery timeline.",
+        "faq_q1": "How long does it take to deliver a website or app?",
+        "faq_a1": "Landing pages take 3 to 5 business days, while comprehensive platforms and custom systems take 7 to 14 days, including security checks and performance tuning.",
+        "faq_q2": "What payment methods are supported?",
+        "faq_a2": "We accept BaridiMob, Bank Transfer, CCP in Algeria, and international payment methods. Projects start with a milestone deposit and complete upon final review.",
+        "faq_q3": "Do you provide technical support after launch?",
+        "faq_a3": "Yes, we include free post-launch support and performance monitoring, with optional ongoing maintenance and evolution retainers.",
+        "faq_q4": "Can designs and videos be revised?",
+        "faq_a4": "Absolutely. Each package includes dedicated revision rounds to guarantee the final deliverables match your brand standard with 100% precision.",
+
         // Footer
         "footer_text": "&copy; 2026 Altiz Solutions DZ. All logic executed securely."
     },
@@ -233,11 +283,13 @@ const translations = {
         "nav_solutions": "Solutions",
         "nav_portfolio": "Portfolio",
         "nav_pricing": "Tarifs",
+        "nav_testimonials": "Avis",
+        "nav_faq": "FAQ",
         "nav_contact": "Contact",
         "btn_start_project": "Projet",
 
         // Hero
-        "hero_title": "ALTIZ",
+        "hero_title": "<span>A</span><span>L</span><span>T</span><span>I</span><span>Z</span>",
         "hero_subtitle_branding": "SOLUTIONS <span class=\"neon-divider\">|</span> DZ",
         "hero_description": "Du développement web haut de gamme à la production cinématographique.<br>Basés en Algérie, au service du monde.",
         "badge_fast_delivery": "Livraison Rapide",
@@ -280,6 +332,7 @@ const translations = {
         "pricing_desc": "Prix transparents pour actifs premium.",
         "tab_marketing": "Créatif & Marketing",
         "tab_webdev": "Web & Apps",
+        "web_solutions_header": "Développement & Programmation",
         "visual_identity": "Identité Visuelle",
         "video_production": "Production Vidéo",
         "digital_strategy": "Stratégie Digitale",
@@ -337,6 +390,28 @@ const translations = {
         "btn_submit": "Transmettre",
         "terminal_email_prompt": "echo \"Contactez par mail\"",
         "terminal_world_prompt": "echo \"Projets mondiaux\"",
+
+        // Trust Building: Stats
+        "stat_projects": "Projets Numériques Livrés",
+        "stat_clients": "Partenaires & Marques Clientes",
+        "stat_delivery": "Précision des Délais",
+        "stat_support": "Support Technique Continu",
+
+        // Trust Building: Testimonials
+        "testimonials_title": "Retours d'Expérience Clients",
+        "testimonials_desc": "Des retours authentiques de marques propulsées par notre rigueur logique et notre vision visuelle.",
+
+        // Trust Building: FAQ
+        "faq_title": "Questions Fréquemment Posées",
+        "faq_desc": "Tout ce que vous devez savoir sur nos processus, conditions de paiement et délais.",
+        "faq_q1": "Quel est le délai de livraison d'un site ou d'une app ?",
+        "faq_a1": "Les Landing Pages prennent 3 à 5 jours ouvrés. Les plateformes et solutions complexes prennent 7 à 14 jours avec audits complets de performance et de sécurité.",
+        "faq_q2": "Quels sont les moyens de paiement acceptés ?",
+        "faq_a2": "Nous acceptons BaridiMob, Virement bancaire, CCP en Algérie ainsi que les paiements internationaux, avec un acompte à l'engagement et solde à la validation.",
+        "faq_q3": "Assurez-vous un support après le lancement ?",
+        "faq_a3": "Oui, nous incluons un support gratuit et un monitoring post-livraison, avec options d'abonnements pour la maintenance et l'évolution continue.",
+        "faq_q4": "Les designs et vidéos peuvent-ils être modifiés ?",
+        "faq_a4": "Tout à fait. Chaque formule comprend des phases de révision dédiées pour assurer une conformité totale avec votre charte.",
 
         // Footer
         "footer_text": "&copy; 2026 Altiz Solutions DZ. Logique sécurisée."

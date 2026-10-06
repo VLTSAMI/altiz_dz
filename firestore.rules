@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Portfolio Projects: Anyone can view, only authenticated admins can write
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Service Plans / Pricing: Anyone can view, only authenticated admins can modify
+    match /plans/{planId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Client Testimonials & Reviews: Anyone can view, only authenticated admins can modify
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Default catch-all rule
+    match /{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
