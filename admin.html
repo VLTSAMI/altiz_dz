@@ -30,7 +30,9 @@
 
         /* Dashboard Layout */
         .sidebar { width: 280px; background: var(--card); border-right: 1px solid var(--border); padding: 2.5rem 1.5rem; position: fixed; height: 100vh; box-sizing: border-box; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; }
-        .logo { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 3rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        .logo { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 3rem; color: #fff; display: flex; align-items: center; gap: 2px; text-decoration: none; letter-spacing: 1px; transition: opacity 0.2s; }
+        .logo span { color: var(--accent); }
+        .logo:hover { opacity: 0.85; }
         .nav-link { color: var(--text-dim); text-decoration: none; padding: 14px 18px; display: flex; align-items: center; gap: 12px; clip-path: var(--cyber-clip-sm); margin-bottom: 8px; cursor: pointer; transition: 0.3s; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
         .nav-link.active { background: var(--accent-glow); color: var(--accent); border-left: 2px solid var(--accent); }
         
@@ -124,7 +126,7 @@
 
     <div class="sidebar">
         <div>
-            <div class="logo">ALTIZ.STUDIO</div>
+            <a href="index.html" class="logo">ALTIZ<span>.DZ</span></a>
             <div class="auth-badge" id="admin-user-badge">Verifying Node...</div>
             <nav>
                 <div class="nav-link active" id="nav-projects" onclick="showTab('projects')">Portfolio</div>
